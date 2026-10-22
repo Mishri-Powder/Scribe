@@ -1,0 +1,466 @@
+{
+  "generated": "2026-10-22T18:34:24.685Z",
+  "included": [
+    {
+      "saveAs": "images/hipaa-logo.png",
+      "referencedInBookAs": "images/hipaa-logo.png",
+      "alt": "HIPAA logo — caduceus with wings and the acronym HIPAA"
+    },
+    {
+      "saveAs": "images/hipaa-patient-rights.png",
+      "referencedInBookAs": "images/hipaa-patient-rights.png",
+      "alt": "Infographic showing patient right to health information: Electronic Health Records, Mobile Device Apps, Laboratories, Hospitals, Web-Based Portals, Health Insurance Plans, Physicians, Pharmacies, Medical Staff"
+    },
+    {
+      "saveAs": "images/cyber-security.png",
+      "referencedInBookAs": "images/cyber-security.png",
+      "alt": "Cyber Security graphic with padlock"
+    },
+    {
+      "saveAs": "images/fig2-1-superior-inferior.png",
+      "referencedInBookAs": "images/fig2-1-superior-inferior.png",
+      "alt": "Figure showing Superior vs. Inferior anatomical terms on a human figure"
+    },
+    {
+      "saveAs": "images/fig2-2-proximal-distal.png",
+      "referencedInBookAs": "images/fig2-2-proximal-distal.png",
+      "alt": "Figure showing Proximal vs. Distal on an arm"
+    },
+    {
+      "saveAs": "images/fig2-3-medial-lateral.png",
+      "referencedInBookAs": "images/fig2-3-medial-lateral.png",
+      "alt": "Figure showing Medial vs. Lateral on a human figure"
+    },
+    {
+      "saveAs": "images/fig2-4-abduction-adduction.png",
+      "referencedInBookAs": "images/fig2-4-abduction-adduction.png",
+      "alt": "Figure showing Abduction vs. Adduction on a human figure"
+    },
+    {
+      "saveAs": "images/fig2-5-anterior-posterior.png",
+      "referencedInBookAs": "images/fig2-5-anterior-posterior.png",
+      "alt": "Figure showing Anterior vs. Posterior views of a human figure"
+    },
+    {
+      "saveAs": "images/fig2-6-dorsal-ventral.png",
+      "referencedInBookAs": "images/fig2-6-dorsal-ventral.png",
+      "alt": "Figure showing Dorsal vs. Ventral on a dog"
+    },
+    {
+      "saveAs": "images/fig2-7-volar-dorsal.png",
+      "referencedInBookAs": "images/fig2-7-volar-dorsal.png",
+      "alt": "Figure showing Volar (palm) vs. Dorsal (back of hand) on a hand"
+    },
+    {
+      "saveAs": "images/fig2-8-dorsal-plantar.png",
+      "referencedInBookAs": "images/fig2-8-dorsal-plantar.png",
+      "alt": "Figure showing Dorsal vs. Plantar on a foot"
+    },
+    {
+      "saveAs": "images/fig2-9-abdominal-quadrants.png",
+      "referencedInBookAs": "images/fig2-9-abdominal-quadrants.png",
+      "alt": "Figure showing the four abdominal quadrants: RUQ, LUQ, RLQ, LLQ"
+    },
+    {
+      "saveAs": "images/fig2-10-abdominal-regions.png",
+      "referencedInBookAs": "images/fig2-10-abdominal-regions.png",
+      "alt": "Figure showing Epigastric, Periumbilical, Suprapubic, and Inguinal regions"
+    },
+    {
+      "saveAs": "images/fig2-11-skeleton.png",
+      "referencedInBookAs": "images/fig2-11-skeleton.png",
+      "alt": "Figure showing the major bones and joints of the human skeleton"
+    },
+    {
+      "saveAs": "images/fig2-12-thorax.png",
+      "referencedInBookAs": "images/fig2-12-thorax.png",
+      "alt": "Figure showing bones and joints of the thorax, including clavicles, scapulae, ribs, sternum"
+    },
+    {
+      "saveAs": "images/fig2-13-radius-ulna.png",
+      "referencedInBookAs": "images/fig2-13-radius-ulna.png",
+      "alt": "Figure showing Radius and ulna of right arm in supinated and pronated positions"
+    },
+    {
+      "saveAs": "images/fig2-14-hand-bones.png",
+      "referencedInBookAs": "images/fig2-14-hand-bones.png",
+      "alt": "Figure showing bones of the hand and numbering system in anterior and posterior views"
+    },
+    {
+      "saveAs": "images/fig2-15-hand-joints.png",
+      "referencedInBookAs": "images/fig2-15-hand-joints.png",
+      "alt": "Figure showing joints of the hand: CMC, MCP, PIP, DIP"
+    },
+    {
+      "saveAs": "images/fig2-16-lower-extremities.png",
+      "referencedInBookAs": "images/fig2-16-lower-extremities.png",
+      "alt": "Figure showing bones and joints of the lower extremities"
+    },
+    {
+      "saveAs": "images/fig2-17-knee-anatomy.png",
+      "referencedInBookAs": "images/fig2-17-knee-anatomy.png",
+      "alt": "Figure showing schematic knee anatomy: femur, patella, tibia, fibula, menisci, ligaments"
+    },
+    {
+      "saveAs": "images/fig2-18-foot-bones.png",
+      "referencedInBookAs": "images/fig2-18-foot-bones.png",
+      "alt": "Figure showing bones and joints of the foot: phalanges, metatarsals, tarsals, TMT, MTP, IP joints"
+    },
+    {
+      "saveAs": "images/fig2-19-female-internal.png",
+      "referencedInBookAs": "images/fig2-19-female-internal.png",
+      "alt": "Figure showing internal female reproductive anatomy, sagittal view: uterus, fundus, ovary, fallopian tube, endometrium, myometrium"
+    },
+    {
+      "saveAs": "images/fig2-20-female-external.png",
+      "referencedInBookAs": "images/fig2-20-female-external.png",
+      "alt": "Figure showing external female reproductive anatomy: mons pubis, labia majora, labia minora, clitoris, vulva vestibule"
+    },
+    {
+      "saveAs": "images/medications-pills.png",
+      "referencedInBookAs": "images/medications-pills.png",
+      "alt": "Photograph of assorted pills and capsules"
+    },
+    {
+      "saveAs": "images/fig3-2-healthcare-screening.png",
+      "referencedInBookAs": "images/fig3-2-healthcare-screening.png",
+      "alt": "Screenshot of healthcare screening data entry in an EHR showing Blood Pressure Screening, Mammogram, Cervical Cancer Screening, Colorectal cancer screening, Hep C Screening, Influenza immunization, Shingles Vaccination, Td/Tdap Adult Booster"
+    },
+    {
+      "saveAs": "images/fig3-3-smoking-documentation.png",
+      "referencedInBookAs": "images/fig3-3-smoking-documentation.png",
+      "alt": "Screenshot of smoking documentation in one EHR showing Former Smoker quit date, readiness to quit, counseling given"
+    },
+    {
+      "saveAs": "images/fig4-1-click-exam.png",
+      "referencedInBookAs": "images/fig4-1-click-exam.png",
+      "alt": "Screenshot of click-based exam entry in an EHR showing General, HEENT, Respiratory, Cardiovascular, Gastrointestinal, Lymphatic sections"
+    },
+    {
+      "saveAs": "images/pulse-oximeter.png",
+      "referencedInBookAs": "images/pulse-oximeter.png",
+      "alt": "Photograph of a pulse oximeter on a finger"
+    },
+    {
+      "saveAs": "images/fig4-2-ear-anatomy.png",
+      "referencedInBookAs": "images/fig4-2-ear-anatomy.png",
+      "alt": "Figure showing ear anatomy: auricle/pinna, external auditory canal, tympanic membrane, semicircular canals, cochlea, eustachian tube"
+    },
+    {
+      "saveAs": "images/fig4-3-normal-tm.png",
+      "referencedInBookAs": "images/fig4-3-normal-tm.png",
+      "alt": "Figure showing normal tympanic membrane appearance"
+    },
+    {
+      "saveAs": "images/fig4-5-cervical-lymph-nodes.png",
+      "referencedInBookAs": "images/fig4-5-cervical-lymph-nodes.png",
+      "alt": "Figure showing cervical lymph nodes: submandibular, anterior cervical, posterior cervical"
+    },
+    {
+      "saveAs": "images/fig4-6-peripheral-pulses.png",
+      "referencedInBookAs": "images/fig4-6-peripheral-pulses.png",
+      "alt": "Figure showing peripheral pulse locations: carotid, brachial, radial, femoral, popliteal, posterior tibial, dorsalis pedis"
+    },
+    {
+      "saveAs": "images/fig4-7-pelvic-exam-position.png",
+      "referencedInBookAs": "images/fig4-7-pelvic-exam-position.png",
+      "alt": "Figure showing positioning for a full pelvic exam, lithotomy position"
+    },
+    {
+      "saveAs": "images/breast-exam.png",
+      "referencedInBookAs": "images/breast-exam.png",
+      "alt": "Photograph of a clinical breast exam"
+    },
+    {
+      "saveAs": "images/fig4-8-skin-lesions.png",
+      "referencedInBookAs": "images/fig4-8-skin-lesions.png",
+      "alt": "Figure showing types of skin lesions: crust, cyst, macule, papule, pustule, ulcer, vesicle, wheal"
+    },
+    {
+      "saveAs": "images/fig4-9-shoulder-dislocation.png",
+      "referencedInBookAs": "images/fig4-9-shoulder-dislocation.png",
+      "alt": "Figure showing obvious deformity due to a shoulder dislocation"
+    },
+    {
+      "saveAs": "images/pediatric-exam.png",
+      "referencedInBookAs": "images/pediatric-exam.png",
+      "alt": "Photograph of a pediatric physical exam"
+    },
+    {
+      "saveAs": "images/fig5-1-urine-dipstick.png",
+      "referencedInBookAs": "images/fig5-1-urine-dipstick.png",
+      "alt": "Figure showing POC urine dipstick"
+    },
+    {
+      "saveAs": "images/fig5-4-diagnosis-entry.png",
+      "referencedInBookAs": "images/fig5-4-diagnosis-entry.png",
+      "alt": "Screenshot of diagnosis entry example, highlighting patient visibility checkbox"
+    },
+    {
+      "saveAs": "images/fig6-1-clinic-flow.png",
+      "referencedInBookAs": "images/fig6-1-clinic-flow.png",
+      "alt": "Figure showing typical patient flow through a clinic: Patient → Registration (Insurance, Miscellaneous paperwork) → MA/RN (Chief complaint, Vital signs, Review medications) → Physician (History, Physical exam, Orders) → Disposition (Diagnostic work-up, Procedures)"
+    },
+    {
+      "saveAs": "images/fig6-2-aging-population.png",
+      "referencedInBookAs": "images/fig6-2-aging-population.png",
+      "alt": "Graph showing rise in the percentage of the population over 65"
+    },
+    {
+      "saveAs": "images/fig6-3-colonoscopy.png",
+      "referencedInBookAs": "images/fig6-3-colonoscopy.png",
+      "alt": "Schematic of colonoscopy procedure"
+    },
+    {
+      "saveAs": "images/fig6-4-bone-density.png",
+      "referencedInBookAs": "images/fig6-4-bone-density.png",
+      "alt": "Figure showing areas evaluated for bone density: femoral neck and spinal column"
+    },
+    {
+      "saveAs": "images/fig6-5-prostate.png",
+      "referencedInBookAs": "images/fig6-5-prostate.png",
+      "alt": "Figure showing normal prostate vs. enlarged prostate with urinary retention"
+    },
+    {
+      "saveAs": "images/fig6-6-pap-smear.png",
+      "referencedInBookAs": "images/fig6-6-pap-smear.png",
+      "alt": "Figure showing the Pap smear and cervical appearance, with normal, early stage, mid stage, late stage views"
+    },
+    {
+      "saveAs": "images/fig6-7-mammogram.png",
+      "referencedInBookAs": "images/fig6-7-mammogram.png",
+      "alt": "Photograph of a mammogram being performed"
+    },
+    {
+      "saveAs": "images/fig6-8-mammogram-images.png",
+      "referencedInBookAs": "images/fig6-8-mammogram-images.png",
+      "alt": "Photograph of mammogram images on a viewing screen"
+    },
+    {
+      "saveAs": "images/fig6-19-fundal-height.png",
+      "referencedInBookAs": "images/fig6-19-fundal-height.png",
+      "alt": "Photograph of measuring fundal height"
+    },
+    {
+      "saveAs": "images/fig6-9-neonate-jaundice.png",
+      "referencedInBookAs": "images/fig6-9-neonate-jaundice.png",
+      "alt": "Figure showing icteric sclera in a neonate"
+    },
+    {
+      "saveAs": "images/fig6-10-growth-chart.png",
+      "referencedInBookAs": "images/fig6-10-growth-chart.png",
+      "alt": "Growth chart for boys 0–24 months old"
+    },
+    {
+      "saveAs": "images/sports-physical.png",
+      "referencedInBookAs": "images/sports-physical.png",
+      "alt": "Illustration of youth sports activities"
+    },
+    {
+      "saveAs": "images/fig6-preop.png",
+      "referencedInBookAs": "images/fig6-preop.png",
+      "alt": "Screenshot of a pre-op visit template in an EHR"
+    },
+    {
+      "saveAs": "images/normal-vs-diabetic-retina.png",
+      "referencedInBookAs": "images/normal-vs-diabetic-retina.png",
+      "alt": "Figure showing normal retina vs. diabetic retinopathy with hemorrhages, aneurysms, hard exudates, and cotton wool spots"
+    },
+    {
+      "saveAs": "images/fig6-12-diabetic-foot-exam.png",
+      "referencedInBookAs": "images/fig6-12-diabetic-foot-exam.png",
+      "alt": "Figure showing sensory testing sites for the diabetic foot exam"
+    },
+    {
+      "saveAs": "images/fig6-13-htn-complications.png",
+      "referencedInBookAs": "images/fig6-13-htn-complications.png",
+      "alt": "Figure showing complications of persistent hypertension: brain (stroke, encephalopathy), retina (hypertensive retinopathy), heart (MI, heart failure), kidneys (nephropathy, chronic renal failure), blood (elevated sugar levels)"
+    },
+    {
+      "saveAs": "images/fig6-14-vertebra.png",
+      "referencedInBookAs": "images/fig6-14-vertebra.png",
+      "alt": "Figure showing anatomy of a vertebra, disk, and exiting nerve"
+    },
+    {
+      "saveAs": "images/headache-illustration.png",
+      "referencedInBookAs": "images/headache-illustration.png",
+      "alt": "Illustration of a person with a headache"
+    },
+    {
+      "saveAs": "images/uri-droplets.png",
+      "referencedInBookAs": "images/uri-droplets.png",
+      "alt": "Photograph of a person coughing or sneezing, showing droplet spread"
+    },
+    {
+      "saveAs": "images/fig6-15-cystitis.png",
+      "referencedInBookAs": "images/fig6-15-cystitis.png",
+      "alt": "Figure showing cystitis — harmful pathogens enter bladder causing inflammation"
+    },
+    {
+      "saveAs": "images/complex-patient.png",
+      "referencedInBookAs": "images/complex-patient.png",
+      "alt": "Photograph of an elderly patient with multiple medications"
+    },
+    {
+      "saveAs": "images/fig6-1-ed-patient-flow.png",
+      "referencedInBookAs": "images/fig6-1-ed-patient-flow.png",
+      "alt": "Figure showing typical patient flow through an ED: Private car/EMS → Triage nurse → Room → Nursing assessment → Provider → Workup → Discharge, Admit, or Transfer"
+    },
+    {
+      "saveAs": "images/fig6-3-coronary-arteries.png",
+      "referencedInBookAs": "images/fig6-3-coronary-arteries.png",
+      "alt": "Figure showing the heart and the coronary arteries"
+    },
+    {
+      "saveAs": "images/fig6-4-normal-ekg.png",
+      "referencedInBookAs": "images/fig6-4-normal-ekg.png",
+      "alt": "Normal EKG with flat ST segments"
+    },
+    {
+      "saveAs": "images/fig6-5-elevated-st.png",
+      "referencedInBookAs": "images/fig6-5-elevated-st.png",
+      "alt": "EKG with elevated ST segments"
+    },
+    {
+      "saveAs": "images/fig6-6-cardiac-catheterization.png",
+      "referencedInBookAs": "images/fig6-6-cardiac-catheterization.png",
+      "alt": "Figure showing cardiac catheterization"
+    },
+    {
+      "saveAs": "images/fig6-7-pe-schematic.png",
+      "referencedInBookAs": "images/fig6-7-pe-schematic.png",
+      "alt": "Figure showing a pulmonary embolism schematic"
+    },
+    {
+      "saveAs": "images/fig6-8-abdominal-organs.png",
+      "referencedInBookAs": "images/fig6-8-abdominal-organs.png",
+      "alt": "Figure showing abdominal organs: liver, gallbladder, stomach, pancreas, small intestine, colon, appendix, rectum, anus"
+    },
+    {
+      "saveAs": "images/fig6-9-colon.png",
+      "referencedInBookAs": "images/fig6-9-colon.png",
+      "alt": "Figure showing the colon: right colic flexure, transverse colon, ascending colon, ileum, cecum, vermiform appendix, anal canal, rectum, sigmoid colon, descending colon, left colic flexure"
+    },
+    {
+      "saveAs": "images/fig6-10-epigastrium.png",
+      "referencedInBookAs": "images/fig6-10-epigastrium.png",
+      "alt": "Figure showing organs and ducts of the epigastrium"
+    },
+    {
+      "saveAs": "images/fig6-11-gallbladder-us.png",
+      "referencedInBookAs": "images/fig6-11-gallbladder-us.png",
+      "alt": "Gallbladder ultrasound"
+    },
+    {
+      "saveAs": "images/female-reproductive-anatomy.png",
+      "referencedInBookAs": "images/female-reproductive-anatomy.png",
+      "alt": "Figure showing female reproductive anatomy"
+    },
+    {
+      "saveAs": "images/fig6-12-early-iup-us.png",
+      "referencedInBookAs": "images/fig6-12-early-iup-us.png",
+      "alt": "Early IUP ultrasound"
+    },
+    {
+      "saveAs": "images/fig6-13-ovarian-anatomy.png",
+      "referencedInBookAs": "images/fig6-13-ovarian-anatomy.png",
+      "alt": "Figure showing simple ovarian anatomy"
+    },
+    {
+      "saveAs": "images/fig6-14-male-urinary-anatomy.png",
+      "referencedInBookAs": "images/fig6-14-male-urinary-anatomy.png",
+      "alt": "Figure showing simple male urinary anatomy"
+    },
+    {
+      "saveAs": "images/fig6-15-vertebral-anatomy.png",
+      "referencedInBookAs": "images/fig6-15-vertebral-anatomy.png",
+      "alt": "Figure showing vertebral anatomy with bulging disc"
+    },
+    {
+      "saveAs": "images/fig6-16-cerebrum-landmarks.png",
+      "referencedInBookAs": "images/fig6-16-cerebrum-landmarks.png",
+      "alt": "Figure showing functional landmarks of the cerebrum: Broca's area, Wernicke's area, motor cortex, sensory cortex, visual cortex, cerebellum"
+    },
+    {
+      "saveAs": "images/fig6-17-nih-stroke-scale.png",
+      "referencedInBookAs": "images/fig6-17-nih-stroke-scale.png",
+      "alt": "Modified NIH Stroke Scale with sections for questions, commands, gaze, visual fields, motor function, sensory, language, neglect"
+    },
+    {
+      "saveAs": "images/fig6-18-thrombotic-cva.png",
+      "referencedInBookAs": "images/fig6-18-thrombotic-cva.png",
+      "alt": "Schematic of thrombotic CVA with blood clot in a blood vessel"
+    },
+    {
+      "saveAs": "images/fig6-19-embolic-cva.png",
+      "referencedInBookAs": "images/fig6-19-embolic-cva.png",
+      "alt": "Schematic of embolic CVA"
+    },
+    {
+      "saveAs": "images/alcohol-glasses.png",
+      "referencedInBookAs": "images/alcohol-glasses.png",
+      "alt": "Photograph of two glasses of beer"
+    },
+    {
+      "saveAs": "images/breathalyzer.png",
+      "referencedInBookAs": "images/breathalyzer.png",
+      "alt": "Photograph of a breathalyzer test"
+    },
+    {
+      "saveAs": "images/suicide-prevention-lifeline.png",
+      "referencedInBookAs": "images/suicide-prevention-lifeline.png",
+      "alt": "National Suicide Prevention Lifeline logo with 1-800-273-TALK"
+    },
+    {
+      "saveAs": "images/car-accident.png",
+      "referencedInBookAs": "images/car-accident.png",
+      "alt": "Photograph of an overturned car after an accident"
+    },
+    {
+      "saveAs": "images/fig6-20-intubation.png",
+      "referencedInBookAs": "images/fig6-20-intubation.png",
+      "alt": "Figure showing orotracheal intubation"
+    },
+    {
+      "saveAs": "images/fig6-21-backboard-c-collar.png",
+      "referencedInBookAs": "images/fig6-21-backboard-c-collar.png",
+      "alt": "Figure showing EMS backboard and C-collar"
+    },
+    {
+      "saveAs": "images/fig6-22-dental-abscess.png",
+      "referencedInBookAs": "images/fig6-22-dental-abscess.png",
+      "alt": "Figure showing dental abscess"
+    },
+    {
+      "saveAs": "images/fig7-1-sdoh-template.png",
+      "referencedInBookAs": "images/fig7-1-sdoh-template.png",
+      "alt": "Screenshot of EHR template for click entry of socioeconomic determinants of health, including questions about housing, food security, and financial strain"
+    },
+    {
+      "saveAs": "images/fig7-2-mips-measures.png",
+      "referencedInBookAs": "images/fig7-2-mips-measures.png",
+      "alt": "List of available MIPS quality measures for primary care (updated 2020), including health condition management, patient safety, screening topics"
+    },
+    {
+      "saveAs": "images/fig7-3-ed-mips-measures.png",
+      "referencedInBookAs": "images/fig7-3-ed-mips-measures.png",
+      "alt": "List of available ED MIPS quality measures (updated 2020)"
+    },
+    {
+      "saveAs": "images/fig8-1-choosing-assessment.png",
+      "referencedInBookAs": "images/fig8-1-choosing-assessment.png",
+      "alt": "Screenshot of choosing an assessment in an EHR, showing search results for type 2 diabetes mellitus with various ICD-10 codes"
+    },
+    {
+      "saveAs": "images/fig8-2-narrowing-differential.png",
+      "referencedInBookAs": "images/fig8-2-narrowing-differential.png",
+      "alt": "Figure showing narrowing the differential: thousands of possibilities → after HPI → labs/imaging → discussed in CDM → final diagnosis"
+    },
+    {
+      "saveAs": "images/fig8-3-patient-portal.png",
+      "referencedInBookAs": "images/fig8-3-patient-portal.png",
+      "alt": "Screenshot of an online patient portal (MyChart) showing health summary, current health issues, medications, allergies, immunizations, preventive care"
+    }
+  ],
+  "stillMissing": []
+}
