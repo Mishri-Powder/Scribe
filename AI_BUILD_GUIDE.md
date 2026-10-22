@@ -148,6 +148,25 @@ Rule: never hand-edit the generated `scribeX.Y.html`. Edit modules, re-run
   JS libraries (violates zero-dependency single file), web fonts (offline fragility),
   canvas graph (SVG is searchable/a11y-friendly and enough for ≤~300 nodes).
 
+### 5.10 Single-file portability: broken image refs vs. asset folders
+The book source referenced `images/*.png` files that do not ship with the artifact —
+opening the built HTML from disk or downloading it standalone would show ~92 broken
+image icons. **Decision:** at extraction time, rewrite every `<img>` tag into a styled
+`.img-placeholder` span carrying its alt text (dashed border + texture), making the
+file truly self-contained. Alternative if assets are available: base64-inline them
+(costs file size) or ship the folder alongside. Add a build assertion: zero remaining
+relative `src="..."` references in the output.
+
+### 5.11 Data payload contract drift
+Three silent runtime-breaking bugs surfaced only when validating the *output*, not
+the modules: (a) an injection sentinel (`window.__APP_DATA__`) shared between the
+shell template and an assert-style scan → renamed to `window.SCRIBE_DATA`;
+(b) double-wrapped knowledge-graph payload (`{'kg': {'kg': {...}}}`) because
+`data.build()` returns `{kg, glossary, flashcards}` but the assembler re-wrapped it;
+(c) placeholder-vs-real token collision. **Lesson:** after every build, parse the
+final HTML's JSON payload and assert key shape/counts, and verify all study links
+resolve to element ids in the same document — module-level tests miss assembly bugs.
+
 ## 6. Build Validation Checklist (automated in build.py)
 - [ ] Chapter wrapper count == expected N
 - [ ] Zero hex/rgb/hsl anywhere in final HTML
@@ -155,6 +174,8 @@ Rule: never hand-edit the generated `scribeX.Y.html`. Edit modules, re-run
 - [ ] Every graph node has shape + texture + oklch hue defined
 - [ ] `app.js` parses (`node --check` or equivalent)
 - [ ] File size sanity (< ~1.5 MB)
+- [ ] Final HTML's embedded JSON parses with correct top-level keys and counts
+- [ ] Zero relative asset references (`src="..."` without `data:`) in output
 
 ## 7. Manual QA (open the built file)
 Select text near left/right/bottom edges → popup fully visible. Toggle every tab; no
