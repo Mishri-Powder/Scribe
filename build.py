@@ -5,9 +5,10 @@ import re, json, sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import data as DATA, mcqs as MCQS, css_tokens, css_book
 
-SRC = '/workspace/Scribe0.1.html'
-OUT = '/workspace/scribe0.4.html'
-HERE = os.path.dirname(os.path.abspath(__file__))
+SRC = 'Scribe0.1.html'                    # repo-root source book (v0.1)
+OUT = 'scribe0.4.html'                    # standalone single-file build
+HERE = os.path.dirname(os.path.abspath(__file__)) or '.'
+SITE_DIR = 'site'                         # GitHub Pages deploy folder
 
 src = open(SRC, encoding='utf-8').read()
 
@@ -155,7 +156,8 @@ open(OUT,'w',encoding='utf-8').write(html)
 print('wrote',OUT,len(html),'bytes')
 
 # ---- checks ----
-assert '__APP_DATA__' not in html, 'data JSON injection failed'
+assert '__DATA_JSON__' not in html, 'data JSON injection failed'
+assert 'window.__APP_DATA__=' in html, 'data bootstrap line missing'
 assert '__CSS__' not in html and '__JS__' not in html, 'shell placeholders left'
 assert html.count('<h2 class="chapter"')==9, 'expected 9 chapter h2s'
 assert html.count('class="quiz" data-ch=')==len(merged), 'quiz containers not all flagged'
@@ -164,6 +166,28 @@ for cid in MCQS.MCQS:
 src_css_left = bool(re.search(r'--quiz-bg:\s*#', html))
 print('source stylesheet leaked:', src_css_left)
 assert not src_css_left, 'old beige hex styles still present'
-hexes=re.findall(r'#[0-9a-fA-F]{3,8}\b(?![0-9a-fA-F])', re.sub(r"data:image/svg\+xml,[^'"]*",'',html))
+
+def count_hex(doc):
+    stripped = re.sub(r'data:image/svg(?:\+xml)?,[^\x27"]*', '', doc)  # svg data-URIs contain encoded hex colors
+    return re.findall(r'#[0-9a-fA-F]{3,8}(?![0-9a-fA-F])', stripped)
+
+hexes = count_hex(html)
 print('raw hex tokens remaining (excl. svg-data-uris):', len(hexes), set(hexes) if hexes else '')
+
+# ---- GitHub Pages deploy folder: site/index.html + images/ ----
+import shutil
+site_html = html.replace('<head>', '<head>\n<link rel="icon" type="image/png" href="images/favicon.png">\n<meta name="theme-color" content="#1c3557">', 1)
+assert 'images/favicon.png' in site_html
+os.makedirs(os.path.join(SITE_DIR, 'images'), exist_ok=True)
+open(os.path.join(SITE_DIR, 'index.html'), 'w', encoding='utf-8').write(site_html)
+img_src = os.path.join(HERE, 'book-images', 'images')
+img_dst = os.path.join(SITE_DIR, 'images')
+if os.path.isdir(img_src):
+    for f in os.listdir(img_src):
+        shutil.copy2(os.path.join(img_src, f), os.path.join(img_dst, f))
+refs = set(re.findall(r'src="(images/[^"]+)"', site_html))
+missing = [r for r in refs if not os.path.exists(os.path.join(SITE_DIR, r))]
+assert not missing, 'site image refs missing on disk: %s' % missing[:5]
+print('site/: index.html (%d bytes) + %d images, all %d referenced images present'
+      % (len(site_html), len(os.listdir(img_dst)), len(refs)))
 print('ALL CHECKS PASSED')

@@ -1,214 +1,381 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="icon" type="image/png" href="images/favicon.png">
+<meta name="theme-color" content="#1c3557">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Medical Note Mastery — Primary Care and Emergency Department Scribe Edition</title>
+<title>Scribe Academy v0.4</title>
 <style>
-  :root {
-    --primary: #1f3a5f;
-    --accent: #b03a2e;
-    --bg: #fdfdfb;
-    --rule: #d8d5cc;
-    --table-header: #1f3a5f;
-    --table-alt: #eef2f7;
-    --example-bg: #f4f1e8;
-    --quiz-bg: #f9f6ee;
-  }
-  * { box-sizing: border-box; }
-  body {
-    font-family: Georgia, "Times New Roman", serif;
-    line-height: 1.65;
-    color: #222;
-    background: var(--bg);
-    margin: 0;
-    padding: 0;
-  }
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem 4rem;
-  }
-  header.book-title {
-    text-align: center;
-    border-bottom: 4px double var(--primary);
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-  }
-  header.book-title h1 {
-    font-size: 2.6rem;
-    color: var(--primary);
-    margin: 0 0 0.4rem;
-    letter-spacing: 0.02em;
-  }
-  header.book-title p.subtitle {
-    font-size: 1.15rem;
-    font-style: italic;
-    margin: 0.25rem 0;
-  }
-  header.book-title p.authors {
-    font-size: 1rem;
-    margin-top: 1rem;
-    font-variant: small-caps;
-  }
-  h2.chapter {
-    font-size: 2rem;
-    color: var(--primary);
-    border-bottom: 3px solid var(--accent);
-    padding-bottom: 0.3rem;
-    margin-top: 3.5rem;
-  }
-  h3 {
-    font-size: 1.45rem;
-    color: var(--primary);
-    margin-top: 2.2rem;
-  }
-  h4 {
-    font-size: 1.15rem;
-    color: #333;
-    margin-top: 1.6rem;
-  }
-  p { margin: 0.8rem 0; }
-  ul, ol { margin: 0.6rem 0 0.6rem 1.6rem; }
-  li { margin: 0.35rem 0; }
-  blockquote.example {
-    background: var(--example-bg);
-    border-left: 5px solid var(--accent);
-    padding: 0.8rem 1.2rem;
-    margin: 1.2rem 0;
-    font-style: italic;
-    border-radius: 0 4px 4px 0;
-  }
-  blockquote.example p { margin: 0.4rem 0; }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1.4rem 0;
-    font-size: 0.92rem;
-    background: #fff;
-  }
-  caption {
-    caption-side: top;
-    text-align: left;
-    font-weight: bold;
-    font-size: 0.95rem;
-    padding-bottom: 0.4rem;
-    color: var(--primary);
-  }
-  th, td {
-    border: 1px solid var(--rule);
-    padding: 0.5rem 0.65rem;
-    vertical-align: top;
-    text-align: left;
-  }
-  thead th {
-    background: var(--table-header);
-    color: #fff;
-    font-weight: bold;
-    font-size: 0.88rem;
-  }
-  tbody tr:nth-child(even) { background: var(--table-alt); }
-  figure {
-    margin: 1.8rem 0;
-    text-align: center;
-    border: 1px solid var(--rule);
-    padding: 1rem;
-    background: #fff;
-  }
-  figure img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-  }
-  figcaption {
-    font-size: 0.88rem;
-    color: #555;
-    margin-top: 0.6rem;
-    font-style: italic;
-  }
-  .quiz {
-    background: var(--quiz-bg);
-    border: 1px solid var(--rule);
-    border-top: 6px solid var(--accent);
-    padding: 1.2rem 1.6rem;
-    margin: 2.5rem 0;
-    border-radius: 4px;
-  }
-  .quiz h3 {
-    margin-top: 0;
-    font-size: 1.25rem;
-    color: var(--accent);
-  }
-  .quiz ol { margin-left: 1.2rem; }
-  .quiz li { margin-bottom: 0.9rem; }
-  .quiz .options { list-style: lower-alpha; margin-left: 1.4rem; }
-  .quiz .options li { margin: 0.15rem 0; }
-  .answer-key {
-    font-size: 0.85rem;
-    color: #666;
-    margin-top: 0.8rem;
-    font-style: italic;
-  }
-  nav.toc {
-    background: #fff;
-    border: 1px solid var(--rule);
-    padding: 1.2rem 1.8rem;
-    margin: 2rem 0 3rem;
-    border-radius: 4px;
-  }
-  nav.toc h2 {
-    margin-top: 0;
-    border-bottom: 2px solid var(--primary);
-    padding-bottom: 0.4rem;
-  }
-  nav.toc ol { margin-left: 1rem; }
-  nav.toc ol ol { list-style: lower-alpha; margin-left: 1.6rem; }
-  nav.toc a { color: var(--primary); text-decoration: none; }
-  nav.toc a:hover { text-decoration: underline; }
-  .note-box {
-    background: #e8f0f8;
-    border-left: 5px solid var(--primary);
-    padding: 0.8rem 1.2rem;
-    margin: 1.2rem 0;
-    font-size: 0.95rem;
-  }
-  .golden-rule {
-    background: #fff4e5;
-    border: 2px solid var(--accent);
-    border-radius: 6px;
-    padding: 0.9rem 1.3rem;
-    margin: 1.2rem 0;
-    font-weight: bold;
-    color: var(--accent);
-    text-align: center;
-    font-size: 1.05rem;
-  }
-  .two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.2rem;
-  }
-  @media (max-width: 640px) {
-    .two-col { grid-template-columns: 1fr; }
-    header.book-title h1 { font-size: 1.9rem; }
-    h2.chapter { font-size: 1.55rem; }
-  }
-  hr.sep {
-    border: none;
-    border-top: 1px solid var(--rule);
-    margin: 2.2rem 0;
-  }
-  .copyright {
-    font-size: 0.85rem;
-    color: #555;
-    text-align: center;
-    margin: 2rem 0;
-  }
+/* ===== v0.4 tokens: all colors are oklch() ===== */
+:root{
+  --primary:oklch(34.7% 0.073 256.7); --accent:oklch(51.8% 0.156 29.2);
+  --bg:oklch(99.3% 0.004 95); --rule:oklch(87.3% 0.013 91.5);
+  --ink:oklch(25.2% 0.006 256); --ink-soft:oklch(45% 0.006 256);
+  --table-header:oklch(34.7% 0.073 256.7); --table-alt:oklch(96% 0.008 253.9);
+  --example-bg:oklch(95.8% 0.012 91.5); --quiz-bg:oklch(97.3% 0.011 89.7); --callout-bg:oklch(97.2% 0.023 75.9);
+  --app-bg:oklch(99.1% 0.005 95); --app-panel:oklch(100% 0 0); --app-sidebar:oklch(96.4% 0.008 95);
+  --app-text:oklch(26% 0.008 256); --app-muted:oklch(52% 0.012 256);
+  --app-accent:oklch(46% 0.13 256); --app-accent-soft:oklch(93.5% 0.028 250); --app-border:oklch(88% 0.01 95);
+  --topbar-h:56px; --shadow:0 8px 28px oklch(0% 0 0/.14);
+  --hl-yellow-ink:oklch(55% 0.13 95);   --hl-yellow-soft:oklch(93% 0.07 95);
+  --hl-green-ink:oklch(50% 0.13 152);   --hl-green-soft:oklch(93% 0.06 152);
+  --hl-blue-ink:oklch(52% 0.13 255);    --hl-blue-soft:oklch(93% 0.055 255);
+  --hl-pink-ink:oklch(55% 0.16 10);     --hl-pink-soft:oklch(93% 0.05 10);
+  --ok:oklch(55% 0.14 152); --ok-soft:oklch(95% 0.045 152); --warn:oklch(62% 0.14 85); --warn-soft:oklch(95% 0.05 95);
+  --font-scale:1; --line-gap:1.75; --track:0em;
+}
+[data-theme="dark"]{
+  --primary:oklch(78% 0.06 250); --accent:oklch(75% 0.14 35);
+  --bg:oklch(20.3% 0.012 250); --rule:oklch(32% 0.017 244.7);
+  --ink:oklch(90.9% 0.011 243.7); --ink-soft:oklch(74% 0.015 246);
+  --table-header:oklch(38% 0.06 255); --table-alt:oklch(26.5% 0.013 250);
+  --example-bg:oklch(28% 0.015 95); --quiz-bg:oklch(27% 0.014 90); --callout-bg:oklch(30% 0.03 75);
+  --app-bg:oklch(20.3% 0.012 250); --app-panel:oklch(24.5% 0.015 250); --app-sidebar:oklch(22% 0.012 250);
+  --app-text:oklch(90.9% 0.011 243.7); --app-muted:oklch(67% 0.023 246);
+  --app-accent:oklch(70.5% 0.14 250); --app-accent-soft:oklch(34.2% 0.071 251.8); --app-border:oklch(32% 0.017 244.7);
+  --shadow:0 8px 28px oklch(0% 0 0/.55);
+  --hl-yellow-ink:oklch(82% 0.11 95);  --hl-yellow-soft:oklch(30% 0.05 95);
+  --hl-green-ink:oklch(80% 0.11 152);  --hl-green-soft:oklch(29% 0.05 152);
+  --hl-blue-ink:oklch(80% 0.10 255);   --hl-blue-soft:oklch(29% 0.05 255);
+  --hl-pink-ink:oklch(80% 0.12 10);    --hl-pink-soft:oklch(30% 0.05 10);
+  --ok:oklch(72% 0.13 152); --ok-soft:oklch(30% 0.06 152); --warn:oklch(80% 0.13 91); --warn-soft:oklch(30% 0.06 91);
+}
+
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:calc(var(--topbar-h) + 16px)}
+body{margin:0;background:var(--app-bg);color:var(--app-text);
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+ font-size:calc(15px * var(--font-scale));line-height:1.5;-webkit-font-smoothing:antialiased}
+/* fine grain texture on every surface — light and dark */
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.42 0 0 0 0 0.35 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+[data-theme="dark"] body::before{opacity:.9;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.75 0 0 0 0 0.8 0 0 0 0 0.9 0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+button{font-family:inherit;font-size:inherit;color:inherit}
+input,select{font-family:inherit;font-size:inherit}
+::selection{background:var(--hl-blue-soft);color:var(--ink)}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:100;height:var(--topbar-h);display:flex;align-items:center;gap:10px;
+ padding:0 14px;background:var(--app-panel);border-bottom:1px solid var(--app-border);box-shadow:0 1px 0 oklch(0% 0 0/.03)}
+.icon-btn{width:36px;height:36px;border-radius:9px;border:1px solid transparent;background:transparent;
+ display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex:none}
+.icon-btn:hover{background:var(--app-accent-soft);border-color:var(--app-border)}
+.icon-btn svg{width:20px;height:20px;display:block;stroke:currentColor}
+.search-wrap{flex:1;max-width:560px;margin:0 auto;position:relative}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:17px;height:17px;stroke:var(--app-muted);pointer-events:none}
+#search-input{width:100%;padding:9px 66px 9px 36px;border-radius:10px;border:1px solid var(--app-border);
+ background:var(--app-bg);color:var(--app-text);outline:none}
+#search-input:focus{border-color:var(--app-accent);box-shadow:0 0 0 3px oklch(46% 0.13 256/.18)}
+#search-shortcut{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--app-muted);
+ border:1px solid var(--app-border);border-radius:5px;padding:1px 6px;background:var(--app-panel);pointer-events:none}
+.results-pop{position:absolute;top:calc(100% + 8px);left:0;right:0;max-height:min(60vh,480px);overflow-y:auto;
+ background:var(--app-panel);border:1px solid var(--app-border);border-radius:12px;box-shadow:var(--shadow);display:none;z-index:200;padding:6px}
+.results-pop.open{display:block}
+.result-item{padding:9px 12px;border-radius:8px;cursor:pointer;border-left:3px solid transparent}
+.result-item.sel{background:var(--app-accent-soft);border-left-color:var(--app-accent)}
+.result-title{font-weight:600}.result-context{font-size:12px;color:var(--app-muted);margin-top:2px}
+mark{background:var(--warn-soft);color:inherit;padding:0 1px;border-radius:3px}
+.progress-bar{position:absolute;left:0;bottom:-1px;height:3px;width:0;background:linear-gradient(90deg,var(--app-accent),var(--accent));transition:width .15s}
+
+/* ---------- sidebar / TOC ---------- */
+.sidebar{position:fixed;top:var(--topbar-h);left:0;bottom:0;width:280px;z-index:90;
+ background:var(--app-sidebar);border-right:1px solid var(--app-border);overflow-y:auto;
+ transform:translateX(-100%);transition:transform .2s ease}
+.sidebar.open{transform:translateX(0)}
+.toc-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--app-border)}
+.toc-title{font-weight:700;text-transform:uppercase;font-size:12px;letter-spacing:.08em;color:var(--app-muted)}
+.toc-close{background:none;border:none;font-size:20px;line-height:1;cursor:pointer;color:var(--app-muted);padding:2px 8px;border-radius:6px}
+.toc-close:hover{background:var(--app-accent-soft)}
+.toc-list,.toc-sublist{list-style:none;margin:0;padding:6px}
+.toc-sublist{padding:0 6px 6px 10px}
+.toc-link{display:block;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--app-text);font-size:14px;cursor:pointer;border-left:3px solid transparent}
+.toc-link:hover{background:var(--app-accent-soft)}
+.toc-link.active{background:var(--app-accent-soft);border-left-color:var(--app-accent);font-weight:600}
+.toc-chapter-label{display:flex;align-items:center;gap:8px}
+.toc-num{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:20px;border-radius:6px;
+ background:var(--app-accent-soft);color:var(--app-accent);font-size:11px;font-weight:700;padding:0 5px}
+.toc-section-link{font-size:13px;color:var(--app-muted);padding:6px 10px 6px 14px}
+.toc-section-link:hover{color:var(--app-text)}
+.overlay{position:fixed;inset:var(--topbar-h) 0 0 0;background:oklch(0% 0 0/.35);z-index:85;opacity:0;visibility:hidden;transition:opacity .2s}
+.overlay.visible{opacity:1;visibility:visible}
+
+/* ---------- views ---------- */
+.view{display:none;position:relative;z-index:1}
+.view.active{display:block}
+#book-view.active{display:flex}
+.book-container{flex:1;min-width:0;display:flex;justify-content:center;padding:26px 18px 90px}
+.paper{max-width:860px;width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--rule);border-radius:14px;
+ box-shadow:0 10px 34px oklch(0% 0 0/.10);padding:clamp(22px,4.5vw,52px);position:relative}
+[data-theme="dark"] .paper{box-shadow:0 10px 34px oklch(0% 0 0/.5);border-color:var(--rule)}
+
+/* ---------- book typography ---------- */
+.paper h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.9rem,4vw,2.5rem);line-height:1.15;
+ letter-spacing:-.01em;margin:.2em 0 .8em;text-align:center;color:var(--primary)}
+.paper h2{font-family:Georgia,serif;font-size:calc(1.45rem * var(--font-scale));margin:2.2em 0 .7em;padding-bottom:.25em;
+ border-bottom:2px solid var(--primary);color:var(--primary)}
+.paper h3{font-family:Georgia,serif;font-size:calc(1.12rem * var(--font-scale));margin:1.7em 0 .5em;color:var(--primary)}
+.paper p{margin:.7em 0;line-height:var(--line-gap);letter-spacing:var(--track)}
+.paper ul,.paper ol{margin:.7em 0;padding-left:1.6em;line-height:var(--line-gap)}
+.paper li{margin:.3em 0}
+.paper a{color:var(--app-accent)}
+.paper b,.paper strong{color:var(--primary)}
+hr{border:none;border-top:1px solid var(--rule);margin:2em 0}
+.chapter{margin-bottom:3.2rem}
+.page-break{page-break-before:always}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:1.2em 0;font-size:calc(.95em * var(--font-scale))}
+th{background:var(--table-header);color:oklch(98% 0.005 95);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink);background:var(--bg)}
+tr:nth-child(even) td{background:var(--table-alt)}
+[data-theme="dark"] td,[data-theme="dark"] tr:nth-child(even) td{color:var(--ink)}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--rule);border-radius:10px;padding:2px 6px;background:var(--bg)}
+.table-scroll table{border:0;margin:.4em 0}
+@media(max-width:760px){ th,td{padding:6px 8px;font-size:.88em} }
+
+/* ---------- examples / callouts ---------- */
+.example-block{background:var(--example-bg);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;
+ padding:14px 18px;margin:1.2em 0;position:relative}
+.example-block::after{content:"";position:absolute;inset:0;border-radius:0 10px 10px 0;pointer-events:none;
+ background-image:repeating-linear-gradient(135deg,oklch(51.8% 0.156 29.2/.05) 0 6px,transparent 6px 12px)}
+.example-block p{margin:.35em 0}
+.example-block ol,.example-block ul{margin:.35em 0}
+.example-label{display:inline-block;background:var(--accent);color:oklch(99% 0.004 95);font-size:11px;font-weight:700;
+ letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:6px;margin-bottom:8px}
+.callout{background:var(--callout-bg);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;padding:12px 16px;margin:1.1em 0}
+.callout b{color:var(--warn)}
+
+/* ---------- figures ---------- */
+.figure{margin:1.4em 0;text-align:center}
+.figure img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--rule);background:var(--panel)}
+.img-placeholder{border:2px dashed var(--rule);background:repeating-linear-gradient(45deg,var(--example-bg) 0 12px,var(--bg) 12px 24px);
+ min-height:150px;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);border-radius:8px;padding:14px;font-size:.9em}
+.caption{font-size:.85em;color:var(--ink-soft);margin-top:8px;font-style:italic}
+
+/* ---------- quiz blocks in book ---------- */
+.quiz{background:var(--quiz-bg);border:1px solid var(--rule);border-radius:12px;padding:18px 22px;margin:2em 0;position:relative}
+.quiz::before{content:"";position:absolute;inset:0;border-radius:12px;pointer-events:none;
+ background-image:radial-gradient(oklch(52% 0.012 256/.10) 1px,transparent 1.4px);background-size:14px 14px}
+.quiz h4{margin:.2em 0 1em;font-family:Georgia,serif;font-size:1.15em;color:var(--primary)}
+.quiz ol{padding-left:1.3em}
+.quiz > ol > li{margin-bottom:1.15em;line-height:1.55}
+.quiz .options{list-style:upper-alpha;margin:.4em 0 0;padding-left:1.5em}
+.quiz .options li{margin:.15em 0}
+
+/* ---------- interactive MCQ mode ---------- */
+.mcq-opt{display:flex;align-items:flex-start;gap:10px;width:100%;text-align:left;background:var(--bg);
+ border:1px solid var(--rule);border-radius:9px;padding:9px 12px;margin:6px 0;cursor:pointer;transition:transform .08s;position:relative;z-index:1}
+.mcq-opt:hover:not(:disabled){border-color:var(--app-accent);transform:translateX(3px)}
+.mcq-opt .mcq-key{font-weight:700;color:var(--app-muted);flex:none}
+.mcq-opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+.mcq-opt.correct .mcq-key{color:var(--ok)}
+.mcq-opt.wrong{border-color:var(--warn);background:var(--warn-soft)}
+.mcq-opt.dim{opacity:.55}
+.mcq-opt:disabled{cursor:default}
+.mcq-explain{display:none;margin:8px 0 2px;padding:10px 12px;border-radius:8px;background:var(--example-bg);
+ border-left:3px solid var(--app-accent);font-size:.92em;position:relative;z-index:1}
+.mcq-explain.show{display:block}
+.mcq-links{margin-top:7px;display:flex;flex-wrap:wrap;gap:6px}
+.mcq-link{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--app-border);background:var(--app-panel);
+ color:var(--app-accent);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.mcq-link:hover{background:var(--app-accent-soft)}
+.mcq-foot{display:flex;align-items:center;gap:14px;margin-top:14px;flex-wrap:wrap;position:relative;z-index:1}
+.mcq-score{font-weight:700;color:var(--app-muted);font-size:13px}
+.mcq-reset{font-size:13px;padding:5px 12px;border-radius:8px;border:1px solid var(--app-border);background:var(--app-panel);cursor:pointer}
+.mcq-reset:hover{background:var(--app-accent-soft)}
+
+/* ---------- highlights: texture + tint + stripe ---------- */
+.hl-yellow,.hl-green,.hl-blue,.hl-pink{padding:.06em .3em;border-radius:.32em;box-decoration-break:clone;-webkit-box-decoration-break:clone;cursor:pointer}
+.hl-yellow{background-color:var(--hl-yellow-soft);color:var(--hl-yellow-ink);
+ background-image:repeating-linear-gradient(45deg,oklch(55% 0.13 95/.16) 0 2px,transparent 2px 6px);
+ border-bottom:2px solid var(--hl-yellow-ink)}
+.hl-green{background-color:var(--hl-green-soft);color:var(--hl-green-ink);
+ background-image:radial-gradient(oklch(50% 0.13 152/.28) 1px,transparent 1.6px);background-size:7px 7px;
+ border-bottom:2px dotted var(--hl-green-ink)}
+.hl-blue{background-color:var(--hl-blue-soft);color:var(--hl-blue-ink);
+ background-image:linear-gradient(oklch(52% 0.13 255/.14) 1px,transparent 1px),linear-gradient(90deg,oklch(52% 0.13 255/.14) 1px,transparent 1px);
+ background-size:7px 7px;border-bottom:2px solid var(--hl-blue-ink)}
+.hl-pink{background-color:var(--hl-pink-soft);color:var(--hl-pink-ink);
+ background-image:repeating-linear-gradient(-45deg,oklch(55% 0.16 10/.15) 0 3px,transparent 3px 8px);
+ border-bottom:2px dashed var(--hl-pink-ink)}
+[data-theme="dark"] .hl-yellow{background-image:repeating-linear-gradient(45deg,oklch(82% 0.11 95/.13) 0 2px,transparent 2px 6px)}
+[data-theme="dark"] .hl-green{background-image:radial-gradient(oklch(80% 0.11 152/.22) 1px,transparent 1.6px)}
+[data-theme="dark"] .hl-blue{background-image:linear-gradient(oklch(80% 0.1 255/.12) 1px,transparent 1px),linear-gradient(90deg,oklch(80% 0.1 255/.12) 1px,transparent 1px)}
+[data-theme="dark"] .hl-pink{background-image:repeating-linear-gradient(-45deg,oklch(80% 0.12 10/.13) 0 3px,transparent 3px 8px)}
+.hl-current{outline:2px solid currentColor;outline-offset:1px}
+
+/* ---------- popup menu (roomy, textured swatches) ---------- */
+.popup-menu{position:absolute;z-index:1000;background:var(--app-panel);border:1px solid var(--app-border);
+ border-radius:14px;box-shadow:var(--shadow);padding:10px;display:none;min-width:236px}
+.popup-menu.open{display:block}
+.pm-row{display:flex;gap:8px;padding:4px 2px;flex-wrap:nowrap}
+.pm-swatch{flex:1;min-width:44px;height:40px;border-radius:9px;border:1px solid var(--app-border);cursor:pointer;position:relative;padding:0}
+.pm-swatch:hover{transform:scale(1.06)}
+.pm-swatch[data-color="yellow"]{background-color:var(--hl-yellow-soft);background-image:repeating-linear-gradient(45deg,oklch(55% 0.13 95/.35) 0 2px,transparent 2px 6px)}
+.pm-swatch[data-color="green"]{background-color:var(--hl-green-soft);background-image:radial-gradient(oklch(50% 0.13 152/.45) 1.2px,transparent 1.8px);background-size:7px 7px}
+.pm-swatch[data-color="blue"]{background-color:var(--hl-blue-soft);background-image:linear-gradient(oklch(52% 0.13 255/.3) 1px,transparent 1px),linear-gradient(90deg,oklch(52% 0.13 255/.3) 1px,transparent 1px);background-size:7px 7px}
+.pm-swatch[data-color="pink"]{background-color:var(--hl-pink-soft);background-image:repeating-linear-gradient(-45deg,oklch(55% 0.16 10/.35) 0 3px,transparent 3px 8px)}
+.pm-swatch .pm-name{position:absolute;bottom:2px;left:0;right:0;font-size:9px;font-weight:700;color:var(--ink-soft);text-align:center}
+.pm-note{display:flex;align-items:center;gap:7px;width:100%;text-align:left;background:var(--example-bg);border:1px solid var(--rule);
+ border-radius:9px;padding:8px 10px;margin-top:6px;cursor:pointer;font-size:13px}
+.pm-note:hover{border-color:var(--app-accent)}
+.pm-note i{width:10px;height:10px;border-radius:3px;background:var(--warn);flex:none;transform:rotate(45deg)}
+.pm-danger{width:100%;margin-top:6px;padding:8px;border-radius:9px;border:1px solid var(--rule);background:var(--bg);cursor:pointer;font-size:13px;color:var(--accent)}
+.pm-danger:hover{background:var(--warn-soft);border-color:var(--warn)}
+.pm-divider{height:1px;background:var(--app-border);margin:8px 0}
+.pm-count{font-size:11px;color:var(--app-muted);padding:2px 4px}
+
+/* ---------- notes panel ---------- */
+.notes-panel{position:fixed;top:var(--topbar-h);right:0;bottom:0;width:min(380px,92vw);z-index:95;background:var(--app-panel);
+ border-left:1px solid var(--app-border);box-shadow:var(--shadow);transform:translateX(100%);transition:transform .2s ease;
+ overflow-y:auto;padding:16px}
+.notes-panel.open{transform:translateX(0)}
+.np-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.np-title{font-weight:700;font-size:15px}
+.note-card{border:1px solid var(--rule);border-radius:10px;padding:10px 12px;margin-bottom:10px;background:var(--bg)}
+.note-quote{font-size:13px;font-style:italic;color:var(--ink-soft);border-left:3px solid var(--warn);padding-left:8px;margin-bottom:6px;
+ display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.note-meta{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--app-muted)}
+.note-jump{margin-left:auto;font-size:12px;padding:3px 9px;border-radius:7px;border:1px solid var(--app-border);background:var(--app-panel);cursor:pointer;color:var(--app-accent)}
+.note-jump:hover{background:var(--app-accent-soft)}
+.note-del{border:none;background:none;color:var(--app-muted);cursor:pointer;font-size:14px;padding:2px 6px;border-radius:6px}
+.note-del:hover{color:var(--accent);background:var(--warn-soft)}
+.np-empty{color:var(--app-muted);font-size:13px;text-align:center;padding:30px 10px}
+
+/* ---------- graph view ---------- */
+.graph-toolbar{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--app-panel);border-bottom:1px solid var(--app-border);flex-wrap:wrap}
+.graph-search{position:relative;flex:1;max-width:420px}
+.graph-search input{width:100%;padding:9px 34px 9px 34px;border-radius:10px;border:1px solid var(--app-border);background:var(--app-bg);color:var(--app-text);outline:none}
+.graph-search input:focus{border-color:var(--app-accent);box-shadow:0 0 0 3px oklch(46% 0.13 256/.18)}
+.graph-search .gs-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--app-muted)}
+.graph-search .gs-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:none;background:none;color:var(--app-muted);cursor:pointer;font-size:16px;display:none}
+.gs-count{font-size:12px;color:var(--app-muted);white-space:nowrap}
+.graph-typefilters{display:flex;gap:6px;flex-wrap:wrap}
+.tf-chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:5px 10px;border-radius:999px;border:1px solid var(--app-border);
+ background:var(--app-panel);cursor:pointer;user-select:none;color:var(--app-text)}
+.tf-chip .tf-dot{width:11px;height:11px;flex:none;border:1px solid oklch(0% 0 0/.25)}
+.tf-chip.off{opacity:.4;filter:saturate(.2)}
+.graph-canvas-wrap{position:relative;height:calc(100vh - var(--topbar-h) - 132px);min-height:420px;background:var(--app-bg);overflow:hidden}
+.graph-svg{width:100%;height:100%;display:block;cursor:grab}
+.graph-svg.grabbing{cursor:grabbing}
+.node-shape{stroke-width:1.6;cursor:pointer}
+.node-label{font-size:10.5px;fill:var(--app-text);pointer-events:none;text-anchor:middle;paint-order:stroke;
+ stroke:var(--app-bg);stroke-width:3px;stroke-linejoin:round}
+.node.hidden{display:none}
+.link.dimmed{opacity:.08}.node.dimmed{opacity:.15}
+.node.match .node-shape{stroke-width:3}
+.graph-controls{position:absolute;right:14px;bottom:14px;display:flex;flex-direction:column;gap:6px}
+.graph-controls button{width:38px;height:38px;border-radius:9px;border:1px solid var(--app-border);background:var(--app-panel);cursor:pointer;font-size:17px;color:var(--app-text)}
+.graph-controls button:hover{background:var(--app-accent-soft)}
+.node-info{position:absolute;left:14px;bottom:14px;max-width:min(420px,80%);background:var(--app-panel);border:1px solid var(--app-border);
+ border-radius:12px;box-shadow:var(--shadow);padding:14px 16px;display:none;z-index:5}
+.node-info.open{display:block}
+.ni-title{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ni-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:999px;border:1px solid var(--app-border)}
+.ni-desc{font-size:13px;color:var(--app-muted);margin:8px 0;line-height:1.5}
+.ni-links{font-size:12.5px;margin-bottom:10px;color:var(--app-text)}
+.ni-btns{display:flex;gap:8px;flex-wrap:wrap}
+.ni-btn{font-size:13px;padding:7px 13px;border-radius:9px;border:1px solid var(--app-border);background:var(--app-bg);cursor:pointer;color:var(--app-text)}
+.ni-btn.primary{background:var(--app-accent);color:oklch(99% 0.004 95);border-color:var(--app-accent)}
+.ni-btn:hover{filter:brightness(1.06)}
+.ni-close{position:absolute;top:8px;right:10px;border:none;background:none;font-size:18px;cursor:pointer;color:var(--app-muted)}
+
+/* ---------- other panels ---------- */
+.panel-view{max-width:1060px;margin:0 auto;padding:26px 18px 80px}
+.pv-title{font-family:Georgia,serif;font-size:1.7rem;color:var(--primary);margin:0 0 6px}
+.pv-sub{color:var(--app-muted);margin:0 0 22px;font-size:14px}
+.flash-wrap{max-width:640px;margin:0 auto}
+.flash-card{background:var(--app-panel);border:1px solid var(--app-border);border-radius:16px;box-shadow:var(--shadow);
+ min-height:260px;display:flex;align-items:center;justify-content:center;padding:30px;cursor:pointer;position:relative;text-align:center}
+.flash-card .fc-face{font-size:1.25rem;line-height:1.5;color:var(--app-text)}
+.flash-card .fc-back{font-size:1.05rem;color:var(--ink);background:var(--example-bg);border-radius:10px;padding:16px 18px;text-align:left}
+.fc-tag{position:absolute;top:12px;left:14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--app-accent)}
+.fc-hint{position:absolute;bottom:10px;right:16px;font-size:11px;color:var(--app-muted)}
+.flash-nav{display:flex;justify-content:center;gap:10px;margin-top:16px;align-items:center}
+.flash-nav button{padding:8px 16px;border-radius:9px;border:1px solid var(--app-border);background:var(--app-panel);cursor:pointer;color:var(--app-text)}
+.flash-nav button:hover{background:var(--app-accent-soft)}
+.flash-progress{font-size:13px;color:var(--app-muted);min-width:70px;text-align:center}
+.gloss-search{width:100%;max-width:420px;padding:9px 14px;border-radius:10px;border:1px solid var(--app-border);background:var(--app-panel);color:var(--app-text);outline:none;margin-bottom:18px}
+.gloss-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.gloss-card{background:var(--app-panel);border:1px solid var(--app-border);border-radius:12px;padding:14px 16px}
+.gloss-term{font-weight:700;color:var(--primary);margin-bottom:4px}
+.gloss-def{font-size:13.5px;color:var(--app-muted);line-height:1.55}
+.mcq-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.mcq-chip{padding:7px 14px;border-radius:999px;border:1px solid var(--app-border);background:var(--app-panel);cursor:pointer;font-size:13px;color:var(--app-text)}
+.mcq-chip.active{background:var(--app-accent);color:oklch(99% 0.004 95);border-color:var(--app-accent)}
+.mcq-chip .chip-score{opacity:.75;font-size:11px;margin-left:5px}
+.mcq-book{background:var(--app-panel);border:1px solid var(--app-border);border-radius:16px;padding:22px clamp(14px,3vw,28px)}
+.settings-group{background:var(--app-panel);border:1px solid var(--app-border);border-radius:14px;padding:18px 20px;margin-bottom:16px;max-width:640px}
+.sg-title{font-weight:700;margin:0 0 14px;color:var(--primary)}
+.sg-row{display:flex;align-items:center;gap:14px;margin:10px 0;flex-wrap:wrap}
+.sg-row label{min-width:150px;font-size:14px}
+.sg-row output{font-size:13px;color:var(--app-muted);min-width:56px}
+input[type=range]{flex:1;accent-color:var(--app-accent)}
+select{padding:7px 10px;border-radius:8px;border:1px solid var(--app-border);background:var(--app-bg);color:var(--app-text)}
+.danger-btn{padding:8px 14px;border-radius:9px;border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer}
+.danger-btn:hover{background:var(--warn-soft)}
+kbd{border:1px solid var(--app-border);border-bottom-width:2px;border-radius:5px;padding:1px 6px;font-size:12px;background:var(--app-bg)}
+.shortcuts-table td{border-bottom:1px solid var(--rule);padding:6px 10px;background:transparent}
+.shortcuts-table tr:nth-child(even) td{background:var(--table-alt)}
+
+@media print{
+ .topbar,.sidebar,.overlay,.notes-panel,.popup-menu{display:none!important}
+ #book-view.active{display:block}
+ .book-container{padding:0}.paper{border:0;box-shadow:none;max-width:100%}
+ body::before{display:none}
+}
+@media(max-width:640px){
+ .search-wrap{margin:0 4px}#search-shortcut{display:none}
+ .graph-canvas-wrap{height:calc(100vh - var(--topbar-h) - 190px)}
+}
 </style>
 </head>
 <body>
+<div class="topbar">
+  <button id="menu-toggle" class="icon-btn" aria-label="Toggle sidebar"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="search-input" type="text" placeholder="Search notes, graph, glossary…" autocomplete="off" spellcheck="false" aria-label="Search">
+    <span id="search-shortcut">Ctrl K</span>
+    <div id="search-results" class="results-pop" role="listbox"></div>
+  </div>
+  <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme"><svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg></button>
+  <button id="notes-panel-toggle" class="icon-btn" aria-label="Notes"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg><span id="notes-count" style="display:none;font-size:11px;font-weight:700;background:var(--app-accent);color:oklch(99% 0 0);border-radius:999px;padding:1px 6px;margin-left:2px"></span></button>
+</div>
+
+<div class="sidebar" id="sidebar">
+  <div class="toc-header"><span class="toc-title">Contents</span><button class="toc-close" id="toc-close" aria-label="Close">×</button></div>
+  <ul class="toc-list" id="toc-list"></ul>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<div class="notes-panel" id="notes-panel">
+  <div class="np-head"><span class="np-title">Highlights &amp; Notes</span><button class="toc-close" id="notes-close" aria-label="Close">×</button></div>
+  <div id="notes-list"></div>
+</div>
+
+<div class="popup-menu" id="popup-menu">
+  <div class="pm-row">
+    <button class="pm-swatch" data-color="yellow" title="Yellow hatch"><span class="pm-name">Key fact</span></button>
+    <button class="pm-swatch" data-color="green" title="Green dots"><span class="pm-name">Definition</span></button>
+    <button class="pm-swatch" data-color="blue" title="Blue grid"><span class="pm-name">Procedure</span></button>
+    <button class="pm-swatch" data-color="pink" title="Pink stripes"><span class="pm-name">Watch out</span></button>
+  </div>
+  <div class="pm-divider"></div>
+  <button class="pm-note" id="pm-add-note"><i></i> Add note…</button>
+  <button class="pm-danger" id="pm-remove-highlight">Remove highlight</button>
+  <div class="pm-divider"></div>
+  <span class="pm-count" id="pm-count"></span>
+</div>
+
+<main>
+  <section class="view active" id="book-view">
+    <div class="book-container"><div class="paper" id="book-content">
 <div class="container">
+
 
 <!-- ============================= TITLE PAGE ============================= -->
 <header class="book-title">
@@ -352,7 +519,7 @@
 </nav>
 
 <!-- ============================= CHAPTER 1 ============================= -->
-<h2 class="chapter" id="ch1">1. Introduction</h2>
+<div class="chapter" id="ch1"><h2 class="chapter" id="ch1">1. Introduction</h2>
 
 <h3 id="ch1-scribe">The Medical Scribe Role</h3>
 <p>Up until the 1990s, medical scribes did not exist to much extent. Healthcare providers documented notes by hand, which were often illegible. With the “tech boom” in the 1990s and the advance of computing and the internet, it became appealing to use technology to record and share patient information. With more data being recorded, more regulatory agencies began to collect data and associate data with reimbursement. To incentivize the use of electronic health records (EHRs), government payors began offering subsidies to organizations that adopted them. However, there was a catch to obtaining these funds: medical documentation needed to include even more components. Healthcare providers became more and more frustrated with how much time they spent on charts, so the scribe industry began.</p>
@@ -463,50 +630,13 @@
 
 <p>Last but not least, when in doubt, ask a supervisor! HIPAA requires that facilities have a privacy officer in charge of monitoring compliance, and that expert can address more specific concerns.</p>
 
-<div class="quiz" id="ch1-quiz">
+<div class="quiz" data-ch="ch1" id="ch1-quiz">
   <h3>End of Chapter Quiz — Chapter 1</h3>
-  <ol>
-    <li>Which of the following is considered PHI?
-      <ol class="options">
-        <li>Patient’s name</li>
-        <li>Patient’s phone number</li>
-        <li>Patient’s address</li>
-        <li>All of the above</li>
-      </ol>
-    </li>
-    <li>Which of the following actions is a scribe prohibited from performing?
-      <ol class="options">
-        <li>Documenting all performed elements of the physical exam</li>
-        <li>Writing the final clinical decision making and assessment dictated by the provider</li>
-        <li>Relaying verbal orders to nursing staff</li>
-        <li>Alerting the physician if a patient’s chart is incomplete</li>
-      </ol>
-    </li>
-    <li>PHI can never be accessed without a patient’s consent.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>What does PHI stand for?
-      <ol class="options">
-        <li>Protected health information</li>
-        <li>Patient heart information</li>
-        <li>Protected human information</li>
-        <li>Patient health information</li>
-      </ol>
-    </li>
-    <li>Scribes are certified just like other healthcare providers.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>Since scribes are a nationally-standardized role, scribe positions are the same from one employer to another.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>To be on the safe side, scribes should avoid discussing work-related topics on social media.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-  </ol>
-</div>
+  <ol><li>Which of the following is considered PHI?<ol class="options"><li>Patient’s name</li><li>Patient’s phone number</li><li>Patient’s address</li><li>All of the above</li></ol></li><li>Which of the following actions is a scribe prohibited from performing?<ol class="options"><li>Documenting all performed elements of the physical exam</li><li>Writing the final clinical decision making and assessment dictated by the provider</li><li>Relaying verbal orders to nursing staff</li><li>Alerting the physician if a patient’s chart is incomplete</li></ol></li><li>PHI can never be accessed without a patient’s consent.<ol class="options"><li>True</li><li>False</li></ol></li><li>What does PHI stand for?<ol class="options"><li>Protected health information</li><li>Patient heart information</li><li>Protected human information</li><li>Patient health information</li></ol></li><li>Scribes are certified just like other healthcare providers.<ol class="options"><li>True</li><li>False</li></ol></li><li>Since scribes are a nationally-standardized role, scribe positions are the same from one employer to another.<ol class="options"><li>True</li><li>False</li></ol></li><li>To be on the safe side, scribes should avoid discussing work-related topics on social media.<ol class="options"><li>True</li><li>False</li></ol></li></ol>
+
 
 <!-- ============================= CHAPTER 2 ============================= -->
-<h2 class="chapter" id="ch2">2. Medical Terminology</h2>
+</div><div class="chapter" id="ch2"><h2 class="chapter" id="ch2">2. Medical Terminology</h2>
 
 <p>This chapter has two major parts: terminology related to anatomy and kinesiology, and terminology broken down into its root pieces. These two sections form the foundation of medical terminology and allow accurate and concise descriptions of the human body for physical exam documentation. Depending on the medical specialty, the amount of terminology required for documentation varies greatly, as one might expect if comparing psychiatry to sports medicine. We intend to set some groundwork, but most documentation assistants will acquire additional terminology on-the-job.</p>
 
@@ -902,54 +1032,13 @@
   </tbody>
 </table>
 
-<div class="quiz" id="ch2-quiz">
+<div class="quiz" data-ch="ch2" id="ch2-quiz">
   <h3>End of Chapter Quiz — Chapter 2</h3>
-  <ol>
-    <li>Which term best describes the location of the big toe on the foot?
-      <ol class="options"><li>Medial</li><li>Lateral</li><li>Proximal</li><li>Ventral</li></ol>
-    </li>
-    <li>Palms of the hand and soles of the feet can be described by which term?
-      <ol class="options"><li>Distal</li><li>Dorsal</li><li>Volar</li><li>Posterior</li></ol>
-    </li>
-    <li>The belly button is more technically known by which term?
-      <ol class="options"><li>Epigastric region</li><li>Pubis</li><li>Periumbilical region</li><li>Umbilicus</li></ol>
-    </li>
-    <li>True or False: the knee is distal to the foot.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>True or False: the thumb is located on the ulnar aspect of the hand.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>The back of the head is more technically known as which part of the scalp?
-      <ol class="options"><li>Occipital</li><li>Temporal</li><li>Parietal</li><li>Frontal</li></ol>
-    </li>
-    <li>Which description below best describes the location of a fingerprint?
-      <ol class="options"><li>Proximal volar phalanx</li><li>Proximal dorsal phalanx</li><li>Distal volar phalanx</li><li>Distal plantar phalanx</li></ol>
-    </li>
-    <li>The ribs connect to the sternum via which anatomical structure? <em>(open answer)</em></li>
-    <li>Which term is NOT an anterior landmark?
-      <ol class="options"><li>Acromioclavicular joint</li><li>Sternum</li><li>Clavicles</li><li>Costovertebral angle</li></ol>
-    </li>
-    <li>The term <em>-sclerosis</em> refers to softening.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>Which term describes low central abdominal pain?
-      <ol class="options"><li>Suprapubic</li><li>Umbilical</li><li>Supraumbilical</li><li>Periumbilical</li></ol>
-    </li>
-    <li>Which root word refers to the liver?
-      <ol class="options"><li>Cardio</li><li>Nephro</li><li>Hepat</li><li>Dermat</li></ol>
-    </li>
-    <li>What is the medical term for the “groin” area?
-      <ol class="options"><li>Suprapubic</li><li>Periumbilical</li><li>Inguinal</li><li>Femoral</li></ol>
-    </li>
-    <li>The abbreviation “prn” means “as needed.”
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-  </ol>
-</div>
+  <ol><li>Which term best describes the location of the big toe on the foot?<ol class="options"><li>Medial</li><li>Lateral</li><li>Proximal</li><li>Ventral</li></ol></li><li>Palms of the hand and soles of the feet can be described by which term?<ol class="options"><li>Distal</li><li>Dorsal</li><li>Volar</li><li>Posterior</li></ol></li><li>The belly button is more technically known by which term?<ol class="options"><li>Epigastric region</li><li>Pubis</li><li>Periumbilical region</li><li>Umbilicus</li></ol></li><li>True or False: the knee is distal to the foot.<ol class="options"><li>True</li><li>False</li></ol></li><li>True or False: the thumb is located on the ulnar aspect of the hand.<ol class="options"><li>True</li><li>False</li></ol></li><li>The back of the head is more technically known as which part of the scalp?<ol class="options"><li>Occipital</li><li>Temporal</li><li>Parietal</li><li>Frontal</li></ol></li><li>Which description below best describes the location of a fingerprint?<ol class="options"><li>Proximal volar phalanx</li><li>Proximal dorsal phalanx</li><li>Distal volar phalanx</li><li>Distal plantar phalanx</li></ol></li><li>Which term is NOT an anterior landmark?<ol class="options"><li>Acromioclavicular joint</li><li>Sternum</li><li>Clavicles</li><li>Costovertebral angle</li></ol></li><li>The term -sclerosis refers to softening.<ol class="options"><li>True</li><li>False</li></ol></li><li>Which term describes low central abdominal pain?<ol class="options"><li>Suprapubic</li><li>Umbilical</li><li>Supraumbilical</li><li>Periumbilical</li></ol></li><li>Which root word refers to the liver?<ol class="options"><li>Cardio</li><li>Nephro</li><li>Hepat</li><li>Dermat</li></ol></li><li>What is the medical term for the “groin” area?<ol class="options"><li>Suprapubic</li><li>Periumbilical</li><li>Inguinal</li><li>Femoral</li></ol></li><li>The abbreviation “prn” means “as needed.”<ol class="options"><li>True</li><li>False</li></ol></li></ol>
+
 
 <!-- ============================= CHAPTER 3 ============================= -->
-<h2 class="chapter" id="ch3">3. The Subjective Sections</h2>
+</div><div class="chapter" id="ch3"><h2 class="chapter" id="ch3">3. The Subjective Sections</h2>
 
 <p>The primary responsibility of the medical scribe is to create the medical note based on what is observed and heard during the patient visit. Most scribes will type this note in real-time into the EHR on a laptop, as the provider is interviewing and examining the patient. In other situations, the scribe may hand-write notes on a clipboard in the patient’s room, and then transfer them into the EHR immediately afterward.</p>
 
@@ -1538,35 +1627,13 @@
 
 <p>Now that we have collected all of the information needed from the subjective section, the provider will move on to the physical exam. This may be the point in the visit where the provider gets up from a chair to perform the exam, which is your clue to change gears. However, most providers will continue to ask historical questions concurrently with the exam to keep conversation going, so your note-taking will need to bounce back and forth between the Subjective and Objective sections.</p>
 
-<div class="quiz" id="ch3-quiz">
+<div class="quiz" data-ch="ch3" id="ch3-quiz">
   <h3>End of Chapter Quiz — Chapter 3</h3>
-  <ol>
-    <li>Which answer below would be an unacceptable chief complaint?
-      <ol class="options"><li>Urinary tract infection</li><li>Dysuria</li><li>Urinary frequency</li><li>Cough</li><li>Follow-up hypertension</li></ol>
-    </li>
-    <li>Which is a more technical term for “fainting?”
-      <ol class="options"><li>Emesis</li><li>Dyspnea</li><li>Malaise</li><li>Syncope</li></ol>
-    </li>
-    <li>Which answer is NOT a description of the quality of pain?
-      <ol class="options"><li>Sharp</li><li>Severe</li><li>Burning</li><li>Dull</li></ol>
-    </li>
-    <li>Which symptom is NOT part of the constitutional system in the ROS?
-      <ol class="options"><li>Malaise</li><li>Fever</li><li>Fatigue</li><li>All of the above are part of the constitutional system</li></ol>
-    </li>
-    <li>Most patients can relay all medications and dosage accurately.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>Chief Complaint and Reason for Visit are the same.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>A medication side effect is the same as an allergy.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-  </ol>
-</div>
+  <ol><li>Which answer below would be an unacceptable chief complaint?<ol class="options"><li>Urinary tract infection</li><li>Dysuria</li><li>Urinary frequency</li><li>Cough</li><li>Follow-up hypertension</li></ol></li><li>Which is a more technical term for “fainting?”<ol class="options"><li>Emesis</li><li>Dyspnea</li><li>Malaise</li><li>Syncope</li></ol></li><li>Which answer is NOT a description of the quality of pain?<ol class="options"><li>Sharp</li><li>Severe</li><li>Burning</li><li>Dull</li></ol></li><li>Which symptom is NOT part of the constitutional system in the ROS?<ol class="options"><li>Malaise</li><li>Fever</li><li>Fatigue</li><li>All of the above are part of the constitutional system</li></ol></li><li>Most patients can relay all medications and dosage accurately.<ol class="options"><li>True</li><li>False</li></ol></li><li>Chief Complaint and Reason for Visit are the same.<ol class="options"><li>True</li><li>False</li></ol></li><li>A medication side effect is the same as an allergy.<ol class="options"><li>True</li><li>False</li></ol></li></ol>
+
 
 <!-- ============================= CHAPTER 4 ============================= -->
-<h2 class="chapter" id="ch4">4. The Physical Exam</h2>
+</div><div class="chapter" id="ch4"><h2 class="chapter" id="ch4">4. The Physical Exam</h2>
 
 <p>The next major task for the medical scribe is accurate documentation of the provider’s physical exam. The physical exam portion of the note represents the provider’s findings based primarily on what they see, feel, and hear. Because it is written from the perspective of the provider, it is written almost entirely in medical terms. So, while a patient may report the symptom of shortness of breath, the provider would observe a patient struggling to breathe and say, “The patient is in moderate respiratory distress” or “Patient exhibits increased work of breathing.” Symptoms do not generally belong in the physical exam unless it is a symptom the provider has elicited by a physical exam maneuver. The interpretation of any abnormal findings is discussed in the MDM section of the note (covered later), not in the exam itself. Hence, there are no diagnoses in the exam section either.</p>
 
@@ -2049,35 +2116,13 @@
   </tbody>
 </table>
 
-<div class="quiz" id="ch4-quiz">
+<div class="quiz" data-ch="ch4" id="ch4-quiz">
   <h3>End of Chapter Quiz — Chapter 4</h3>
-  <ol>
-    <li>Which abnormal lung sound is also known as crackles?
-      <ol class="options"><li>Rales</li><li>Rhonchi</li><li>Wheezing</li><li>Sputum</li></ol>
-    </li>
-    <li>Which grade denotes a normal pulse strength?
-      <ol class="options"><li>1+</li><li>2+</li><li>3+</li><li>4+</li></ol>
-    </li>
-    <li>A rapid heart rate is known as what?
-      <ol class="options"><li>Tachypnea</li><li>Tachycardia</li><li>Bradycardia</li><li>Hypoxia</li></ol>
-    </li>
-    <li>Which term is NOT part of the neck exam?
-      <ol class="options"><li>Tenderness</li><li>Lymphadenopathy</li><li>Cerumen</li><li>Thyromegaly</li></ol>
-    </li>
-    <li>Edema refers to redness surrounding an injury.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>The physical exam generally includes:
-      <ol class="options"><li>Inspection</li><li>Auscultation</li><li>Palpation</li><li>All of the above</li></ol>
-    </li>
-    <li>Symptoms are often included in the physical exam.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-  </ol>
-</div>
+  <ol><li>Which abnormal lung sound is also known as crackles?<ol class="options"><li>Rales</li><li>Rhonchi</li><li>Wheezing</li><li>Sputum</li></ol></li><li>Which grade denotes a normal pulse strength?<ol class="options"><li>1+</li><li>2+</li><li>3+</li><li>4+</li></ol></li><li>A rapid heart rate is known as what?<ol class="options"><li>Tachypnea</li><li>Tachycardia</li><li>Bradycardia</li><li>Hypoxia</li></ol></li><li>Which term is NOT part of the neck exam?<ol class="options"><li>Tenderness</li><li>Lymphadenopathy</li><li>Cerumen</li><li>Thyromegaly</li></ol></li><li>Edema refers to redness surrounding an injury.<ol class="options"><li>True</li><li>False</li></ol></li><li>The physical exam generally includes:<ol class="options"><li>Inspection</li><li>Auscultation</li><li>Palpation</li><li>All of the above</li></ol></li><li>Symptoms are often included in the physical exam.<ol class="options"><li>True</li><li>False</li></ol></li></ol>
+
 
 <!-- ============================= CHAPTER 5 ============================= -->
-<h2 class="chapter" id="ch5">5. Objective Sections: Clinical Course, Results, A&amp;P</h2>
+</div><div class="chapter" id="ch5"><h2 class="chapter" id="ch5">5. Objective Sections: Clinical Course, Results, A&amp;P</h2>
 
 <h3 id="ch5-course">Clinical Course</h3>
 <p>The Clinical Course outlines updates and progress that occur after the initial history and physical exam. A Clinical Course should be included any time that tests, consultations, therapies and re-evaluations are performed during the visit to document the timeline of when results returned and how the patient responded to treatments. The intent is to demonstrate the chronology of the patient’s clinical course, not lengthy descriptions or interpretations that are documented elsewhere.</p>
@@ -2413,55 +2458,13 @@
 
 <p>Another example would be a PCP referral to a dermatologist who uses a different EHR, and after the visit, the dermatologist must send the information back to the referring provider. This communication must be accomplished in a HIPAA-compliant manner, preferably through secure EHR messaging. EHRs can generate a clinical summary or a continuity of care document (CCD), which is in a standardized technical format that can be more easily transmitted between EHRs. Encrypted fax or sometimes plain old mailed paper are other options. In any case, the note should specify how the communication was handled.</p>
 
-<div class="quiz" id="ch5-quiz">
+<div class="quiz" data-ch="ch5" id="ch5-quiz">
   <h3>End of Chapter Quiz — Chapter 5</h3>
-  <ol>
-    <li>What should be included in the Clinic/ED course?
-      <ol class="options">
-        <li>Labs, imaging, therapies, consultations, and re-evaluations</li>
-        <li>Labs, imaging, and therapies</li>
-        <li>Consultations and re-evaluations</li>
-        <li>Labs, therapies, and re-evaluations</li>
-      </ol>
-    </li>
-    <li>What does ICD stand for?
-      <ol class="options">
-        <li>Important classification of disease</li>
-        <li>International certification of disease</li>
-        <li>International classification of disease</li>
-        <li>Important certification of disease</li>
-      </ol>
-    </li>
-    <li>Which of the following should be included in an assessment?
-      <ol class="options">
-        <li>Acute or chronic</li>
-        <li>Stable or unstable</li>
-        <li>Well-controlled or poorly-controlled</li>
-        <li>All of the above</li>
-      </ol>
-    </li>
-    <li>When is an addendum a necessary component to the note?
-      <ol class="options">
-        <li>When changes are made to the note before being signed off</li>
-        <li>When changes are made to the note after being signed off</li>
-        <li>When changes are made to the note before or after being signed off</li>
-        <li>Never — you can just edit the note</li>
-      </ol>
-    </li>
-    <li>Since providers are able to see results very quickly in the EHR, there is no need to specify that the provider reviewed the results.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>A clinic visit should only list 1–2 diagnoses to reduce confusion.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>Medication errors are common, so the Plan should specify all medications to be started, continued, or stopped.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-  </ol>
-</div>
+  <ol><li>What should be included in the Clinic/ED course?<ol class="options"><li>Labs, imaging, therapies, consultations, and re-evaluations</li><li>Labs, imaging, and therapies</li><li>Consultations and re-evaluations</li><li>Labs, therapies, and re-evaluations</li></ol></li><li>What does ICD stand for?<ol class="options"><li>Important classification of disease</li><li>International certification of disease</li><li>International classification of disease</li><li>Important certification of disease</li></ol></li><li>Which of the following should be included in an assessment?<ol class="options"><li>Acute or chronic</li><li>Stable or unstable</li><li>Well-controlled or poorly-controlled</li><li>All of the above</li></ol></li><li>When is an addendum a necessary component to the note?<ol class="options"><li>When changes are made to the note before being signed off</li><li>When changes are made to the note after being signed off</li><li>When changes are made to the note before or after being signed off</li><li>Never — you can just edit the note</li></ol></li><li>Since providers are able to see results very quickly in the EHR, there is no need to specify that the provider reviewed the results.<ol class="options"><li>True</li><li>False</li></ol></li><li>A clinic visit should only list 1–2 diagnoses to reduce confusion.<ol class="options"><li>True</li><li>False</li></ol></li><li>Medication errors are common, so the Plan should specify all medications to be started, continued, or stopped.<ol class="options"><li>True</li><li>False</li></ol></li></ol>
+
 
 <!-- ============================= CHAPTER 6A ============================= -->
-<h2 class="chapter" id="ch6a">6A. The Primary Care Clinic</h2>
+</div><div class="chapter" id="ch6a"><h2 class="chapter" id="ch6a">6A. The Primary Care Clinic</h2>
 
 <p>Primary care refers to a group of medical providers that serve as the initial and centralized point of patient care, which typically includes:</p>
 <ul>
@@ -3173,47 +3176,13 @@
   <p><em>I, Michael Parker, MD, attest that I have reviewed and approved the documentation entered by the aforementioned scribe prior to note finalization and signature.</em></p>
 </blockquote>
 
-<div class="quiz" id="ch6a-quiz">
+<div class="quiz" data-ch="ch6a" id="ch6a-quiz">
   <h3>End of Chapter Quiz — Chapter 6A</h3>
-  <ol>
-    <li>Bone density testing is primarily done in women.
-      <ol class="options"><li>Adult</li><li>Post-menopausal</li><li>Teenage</li><li>Elderly</li></ol>
-    </li>
-    <li>Osteoporosis can be treated with which of the following items?
-      <ol class="options"><li>Calcium</li><li>Vitamin D</li><li>Alendronate</li><li>All of the above</li></ol>
-    </li>
-    <li>Monofilament testing assesses for early signs of a condition associated with type II diabetes mellitus.
-      <ol class="options"><li>Hypertension</li><li>Nephropathy</li><li>Neuropathy</li><li>Retinopathy</li></ol>
-    </li>
-    <li>Diabetic nephropathy is assessed via which of these tests?
-      <ol class="options"><li>Monofilament testing</li><li>Hemoglobin A1c</li><li>Lipid panel</li><li>Urine microalbumin</li></ol>
-    </li>
-    <li>True or False: Hypertension is defined as a blood pressure of greater than 140/90 on a single measurement.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>Which medication below is NOT used to treat type II diabetes?
-      <ol class="options"><li>Atorvastatin</li><li>Glimepiride</li><li>Glipizide</li><li>Metformin</li></ol>
-    </li>
-    <li>A “kidney infection” is more technically known as what?
-      <ol class="options"><li>Peptic ulcer disease</li><li>Nephrosis</li><li>Nephrolithiasis</li><li>Pyelonephritis</li></ol>
-    </li>
-    <li>Which medication is not an opioid?
-      <ol class="options"><li>Dilaudid</li><li>Morphine</li><li>Hydrocodone</li><li>Hydrochlorothiazide</li></ol>
-    </li>
-    <li>Which questionnaires are used to gauge a patient’s likelihood of having depression?
-      <ol class="options"><li>GAD-7; PHQ-2</li><li>TSH; A1c</li><li>PHQ-9, GAD-7</li><li>PHQ-2; PHQ-9</li></ol>
-    </li>
-    <li>Which diagnostic study is NOT usually part of the normal screening recommendations for a 70-year-old patient?
-      <ol class="options"><li>DEXA scan</li><li>PSA</li><li>Colonoscopy</li><li>Mammogram</li></ol>
-    </li>
-    <li>True or False: A low TSH level is indicative of hypothyroidism.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-  </ol>
-</div>
+  <ol><li>Bone density testing is primarily done in women.<ol class="options"><li>Adult</li><li>Post-menopausal</li><li>Teenage</li><li>Elderly</li></ol></li><li>Osteoporosis can be treated with which of the following items?<ol class="options"><li>Calcium</li><li>Vitamin D</li><li>Alendronate</li><li>All of the above</li></ol></li><li>Monofilament testing assesses for early signs of a condition associated with type II diabetes mellitus.<ol class="options"><li>Hypertension</li><li>Nephropathy</li><li>Neuropathy</li><li>Retinopathy</li></ol></li><li>Diabetic nephropathy is assessed via which of these tests?<ol class="options"><li>Monofilament testing</li><li>Hemoglobin A1c</li><li>Lipid panel</li><li>Urine microalbumin</li></ol></li><li>True or False: Hypertension is defined as a blood pressure of greater than 140/90 on a single measurement.<ol class="options"><li>True</li><li>False</li></ol></li><li>Which medication below is NOT used to treat type II diabetes?<ol class="options"><li>Atorvastatin</li><li>Glimepiride</li><li>Glipizide</li><li>Metformin</li></ol></li><li>A “kidney infection” is more technically known as what?<ol class="options"><li>Peptic ulcer disease</li><li>Nephrosis</li><li>Nephrolithiasis</li><li>Pyelonephritis</li></ol></li><li>Which medication is not an opioid?<ol class="options"><li>Dilaudid</li><li>Morphine</li><li>Hydrocodone</li><li>Hydrochlorothiazide</li></ol></li><li>Which questionnaires are used to gauge a patient’s likelihood of having depression?<ol class="options"><li>GAD-7; PHQ-2</li><li>TSH; A1c</li><li>PHQ-9, GAD-7</li><li>PHQ-2; PHQ-9</li></ol></li><li>Which diagnostic study is NOT usually part of the normal screening recommendations for a 70-year-old patient?<ol class="options"><li>DEXA scan</li><li>PSA</li><li>Colonoscopy</li><li>Mammogram</li></ol></li><li>True or False: A low TSH level is indicative of hypothyroidism.<ol class="options"><li>True</li><li>False</li></ol></li></ol>
+
 
 <!-- ============================= CHAPTER 6B ============================= -->
-<h2 class="chapter" id="ch6b">6B. The Emergency Department</h2>
+</div><div class="chapter" id="ch6b"><h2 class="chapter" id="ch6b">6B. The Emergency Department</h2>
 
 <p>Called either the emergency department (ED) or the emergency room (ER), the ED sees a wide variety of patients, and the environment can be drastically different at different times of day and in different locations. Most ERs are within or attached to a hospital so that ill patients have the hospital’s full resources available next door, but more recently, “standalone” ERs and urgent cares have arisen as well. Many EDs have upwards of twenty beds that can be in use at any time, some for general use and others with specialized equipment. An ED typically has a few large trauma bays reserved to accommodate required staff and equipment. There may also be rooms reserved for dental complaints, eye complaints, ob/gyn complaints, and psychiatric complaints because of the specialized equipment required for each of these cases. A large track board screen is often in a central location, or on each computer’s home screen, so that the status of every room in the ED can be seen in a single view.</p>
 
@@ -3919,53 +3888,13 @@
   <p><em>(The repair itself is coded as CPT 12052 based upon the length, complexity, and location, all of which is specified in the procedure note.)</em></p>
 </blockquote>
 
-<div class="quiz" id="ch6b-quiz">
+<div class="quiz" data-ch="ch6b" id="ch6b-quiz">
   <h3>End of Chapter Quiz — Chapter 6B</h3>
-  <ol>
-    <li>A “kidney infection” is more technically known as what?
-      <ol class="options"><li>Peptic ulcer disease</li><li>Nephrosis</li><li>Nephrolithiasis</li><li>Pyelonephritis</li></ol>
-    </li>
-    <li>Which condition is NOT typically characterized by epigastric pain?
-      <ol class="options"><li>Peptic ulcer disease</li><li>Pancreatitis</li><li>Cholelithiasis</li><li>Colitis</li></ol>
-    </li>
-    <li>Which lab test is used to diagnose pancreatitis?
-      <ol class="options"><li>Lipase</li><li>Alkaline phosphatase (ALP)</li><li>D-dimer</li><li>Troponin</li></ol>
-    </li>
-    <li>Which of these medications is a risk factor for hemorrhagic stroke?
-      <ol class="options"><li>cephalexin</li><li>coumadin</li><li>ciprofloxacin</li><li>caffeine</li></ol>
-    </li>
-    <li>What is the most common source of clot in a pulmonary embolus?
-      <ol class="options"><li>Appendicitis</li><li>Heart atria</li><li>DVT</li><li>Varicose veins</li></ol>
-    </li>
-    <li>Which lab test can detect trace amounts of myocardial cell death?
-      <ol class="options"><li>Troponin</li><li>D-dimer</li><li>Hemoglobin</li><li>Lipase</li></ol>
-    </li>
-    <li>Acute appendicitis presents with focal pain in which abdominal region?
-      <ol class="options"><li>Right upper quadrant (RUQ)</li><li>Left upper quadrant (LUQ)</li><li>Left lower quadrant (LLQ)</li><li>Right lower quadrant (RLQ)</li></ol>
-    </li>
-    <li>Which proton pump inhibitor helps reduce acid secretion in the stomach in patients with PUD?
-      <ol class="options"><li>Zantac</li><li>Pantoprazole</li><li>Nitroglycerin</li><li>Hydrochlorothiazide</li></ol>
-    </li>
-    <li>True or False: Abdominal pain that is worse after eating fatty foods is concerning for cholelithiasis.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>Which lab test helps detect the presence of a blood clot?
-      <ol class="options"><li>D-dimer</li><li>Troponin</li><li>Lipase</li><li>ALP</li></ol>
-    </li>
-    <li>PE and stroke from atrial fibrillation are both caused by embolism.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>This is acceptable procedure documentation: “Physician performed FAST exam and no intra-abdominal fluid was seen.”
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>If a patient denies seeing blood in the stool, a GI bleed is not possible.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-  </ol>
-</div>
+  <ol><li>A “kidney infection” is more technically known as what?<ol class="options"><li>Peptic ulcer disease</li><li>Nephrosis</li><li>Nephrolithiasis</li><li>Pyelonephritis</li></ol></li><li>Which condition is NOT typically characterized by epigastric pain?<ol class="options"><li>Peptic ulcer disease</li><li>Pancreatitis</li><li>Cholelithiasis</li><li>Colitis</li></ol></li><li>Which lab test is used to diagnose pancreatitis?<ol class="options"><li>Lipase</li><li>Alkaline phosphatase (ALP)</li><li>D-dimer</li><li>Troponin</li></ol></li><li>Which of these medications is a risk factor for hemorrhagic stroke?<ol class="options"><li>cephalexin</li><li>coumadin</li><li>ciprofloxacin</li><li>caffeine</li></ol></li><li>What is the most common source of clot in a pulmonary embolus?<ol class="options"><li>Appendicitis</li><li>Heart atria</li><li>DVT</li><li>Varicose veins</li></ol></li><li>Which lab test can detect trace amounts of myocardial cell death?<ol class="options"><li>Troponin</li><li>D-dimer</li><li>Hemoglobin</li><li>Lipase</li></ol></li><li>Acute appendicitis presents with focal pain in which abdominal region?<ol class="options"><li>Right upper quadrant (RUQ)</li><li>Left upper quadrant (LUQ)</li><li>Left lower quadrant (LLQ)</li><li>Right lower quadrant (RLQ)</li></ol></li><li>Which proton pump inhibitor helps reduce acid secretion in the stomach in patients with PUD?<ol class="options"><li>Zantac</li><li>Pantoprazole</li><li>Nitroglycerin</li><li>Hydrochlorothiazide</li></ol></li><li>True or False: Abdominal pain that is worse after eating fatty foods is concerning for cholelithiasis.<ol class="options"><li>True</li><li>False</li></ol></li><li>Which lab test helps detect the presence of a blood clot?<ol class="options"><li>D-dimer</li><li>Troponin</li><li>Lipase</li><li>ALP</li></ol></li><li>PE and stroke from atrial fibrillation are both caused by embolism.<ol class="options"><li>True</li><li>False</li></ol></li><li>This is acceptable procedure documentation: “Physician performed FAST exam and no intra-abdominal fluid was seen.”<ol class="options"><li>True</li><li>False</li></ol></li><li>If a patient denies seeing blood in the stool, a GI bleed is not possible.<ol class="options"><li>True</li><li>False</li></ol></li></ol>
+
 
 <!-- ============================= CHAPTER 7 ============================= -->
-<h2 class="chapter" id="ch7">7. Billing and Reimbursement</h2>
+</div><div class="chapter" id="ch7"><h2 class="chapter" id="ch7">7. Billing and Reimbursement</h2>
 
 <p>Accurate and comprehensive documentation of each visit ensures fair compensation to the department, as well as the individual provider. A good scribe captures these details, and in turn, further justifies the scribe service expense. Medical billing and coding is a complex topic that few healthcare providers know much about, or maybe even want to know much about. However, knowledge deficits in this area can have long-term ramifications for physicians who fail to learn how to capture revenue. Leaving money on the table is inefficient and may just lead to more work in the long-run, so thorough documentation with billing parameters in mind captures the reimbursement that is due and improved efficiency reduces long-term workload.</p>
 
@@ -4300,38 +4229,13 @@
   </ul>
 </div>
 
-<div class="quiz" id="ch7-quiz">
+<div class="quiz" data-ch="ch7" id="ch7-quiz">
   <h3>End of Chapter Quiz — Chapter 7</h3>
-  <ol>
-    <li>True or False: an E/M level of 5 has a moderate level of complexity.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>How many systems must be listed in the ROS for an ER E/M level 5?
-      <ol class="options"><li>1</li><li>5</li><li>10</li><li>8</li></ol>
-    </li>
-    <li>Which of the following cannot be counted within critical care time?
-      <ol class="options"><li>Trauma</li><li>Respiratory failure</li><li>Intubation procedure</li><li>Acute MI</li></ol>
-    </li>
-    <li>Documenting an EKG interpretation as “normal” is billable.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>Since the 2021 outpatient clinic E/M guidelines no longer count elements in the history, it is OK to just write a sentence or two and skip the rest.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>Quality measures promote quality care without financial consequence.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>Providers can bill the E/M level OR a procedure from a single encounter, but not both.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-    <li>Patients understand that procedures have risks, so consent is not needed.
-      <ol class="options"><li>True</li><li>False</li></ol>
-    </li>
-  </ol>
-</div>
+  <ol><li>True or False: an E/M level of 5 has a moderate level of complexity.<ol class="options"><li>True</li><li>False</li></ol></li><li>How many systems must be listed in the ROS for an ER E/M level 5?<ol class="options"><li>1</li><li>5</li><li>10</li><li>8</li></ol></li><li>Which of the following cannot be counted within critical care time?<ol class="options"><li>Trauma</li><li>Respiratory failure</li><li>Intubation procedure</li><li>Acute MI</li></ol></li><li>Documenting an EKG interpretation as “normal” is billable.<ol class="options"><li>True</li><li>False</li></ol></li><li>Since the 2021 outpatient clinic E/M guidelines no longer count elements in the history, it is OK to just write a sentence or two and skip the rest.<ol class="options"><li>True</li><li>False</li></ol></li><li>Quality measures promote quality care without financial consequence.<ol class="options"><li>True</li><li>False</li></ol></li><li>Providers can bill the E/M level OR a procedure from a single encounter, but not both.<ol class="options"><li>True</li><li>False</li></ol></li><li>Patients understand that procedures have risks, so consent is not needed.<ol class="options"><li>True</li><li>False</li></ol></li></ol>
+
 
 <!-- ============================= CHAPTER 8 ============================= -->
-<h2 class="chapter" id="ch8">8. The Medical Note Big Picture</h2>
+</div><div class="chapter" id="ch8"><h2 class="chapter" id="ch8">8. The Medical Note Big Picture</h2>
 
 <p>Throughout this handbook, we have covered a lot of material regarding medical language, the mechanics of the medical note, how to collect and assemble information, and how that information is later analyzed. A thorough note accurately captures today’s visit — the story, exam, workup, assessment and plan — in a standardized fashion that is clear for future readers who have various perspectives. In this training, we intend to teach not only the mechanics of compiling the note, but also the purposes of the documentation. With this knowledge, you will understand the broader importance of medical documentation, which will serve you throughout your healthcare career.</p>
 
@@ -4489,14 +4393,644 @@
 <div class="golden-rule">Avoid regrets.</div>
 
 <p>Knowing in advance how the note will be interpreted in many different perspectives influences the tone of the note and its content. From the physician’s perspective today, the note needs to be accurate and medically rational. But then the note takes on multiple personalities as it is viewed by many future readers, each viewing the note with their own needs and own lens in mind. Cognizance of the note’s future life can make a good documenter into a great one.</p>
+</div></div>
+</div></div>
+  </section>
 
-<hr class="sep">
-<p class="copyright">
-  Medical Note Mastery — Primary Care and Emergency Department Scribe Edition<br>
-  ©2021, Medical Note Masters, LLC · ISBN 9798675122059<br>
-  www.medicalscribetraining.net · admin@mednotemasters.com
-</p>
+  <section class="view" id="graph-view">
+    <div class="graph-toolbar">
+      <div class="graph-search">
+        <svg class="gs-icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="graph-search" type="text" placeholder="Search the map — topics, sections, figures…" autocomplete="off" spellcheck="false">
+        <button class="gs-clear" id="graph-search-clear" aria-label="Clear">×</button>
+      </div>
+      <span class="gs-count" id="graph-match-count"></span>
+      <span class="gs-count" id="graph-reset" style="cursor:pointer;color:var(--app-accent)">reset view</span>
+    </div>
+    <div class="graph-typefilters" id="graph-typefilters" style="padding:8px 16px;background:var(--app-panel);border-bottom:1px solid var(--app-border)"></div>
+    <div class="graph-canvas-wrap" id="graph-canvas-wrap">
+      <svg class="graph-svg" id="graph-svg"><g id="graph-transform-group"><g id="graph-links"></g><g id="graph-nodes"></g></g></svg>
+      <div class="graph-controls">
+        <button id="zoom-in" aria-label="Zoom in">+</button><button id="zoom-out" aria-label="Zoom out">−</button><button id="zoom-fit" aria-label="Fit">⤢</button>
+      </div>
+      <div class="node-info" id="node-info">
+        <button class="ni-close" id="ni-close" aria-label="Close">×</button>
+        <div class="ni-title"><span id="ni-label"></span><span class="ni-badge" id="ni-type"></span></div>
+        <p class="ni-desc" id="ni-desc"></p>
+        <div class="ni-links" id="ni-links"></div>
+        <div class="ni-btns"><button class="ni-btn primary" id="ni-open-book">Open in book</button><button class="ni-btn" id="ni-focus">Focus connections</button></div>
+      </div>
+    </div>
+  </section>
 
-</div><!-- /.container -->
+  <section class="view" id="flashcards-view"><div class="panel-view">
+    <h2 class="pv-title">Flashcards</h2><p class="pv-sub">Tap the card to flip. Space flips, arrows navigate.</p>
+    <div class="flash-wrap">
+      <div class="flash-card" id="flash-card"><span class="fc-tag" id="fc-tag"></span><div class="fc-face" id="fc-front"></div><span class="fc-hint">click / space to flip</span></div>
+      <div class="flash-nav"><button id="prev-card">← Prev</button><span class="flash-progress" id="flash-progress"></span><button id="next-card">Next →</button><button id="shuffle-cards">Shuffle</button></div>
+    </div>
+  </div></section>
+
+  <section class="view" id="mcq-view"><div class="panel-view">
+    <h2 class="pv-title">Chapter MCQs — Practice Mode</h2>
+    <p class="pv-sub">Every end-of-chapter question, now interactive: pick an answer, get the reasoning, and jump straight to the section to study.</p>
+    <div class="mcq-nav" id="mcq-nav"></div>
+    <div class="mcq-book" id="mcq-book"></div>
+  </div></section>
+
+  <section class="view" id="glossary-view"><div class="panel-view">
+    <h2 class="pv-title">Glossary</h2><p class="pv-sub">Terms from the whole book, searchable.</p>
+    <input class="gloss-search" id="glossary-search" type="text" placeholder="Filter terms…" autocomplete="off">
+    <div class="gloss-grid" id="glossary-list"></div>
+  </div></section>
+
+  <section class="view" id="settings-view"><div class="panel-view">
+    <h2 class="pv-title">Settings</h2><p class="pv-sub">Reading comfort and stored data.</p>
+    <div class="settings-group"><h3 class="sg-title">Reading</h3>
+      <div class="sg-row"><label for="font-scale-slider">Font size</label><input id="font-scale-slider" type="range" min="0.8" max="1.6" step="0.05" value="1"><output id="font-scale-value">100%</output></div>
+      <div class="sg-row"><label for="line-spacing-slider">Line spacing</label><input id="line-spacing-slider" type="range" min="1.4" max="2.4" step="0.05" value="1.75"><output id="line-spacing-value">1.75</output></div>
+      <div class="sg-row"><label for="letter-spacing-slider">Letter spacing</label><input id="letter-spacing-slider" type="range" min="-0.02" max="0.08" step="0.005" value="0"><output id="letter-spacing-value">0em</output></div>
+      <div class="sg-row"><label for="theme-select">Theme</label><select id="theme-select"><option value="light">Light</option><option value="dark">Dark</option></select></div>
+    </div>
+    <div class="settings-group"><h3 class="sg-title">Data</h3>
+      <div class="sg-row"><span id="storage-status" style="flex:1"></span><button class="danger-btn" id="clear-all-data">Clear all data</button></div>
+    </div>
+    <div class="settings-group"><h3 class="sg-title">Keyboard shortcuts</h3>
+      <table class="shortcuts-table"><tbody>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>K</kbd></td><td>Focus search</td></tr>
+        <tr><td><kbd>[</kbd> / <kbd>]</kbd></td><td>Previous / next chapter</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Close popups · leave panels</td></tr>
+        <tr><td><kbd>Space</kbd></td><td>Flip flashcard (in Flashcards)</td></tr>
+      </tbody></table>
+    </div>
+  </div></section>
+</main>
+
+<script>window.__APP_DATA__={"kg": {"kg": {"nodes": [{"id": "ch1", "label": "Introduction", "type": "chapter", "ch": "ch1", "desc": "Chapter of the book."}, {"id": "ch2", "label": "Medical Terminology", "type": "chapter", "ch": "ch2", "desc": "Chapter of the book."}, {"id": "ch3", "label": "The Subjective Sections", "type": "chapter", "ch": "ch3", "desc": "Chapter of the book."}, {"id": "ch4", "label": "The Physical Exam", "type": "chapter", "ch": "ch4", "desc": "Chapter of the book."}, {"id": "ch5", "label": "Objective: Course, Results, A&P", "type": "chapter", "ch": "ch5", "desc": "Chapter of the book."}, {"id": "ch6a", "label": "Primary Care Clinic", "type": "chapter", "ch": "ch6a", "desc": "Chapter of the book."}, {"id": "ch6b", "label": "Emergency Department", "type": "chapter", "ch": "ch6b", "desc": "Chapter of the book."}, {"id": "ch7", "label": "Billing and Reimbursement", "type": "chapter", "ch": "ch7", "desc": "Chapter of the book."}, {"id": "ch8", "label": "The Medical Note Big Picture", "type": "chapter", "ch": "ch8", "desc": "Chapter of the book."}, {"id": "scribe", "label": "Medical Scribe", "type": "role", "ch": "ch1", "desc": "Documents provider-patient encounters in real time into the EHR."}, {"id": "hipaa", "label": "HIPAA", "type": "rule", "ch": "ch1", "desc": "Federal law protecting patient health information privacy and security."}, {"id": "phi", "label": "PHI", "type": "concept", "ch": "ch1", "desc": "Protected Health Information — any identifiable health data."}, {"id": "min-necessary", "label": "Minimum Necessary", "type": "rule", "ch": "ch1", "desc": "Access only the PHI needed to do your job."}, {"id": "terminology", "label": "Medical Terminology", "type": "concept", "ch": "ch2", "desc": "Greek/Latin-based language of medicine: prefixes, roots, suffixes."}, {"id": "anatomy", "label": "Anatomy & Planes", "type": "concept", "ch": "ch2", "desc": "Directional terms (superior, proximal) and body planes."}, {"id": "abd-regions", "label": "Abdominal Regions", "type": "concept", "ch": "ch2", "desc": "9 regions / 4 quadrants used to localize abdominal pain."}, {"id": "skeletal", "label": "Skeletal Landmarks", "type": "concept", "ch": "ch2", "desc": "Bones and palpable landmarks documented in exams."}, {"id": "soap", "label": "SOAP Note", "type": "topic", "ch": "ch3", "desc": "Subjective, Objective, Assessment, Plan — standard note structure."}, {"id": "cc", "label": "Chief Complaint", "type": "topic", "ch": "ch3", "desc": "Why the patient came, ideally in quotes."}, {"id": "hpi", "label": "HPI", "type": "topic", "ch": "ch3", "desc": "Narrative of present illness: OLDCARTS elements."}, {"id": "ros", "label": "Review of Systems", "type": "topic", "ch": "ch3", "desc": "Head-to-toe symptom checklist beyond the HPI."}, {"id": "pmhx", "label": "PMHx / Meds / Allergies", "type": "topic", "ch": "ch3", "desc": "Past history, medications, allergies — semi-subjective context."}, {"id": "golden-rules", "label": "Golden Rules", "type": "rule", "ch": "ch3", "desc": "Document what is said/done; never fabricate or interpret."}, {"id": "vitals", "label": "Vital Signs", "type": "objective", "ch": "ch4", "desc": "BP, HR, RR, temp, SpO2, pain score — objective baseline."}, {"id": "phys-exam", "label": "Physical Exam", "type": "objective", "ch": "ch4", "desc": "Provider's observed findings by system; pediatric vs adult norms differ."}, {"id": "clinical-course", "label": "Clinical Course", "type": "objective", "ch": "ch5", "desc": "What happened during the stay: interventions, response."}, {"id": "results", "label": "Results Review", "type": "objective", "ch": "ch5", "desc": "Labs/imaging and provider interpretation of them."}, {"id": "ap", "label": "Assessment & Plan", "type": "topic", "ch": "ch5", "desc": "Diagnosis reasoning and management per problem."}, {"id": "cdm", "label": "Clinical Decision Making", "type": "concept", "ch": "ch5", "desc": "Risk, data reviewed, alternatives considered — drives billing level."}, {"id": "icd10", "label": "ICD-10 Coding", "type": "billing", "ch": "ch5", "desc": "Diagnosis codes that must be supported by documentation."}, {"id": "addendum", "label": "Addenda & Corrections", "type": "rule", "ch": "ch5", "desc": "Late changes are addenda with reason and author — never delete."}, {"id": "primary-care", "label": "Primary Care Clinic", "type": "setting", "ch": "ch6a", "desc": "Preventive medicine, chronic disease, wellness visits."}, {"id": "annual-physical", "label": "Annual Physical (AWV)", "type": "encounter", "ch": "ch6a", "desc": "Preventive visit: screening, immunizations, counseling."}, {"id": "prenatal", "label": "Prenatal Care", "type": "encounter", "ch": "ch6a", "desc": "Pregnancy tracking: dates, fundal height, fetal heart tones."}, {"id": "wcc", "label": "Well Child Checks", "type": "encounter", "ch": "ch6a", "desc": "Pediatric milestones, growth curves, vaccines."}, {"id": "chronic", "label": "Chronic Disease Mgmt", "type": "encounter", "ch": "ch6a", "desc": "Diabetes, HTN, asthma: control status and med adjustments."}, {"id": "ed", "label": "Emergency Department", "type": "setting", "ch": "ch6b", "desc": "Acute care: triage, resuscitation, disposition."}, {"id": "triage", "label": "Triage & ESI", "type": "concept", "ch": "ch6b", "desc": "Severity indexing driving wait order."}, {"id": "chest-pain", "label": "Chest Pain Workup", "type": "condition", "ch": "ch6b", "desc": "ECG within 10 min, troponin, rule out ACS."}, {"id": "abdo-ed", "label": "ED Abdominal Pain", "type": "condition", "ch": "ch6b", "desc": "Differential broad: appendicitis, stones, ectopic."}, {"id": "stroke", "label": "Stroke / CVA", "type": "condition", "ch": "ch6b", "desc": "Time-critical: last known well, NIHSS, tPA window."}, {"id": "ed-meds", "label": "ED Medications", "type": "concept", "ch": "ch6b", "desc": "Common acute meds and documentation of response."}, {"id": "em-levels", "label": "E/M Levels", "type": "billing", "ch": "ch7", "desc": "99202-99215 outpatient, 99281-99288 ED levels."}, {"id": "time-billing", "label": "Billing by Time", "type": "billing", "ch": "ch7", "desc": "Total time can determine level since 2021 rules."}, {"id": "critical-care", "label": "Critical Care Time", "type": "billing", "ch": "ch7", "desc": "At least 30 min continuous high-intensity care, separately billed."}, {"id": "med-necessity", "label": "Medical Necessity", "type": "billing", "ch": "ch7", "desc": "Services justified by symptoms/findings — documented rationale."}, {"id": "quality-measures", "label": "Quality Measures", "type": "billing", "ch": "ch7", "desc": "CMS/TJC core measures tied to reimbursement."}, {"id": "medicolegal", "label": "Medicolegal Record", "type": "concept", "ch": "ch8", "desc": "The chart is a legal document: contemporaneous, factual."}, {"id": "chart-vs-note", "label": "Note vs Chart", "type": "concept", "ch": "ch8", "desc": "One visit note lives inside the lifelong longitudinal chart."}, {"id": "future-readers", "label": "Future Readers", "type": "concept", "ch": "ch8", "desc": "Write for consultants, lawyers, patients reading later."}, {"id": "ch1-scribe", "label": "The Medical Scribe Role", "type": "section", "ch": "ch1", "desc": "Book section of 1. Introduction."}, {"id": "ch1-hipaa", "label": "HIPAA and Patient Privacy", "type": "section", "ch": "ch1", "desc": "Book section of 1. Introduction."}, {"id": "ch2-anatomy", "label": "General Anatomy and Kinesiology", "type": "section", "ch": "ch2", "desc": "Book section of 2. Medical Terminology."}, {"id": "ch2-abdominal", "label": "Abdominal Regions", "type": "section", "ch": "ch2", "desc": "Book section of 2. Medical Terminology."}, {"id": "ch2-skeletal", "label": "Basic Skeletal Anatomy", "type": "section", "ch": "ch2", "desc": "Book section of 2. Medical Terminology."}, {"id": "ch2-head", "label": "The Head", "type": "section", "ch": "ch2", "desc": "Book section of 2. Medical Terminology."}, {"id": "ch2-thorax", "label": "The Thorax", "type": "section", "ch": "ch2", "desc": "Book section of 2. Medical Terminology."}, {"id": "ch2-upper", "label": "The Upper Extremities", "type": "section", "ch": "ch2", "desc": "Book section of 2. Medical Terminology."}, {"id": "ch2-hand", "label": "The Hand", "type": "section", "ch": "ch2", "desc": "Book section of 2. Medical Terminology."}, {"id": "ch2-lower", "label": "The Lower Body", "type": "section", "ch": "ch2", "desc": "Book section of 2. Medical Terminology."}, {"id": "ch2-foot", "label": "The Foot", "type": "section", "ch": "ch2", "desc": "Book section of 2. Medical Terminology."}, {"id": "ch2-female", "label": "Female Anatomy", "type": "section", "ch": "ch2", "desc": "Book section of 2. Medical Terminology."}, {"id": "ch2-language", "label": "The Language of Medicine", "type": "section", "ch": "ch2", "desc": "Book section of 2. Medical Terminology."}, {"id": "ch3-golden", "label": "The Golden Rules", "type": "section", "ch": "ch3", "desc": "Book section of 3. The Subjective Sections."}, {"id": "ch3-soap", "label": "SOAP Note", "type": "section", "ch": "ch3", "desc": "Book section of 3. The Subjective Sections."}, {"id": "ch3-outline", "label": "General Medical Note Outline", "type": "section", "ch": "ch3", "desc": "Book section of 3. The Subjective Sections."}, {"id": "ch3-cc", "label": "Chief Complaint (CC) / Reason for Visit (RFV)", "type": "section", "ch": "ch3", "desc": "Book section of 3. The Subjective Sections."}, {"id": "ch3-hpi", "label": "History of Present Illness (HPI)", "type": "section", "ch": "ch3", "desc": "Book section of 3. The Subjective Sections."}, {"id": "ch3-ros", "label": "Review of Systems (ROS)", "type": "section", "ch": "ch3", "desc": "Book section of 3. The Subjective Sections."}, {"id": "ch4-vitals", "label": "The Vital Signs (VS)", "type": "section", "ch": "ch4", "desc": "Book section of 4. The Physical Exam."}, {"id": "ch4-adult", "label": "Adult Physical Exam", "type": "section", "ch": "ch4", "desc": "Book section of 4. The Physical Exam."}, {"id": "ch4-peds", "label": "Pediatric Physical Exam", "type": "section", "ch": "ch4", "desc": "Book section of 4. The Physical Exam."}, {"id": "ch5-course", "label": "Clinical Course", "type": "section", "ch": "ch5", "desc": "Book section of 5. Objective Sections: Clinical Course, Results, A&amp;P."}, {"id": "ch5-results", "label": "Results Review", "type": "section", "ch": "ch5", "desc": "Book section of 5. Objective Sections: Clinical Course, Results, A&amp;P."}, {"id": "ch5-ap", "label": "The Assessment and Plan (A&amp;P)", "type": "section", "ch": "ch5", "desc": "Book section of 5. Objective Sections: Clinical Course, Results, A&amp;P."}, {"id": "ch5-mdm", "label": "Clinical Decision Making (CDM) or Medical Decision Making (MDM)", "type": "section", "ch": "ch5", "desc": "Book section of 5. Objective Sections: Clinical Course, Results, A&amp;P."}, {"id": "ch5-dx", "label": "Diagnosis and ICD-10", "type": "section", "ch": "ch5", "desc": "Book section of 5. Objective Sections: Clinical Course, Results, A&amp;P."}, {"id": "ch5-plan", "label": "The Plan", "type": "section", "ch": "ch5", "desc": "Book section of 5. Objective Sections: Clinical Course, Results, A&amp;P."}, {"id": "ch5-meds", "label": "Medications", "type": "section", "ch": "ch5", "desc": "Book section of 5. Objective Sections: Clinical Course, Results, A&amp;P."}, {"id": "ch5-examples", "label": "Examples", "type": "section", "ch": "ch5", "desc": "Book section of 5. Objective Sections: Clinical Course, Results, A&amp;P."}, {"id": "ch5-addenda", "label": "Note Changes and Addenda", "type": "section", "ch": "ch5", "desc": "Book section of 5. Objective Sections: Clinical Course, Results, A&amp;P."}, {"id": "ch5-comm", "label": "Communication with Other Providers", "type": "section", "ch": "ch5", "desc": "Book section of 5. Objective Sections: Clinical Course, Results, A&amp;P."}, {"id": "ch6a-encounters", "label": "Common Patient Encounters", "type": "section", "ch": "ch6a", "desc": "Book section of 6A. The Primary Care Clinic."}, {"id": "ch6a-annual", "label": "Annual Physicals and Preventative Medicine", "type": "section", "ch": "ch6a", "desc": "Book section of 6A. The Primary Care Clinic."}, {"id": "ch6a-bone", "label": "Bone Loss Screening", "type": "section", "ch": "ch6a", "desc": "Book section of 6A. The Primary Care Clinic."}, {"id": "ch6a-female", "label": "Annual Physicals: Female Organ-Specific", "type": "section", "ch": "ch6a", "desc": "Book section of 6A. The Primary Care Clinic."}, {"id": "ch6a-prenatal", "label": "Prenatal Care", "type": "section", "ch": "ch6a", "desc": "Book section of 6A. The Primary Care Clinic."}, {"id": "ch6a-wcc", "label": "Well Child Checks (WCC)", "type": "section", "ch": "ch6a", "desc": "Book section of 6A. The Primary Care Clinic."}, {"id": "ch6a-preop", "label": "Pre-Operative (Pre-Op) Visits", "type": "section", "ch": "ch6a", "desc": "Book section of 6A. The Primary Care Clinic."}, {"id": "ch6a-chronic", "label": "Management of Chronic Diseases", "type": "section", "ch": "ch6a", "desc": "Book section of 6A. The Primary Care Clinic."}, {"id": "ch6a-acute", "label": "Common Acute Complaints", "type": "section", "ch": "ch6a", "desc": "Book section of 6A. The Primary Care Clinic."}, {"id": "ch6a-complex", "label": "Complex Complaints", "type": "section", "ch": "ch6a", "desc": "Book section of 6A. The Primary Care Clinic."}, {"id": "ch6a-notes", "label": "Complete Note — Example 1", "type": "section", "ch": "ch6a", "desc": "Book section of 6A. The Primary Care Clinic."}, {"id": "ch6a-note2", "label": "Complete Note — Example 2", "type": "section", "ch": "ch6a", "desc": "Book section of 6A. The Primary Care Clinic."}, {"id": "ch6b-personnel", "label": "Emergency Department Personnel", "type": "section", "ch": "ch6b", "desc": "Book section of 6B. The Emergency Department."}, {"id": "ch6b-process", "label": "The Emergency Department Process", "type": "section", "ch": "ch6b", "desc": "Book section of 6B. The Emergency Department."}, {"id": "ch6b-conditions", "label": "Common Emergency Medicine Conditions", "type": "section", "ch": "ch6b", "desc": "Book section of 6B. The Emergency Department."}, {"id": "ch6b-meds", "label": "Common Emergency Medicine Medications", "type": "section", "ch": "ch6b", "desc": "Book section of 6B. The Emergency Department."}, {"id": "ch6b-note", "label": "A Complete Note Example", "type": "section", "ch": "ch6b", "desc": "Book section of 6B. The Emergency Department."}, {"id": "ch7-em", "label": "Outpatient E/M Levels", "type": "section", "ch": "ch7", "desc": "Book section of 7. Billing and Reimbursement."}, {"id": "ch7-time", "label": "Billing by Time", "type": "section", "ch": "ch7", "desc": "Book section of 7. Billing and Reimbursement."}, {"id": "ch7-edem", "label": "Emergency Department E/M", "type": "section", "ch": "ch7", "desc": "Book section of 7. Billing and Reimbursement."}, {"id": "ch7-obs", "label": "ED Observation (“Obs”)", "type": "section", "ch": "ch7", "desc": "Book section of 7. Billing and Reimbursement."}, {"id": "ch7-critical", "label": "Critical Care Time", "type": "section", "ch": "ch7", "desc": "Book section of 7. Billing and Reimbursement."}, {"id": "ch7-mdm", "label": "Medical Decision Making in E/M Levels", "type": "section", "ch": "ch7", "desc": "Book section of 7. Billing and Reimbursement."}, {"id": "ch7-necessity", "label": "Medical Necessity", "type": "section", "ch": "ch7", "desc": "Book section of 7. Billing and Reimbursement."}, {"id": "ch7-procedure", "label": "Procedure Documentation and Billing", "type": "section", "ch": "ch7", "desc": "Book section of 7. Billing and Reimbursement."}, {"id": "ch7-ekg", "label": "EKG Billing", "type": "section", "ch": "ch7", "desc": "Book section of 7. Billing and Reimbursement."}, {"id": "ch7-smoking", "label": "Smoking Cessation", "type": "section", "ch": "ch7", "desc": "Book section of 7. Billing and Reimbursement."}, {"id": "ch7-ultrasound", "label": "Ultrasound Billing and Documentation", "type": "section", "ch": "ch7", "desc": "Book section of 7. Billing and Reimbursement."}, {"id": "ch7-cms", "label": "CMS Quality Measures and Reimbursement", "type": "section", "ch": "ch7", "desc": "Book section of 7. Billing and Reimbursement."}, {"id": "ch7-tjc", "label": "The Joint Commission (TJC) Core Measures", "type": "section", "ch": "ch7", "desc": "Book section of 7. Billing and Reimbursement."}, {"id": "ch7-summary", "label": "Billing and Reimbursement Summary", "type": "section", "ch": "ch7", "desc": "Book section of 7. Billing and Reimbursement."}, {"id": "ch8-note", "label": "The “Note” vs. the “Chart”", "type": "section", "ch": "ch8", "desc": "Book section of 8. The Medical Note Big Picture."}, {"id": "ch8-today", "label": "Today’s Visit", "type": "section", "ch": "ch8", "desc": "Book section of 8. The Medical Note Big Picture."}, {"id": "ch8-differential", "label": "Narrowing the Differential", "type": "section", "ch": "ch8", "desc": "Book section of 8. The Medical Note Big Picture."}, {"id": "ch8-future", "label": "Future Readers", "type": "section", "ch": "ch8", "desc": "Book section of 8. The Medical Note Big Picture."}, {"id": "ch8-access", "label": "Patient Access", "type": "section", "ch": "ch8", "desc": "Book section of 8. The Medical Note Big Picture."}, {"id": "ch8-billing", "label": "Billing and Reimbursement", "type": "section", "ch": "ch8", "desc": "Book section of 8. The Medical Note Big Picture."}, {"id": "ch8-quality", "label": "Quality Measures", "type": "section", "ch": "ch8", "desc": "Book section of 8. The Medical Note Big Picture."}, {"id": "ch8-medicolegal", "label": "Medicolegal Aspect", "type": "section", "ch": "ch8", "desc": "Book section of 8. The Medical Note Big Picture."}, {"id": "ch8-summary", "label": "Summary", "type": "section", "ch": "ch8", "desc": "Book section of 8. The Medical Note Big Picture."}, {"id": "ch1-fig1", "label": "HIPAA — Health Insurance Portability and Accountability Act", "type": "figure", "ch": "ch1", "desc": "Illustration referenced in 1. Introduction."}, {"id": "ch1-fig2", "label": "Your Right to Your Health Information", "type": "figure", "ch": "ch1", "desc": "Illustration referenced in 1. Introduction."}, {"id": "ch1-fig3", "label": "Cyber Security", "type": "figure", "ch": "ch1", "desc": "Illustration referenced in 1. Introduction."}, {"id": "ch2-fig4", "label": "Figure 2.1: Superior vs. Inferior", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig5", "label": "Figure 2.2: Proximal vs. Distal", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig6", "label": "Figure 2.3: Medial vs. Lateral", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig7", "label": "Figure 2.4: Abduction vs. Adduction", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig8", "label": "Figure 2.5: Anterior vs. Posterior", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig9", "label": "Figure 2.6: Dorsal vs. Ventral", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig10", "label": "Figure 2.7: Volar vs. Dorsal", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig11", "label": "Figure 2.8: Dorsal vs. Plantar", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig12", "label": "Figure 2.9: Abdominal quadrants", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig13", "label": "Figure 2.10: Abdominal regions", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig14", "label": "Figure 2.11: Cranial and facial bones", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig15", "label": "Figure 2.12: Bones and joints of the thorax", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig16", "label": "Figure 2.13: Radius and ulna of right arm in supinated (left", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig17", "label": "Figure 2.14: Bones of the hand and numbering system", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig18", "label": "Figure 2.15: Joints of the hand", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig19", "label": "Figure 2.16: Bones and joints of the lower extremities", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig20", "label": "Figure 2.17: Schematic knee anatomy", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig21", "label": "Figure 2.18: Bones and joints of the foot", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig22", "label": "Figure 2.19: Internal female reproductive anatomy, sagittal ", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch2-fig23", "label": "Figure 2.20: External female reproductive anatomy", "type": "figure", "ch": "ch2", "desc": "Illustration referenced in 2. Medical Terminology."}, {"id": "ch3-fig24", "label": "Medication reconciliation", "type": "figure", "ch": "ch3", "desc": "Illustration referenced in 3. The Subjective Sections."}, {"id": "ch3-fig25", "label": "Figure 3.2: Healthcare screening data entry in an example EH", "type": "figure", "ch": "ch3", "desc": "Illustration referenced in 3. The Subjective Sections."}, {"id": "ch3-fig26", "label": "Figure 3.3: Smoking documentation in one EHR", "type": "figure", "ch": "ch3", "desc": "Illustration referenced in 3. The Subjective Sections."}, {"id": "ch4-fig27", "label": "Figure 4.1: Example of click-based exam entry in an EHR", "type": "figure", "ch": "ch4", "desc": "Illustration referenced in 4. The Physical Exam."}, {"id": "ch4-fig28", "label": "Pulse oximetry", "type": "figure", "ch": "ch4", "desc": "Illustration referenced in 4. The Physical Exam."}, {"id": "ch4-fig29", "label": "Figure 4.2: Ear anatomy", "type": "figure", "ch": "ch4", "desc": "Illustration referenced in 4. The Physical Exam."}, {"id": "ch4-fig30", "label": "Figure 4.3: Normal TM appearance", "type": "figure", "ch": "ch4", "desc": "Illustration referenced in 4. The Physical Exam."}, {"id": "ch4-fig31", "label": "Figure 4.5: Cervical lymph nodes", "type": "figure", "ch": "ch4", "desc": "Illustration referenced in 4. The Physical Exam."}, {"id": "ch4-fig32", "label": "Figure 4.6: Peripheral pulses", "type": "figure", "ch": "ch4", "desc": "Illustration referenced in 4. The Physical Exam."}, {"id": "ch4-fig33", "label": "Figure 4.7: Positioning for a full pelvic exam, sometimes ca", "type": "figure", "ch": "ch4", "desc": "Illustration referenced in 4. The Physical Exam."}, {"id": "ch4-fig34", "label": "Clinical breast exam", "type": "figure", "ch": "ch4", "desc": "Illustration referenced in 4. The Physical Exam."}, {"id": "ch4-fig35", "label": "Figure 4.8: Types of skin lesions. This photo is licensed un", "type": "figure", "ch": "ch4", "desc": "Illustration referenced in 4. The Physical Exam."}, {"id": "ch4-fig36", "label": "Figure 4.9: Obvious deformity due to a shoulder dislocation,", "type": "figure", "ch": "ch4", "desc": "Illustration referenced in 4. The Physical Exam."}, {"id": "ch4-fig37", "label": "Pediatric physical exam", "type": "figure", "ch": "ch4", "desc": "Illustration referenced in 4. The Physical Exam."}, {"id": "ch5-fig38", "label": "Figure 5.1: POC urine dipstick", "type": "figure", "ch": "ch5", "desc": "Illustration referenced in 5. Objective Sections: Clinical Course, Results, A&amp;P."}, {"id": "ch5-fig39", "label": "Figure 5.4: Diagnosis entry example, highlighting patient vi", "type": "figure", "ch": "ch5", "desc": "Illustration referenced in 5. Objective Sections: Clinical Course, Results, A&amp;P."}, {"id": "ch6a-fig40", "label": "Figure 6.1: Typical patient flow through a clinic", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig41", "label": "Figure 6.2: Rise in the % of the population &gt;65", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig42", "label": "Figure 6.3: Schematic of colonoscopy procedure", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig43", "label": "Figure 6.4: Areas evaluated for bone density — the femoral n", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig44", "label": "Figure 6.5: Urinary retention associated with an enlarged or", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig45", "label": "Figure 6.6: The Pap smear and cervical appearance", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig46", "label": "Figure 6.7: Performing a mammogram", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig47", "label": "Figure 6.8: Mammogram images", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig48", "label": "Figure 6.19: Measuring fundal height", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig49", "label": "Figure 6.9: Icteric sclera in a neonate (Attribution BY 2.0)", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig50", "label": "Figure 6.10: Growth chart for boys 0–24 months old", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig51", "label": "Sports physicals", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig52", "label": "Pre-op visit template", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig53", "label": "Normal retina vs. diabetic retinopathy", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig54", "label": "Figure 6.12: Sensory testing sites for the diabetic foot exa", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig55", "label": "Figure 6.13: Complications of persistent HTN", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig56", "label": "Figure 6.14: Anatomy of a vertebra, disk, and exiting nerve", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig57", "label": "Headache", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig58", "label": "Droplet spread of URIs", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig59", "label": "Figure 6.15: Cystitis", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6a-fig60", "label": "Complex patients", "type": "figure", "ch": "ch6a", "desc": "Illustration referenced in 6A. The Primary Care Clinic."}, {"id": "ch6b-fig61", "label": "Figure 6.1: Typical patient flow through an ED", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig62", "label": "Figure 6.3: The heart and the coronary arteries", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig63", "label": "Figure 6.4: Normal, flat ST segments", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig64", "label": "Figure 6.5: Elevated ST segments", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig65", "label": "Figure 6.6: Cardiac catheterization", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig66", "label": "Figure 6.7: PE schematic", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig67", "label": "Figure 6.8: Abdominal organs", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig68", "label": "Figure 6.9: The colon. This Photo licensed under CC BY.", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig69", "label": "Figure 6.10: Organs and ducts of the epigastrium", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig70", "label": "Figure 6.11: Gallbladder ultrasound", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig71", "label": "Female reproductive anatomy", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig72", "label": "Figure 6.12: Early IUP US. © Nevitt Dilmen / CC BY-SA", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig73", "label": "Figure 6.13: Simple ovarian anatomy. Bfpage / CC BY-SA", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig74", "label": "Figure 6.14: Simple male urinary anatomy, BruceBlaus / CC BY", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig75", "label": "Figure 6.15: Vertebral anatomy with bulging disc", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig76", "label": "Figure 6.16: Functional landmarks of the cerebrum", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig77", "label": "Figure 6.17: Modified NIH Stroke Scale", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig78", "label": "Figure 6.18: Schematic of thrombotic CVA", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig79", "label": "Figure 6.19: Schematic of embolic CVA", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig80", "label": "Alcohol intoxication", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig81", "label": "Breathalyzer test", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig82", "label": "National Suicide Prevention Lifeline", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig83", "label": "Trauma — motor vehicle collision", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig84", "label": "Figure 6.20: Orotracheal intubation", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig85", "label": "Figure 6.21: EMS backboard and C-collar", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch6b-fig86", "label": "Figure 6.22: Dental abscess", "type": "figure", "ch": "ch6b", "desc": "Illustration referenced in 6B. The Emergency Department."}, {"id": "ch7-fig87", "label": "Figure 7.1: EHR template for click entry of socioeconomic de", "type": "figure", "ch": "ch7", "desc": "Illustration referenced in 7. Billing and Reimbursement."}, {"id": "ch7-fig88", "label": "Figure 7.2: Available MIPS quality measures for primary care", "type": "figure", "ch": "ch7", "desc": "Illustration referenced in 7. Billing and Reimbursement."}, {"id": "ch7-fig89", "label": "Figure 7.3: Available ED MIPS quality measures (Updated 2020", "type": "figure", "ch": "ch7", "desc": "Illustration referenced in 7. Billing and Reimbursement."}, {"id": "ch8-fig90", "label": "Figure 8.1: Choosing an assessment in an EHR", "type": "figure", "ch": "ch8", "desc": "Illustration referenced in 8. The Medical Note Big Picture."}, {"id": "ch8-fig91", "label": "Figure 8.2: Narrowing the differential", "type": "figure", "ch": "ch8", "desc": "Illustration referenced in 8. The Medical Note Big Picture."}, {"id": "ch8-fig92", "label": "Figure 8.3: Online patient portal", "type": "figure", "ch": "ch8", "desc": "Illustration referenced in 8. The Medical Note Big Picture."}], "links": [["ch1", "ch1-scribe", "contains"], ["ch1", "ch1-hipaa", "contains"], ["ch2", "ch2-anatomy", "contains"], ["ch2", "ch2-abdominal", "contains"], ["ch2", "ch2-skeletal", "contains"], ["ch2", "ch2-head", "contains"], ["ch2", "ch2-thorax", "contains"], ["ch2", "ch2-upper", "contains"], ["ch2", "ch2-hand", "contains"], ["ch2", "ch2-lower", "contains"], ["ch2", "ch2-foot", "contains"], ["ch2", "ch2-female", "contains"], ["ch2", "ch2-language", "contains"], ["ch3", "ch3-golden", "contains"], ["ch3", "ch3-soap", "contains"], ["ch3", "ch3-outline", "contains"], ["ch3", "ch3-cc", "contains"], ["ch3", "ch3-hpi", "contains"], ["ch3", "ch3-ros", "contains"], ["ch4", "ch4-vitals", "contains"], ["ch4", "ch4-adult", "contains"], ["ch4", "ch4-peds", "contains"], ["ch5", "ch5-course", "contains"], ["ch5", "ch5-results", "contains"], ["ch5", "ch5-ap", "contains"], ["ch5", "ch5-mdm", "contains"], ["ch5", "ch5-dx", "contains"], ["ch5", "ch5-plan", "contains"], ["ch5", "ch5-meds", "contains"], ["ch5", "ch5-examples", "contains"], ["ch5", "ch5-addenda", "contains"], ["ch5", "ch5-comm", "contains"], ["ch6a", "ch6a-encounters", "contains"], ["ch6a", "ch6a-annual", "contains"], ["ch6a", "ch6a-bone", "contains"], ["ch6a", "ch6a-female", "contains"], ["ch6a", "ch6a-prenatal", "contains"], ["ch6a", "ch6a-wcc", "contains"], ["ch6a", "ch6a-preop", "contains"], ["ch6a", "ch6a-chronic", "contains"], ["ch6a", "ch6a-acute", "contains"], ["ch6a", "ch6a-complex", "contains"], ["ch6a", "ch6a-notes", "contains"], ["ch6a", "ch6a-note2", "contains"], ["ch6b", "ch6b-personnel", "contains"], ["ch6b", "ch6b-process", "contains"], ["ch6b", "ch6b-conditions", "contains"], ["ch6b", "ch6b-meds", "contains"], ["ch6b", "ch6b-note", "contains"], ["ch7", "ch7-em", "contains"], ["ch7", "ch7-time", "contains"], ["ch7", "ch7-edem", "contains"], ["ch7", "ch7-obs", "contains"], ["ch7", "ch7-critical", "contains"], ["ch7", "ch7-mdm", "contains"], ["ch7", "ch7-necessity", "contains"], ["ch7", "ch7-procedure", "contains"], ["ch7", "ch7-ekg", "contains"], ["ch7", "ch7-smoking", "contains"], ["ch7", "ch7-ultrasound", "contains"], ["ch7", "ch7-cms", "contains"], ["ch7", "ch7-tjc", "contains"], ["ch7", "ch7-summary", "contains"], ["ch8", "ch8-note", "contains"], ["ch8", "ch8-today", "contains"], ["ch8", "ch8-differential", "contains"], ["ch8", "ch8-future", "contains"], ["ch8", "ch8-access", "contains"], ["ch8", "ch8-billing", "contains"], ["ch8", "ch8-quality", "contains"], ["ch8", "ch8-medicolegal", "contains"], ["ch8", "ch8-summary", "contains"], ["ch1", "ch1-fig1", "illustrates"], ["ch1", "ch1-fig2", "illustrates"], ["ch1", "ch1-fig3", "illustrates"], ["ch2", "ch2-fig4", "illustrates"], ["ch2", "ch2-fig5", "illustrates"], ["ch2", "ch2-fig6", "illustrates"], ["ch2", "ch2-fig7", "illustrates"], ["ch2", "ch2-fig8", "illustrates"], ["ch2", "ch2-fig9", "illustrates"], ["ch2", "ch2-fig10", "illustrates"], ["ch2", "ch2-fig11", "illustrates"], ["ch2", "ch2-fig12", "illustrates"], ["ch2", "ch2-fig13", "illustrates"], ["ch2", "ch2-fig14", "illustrates"], ["ch2", "ch2-fig15", "illustrates"], ["ch2", "ch2-fig16", "illustrates"], ["ch2", "ch2-fig17", "illustrates"], ["ch2", "ch2-fig18", "illustrates"], ["ch2", "ch2-fig19", "illustrates"], ["ch2", "ch2-fig20", "illustrates"], ["ch2", "ch2-fig21", "illustrates"], ["ch2", "ch2-fig22", "illustrates"], ["ch2", "ch2-fig23", "illustrates"], ["ch3", "ch3-fig24", "illustrates"], ["ch3", "ch3-fig25", "illustrates"], ["ch3", "ch3-fig26", "illustrates"], ["ch4", "ch4-fig27", "illustrates"], ["ch4", "ch4-fig28", "illustrates"], ["ch4", "ch4-fig29", "illustrates"], ["ch4", "ch4-fig30", "illustrates"], ["ch4", "ch4-fig31", "illustrates"], ["ch4", "ch4-fig32", "illustrates"], ["ch4", "ch4-fig33", "illustrates"], ["ch4", "ch4-fig34", "illustrates"], ["ch4", "ch4-fig35", "illustrates"], ["ch4", "ch4-fig36", "illustrates"], ["ch4", "ch4-fig37", "illustrates"], ["ch5", "ch5-fig38", "illustrates"], ["ch5", "ch5-fig39", "illustrates"], ["ch6a", "ch6a-fig40", "illustrates"], ["ch6a", "ch6a-fig41", "illustrates"], ["ch6a", "ch6a-fig42", "illustrates"], ["ch6a", "ch6a-fig43", "illustrates"], ["ch6a", "ch6a-fig44", "illustrates"], ["ch6a", "ch6a-fig45", "illustrates"], ["ch6a", "ch6a-fig46", "illustrates"], ["ch6a", "ch6a-fig47", "illustrates"], ["ch6a", "ch6a-fig48", "illustrates"], ["ch6a", "ch6a-fig49", "illustrates"], ["ch6a", "ch6a-fig50", "illustrates"], ["ch6a", "ch6a-fig51", "illustrates"], ["ch6a", "ch6a-fig52", "illustrates"], ["ch6a", "ch6a-fig53", "illustrates"], ["ch6a", "ch6a-fig54", "illustrates"], ["ch6a", "ch6a-fig55", "illustrates"], ["ch6a", "ch6a-fig56", "illustrates"], ["ch6a", "ch6a-fig57", "illustrates"], ["ch6a", "ch6a-fig58", "illustrates"], ["ch6a", "ch6a-fig59", "illustrates"], ["ch6a", "ch6a-fig60", "illustrates"], ["ch6b", "ch6b-fig61", "illustrates"], ["ch6b", "ch6b-fig62", "illustrates"], ["ch6b", "ch6b-fig63", "illustrates"], ["ch6b", "ch6b-fig64", "illustrates"], ["ch6b", "ch6b-fig65", "illustrates"], ["ch6b", "ch6b-fig66", "illustrates"], ["ch6b", "ch6b-fig67", "illustrates"], ["ch6b", "ch6b-fig68", "illustrates"], ["ch6b", "ch6b-fig69", "illustrates"], ["ch6b", "ch6b-fig70", "illustrates"], ["ch6b", "ch6b-fig71", "illustrates"], ["ch6b", "ch6b-fig72", "illustrates"], ["ch6b", "ch6b-fig73", "illustrates"], ["ch6b", "ch6b-fig74", "illustrates"], ["ch6b", "ch6b-fig75", "illustrates"], ["ch6b", "ch6b-fig76", "illustrates"], ["ch6b", "ch6b-fig77", "illustrates"], ["ch6b", "ch6b-fig78", "illustrates"], ["ch6b", "ch6b-fig79", "illustrates"], ["ch6b", "ch6b-fig80", "illustrates"], ["ch6b", "ch6b-fig81", "illustrates"], ["ch6b", "ch6b-fig82", "illustrates"], ["ch6b", "ch6b-fig83", "illustrates"], ["ch6b", "ch6b-fig84", "illustrates"], ["ch6b", "ch6b-fig85", "illustrates"], ["ch6b", "ch6b-fig86", "illustrates"], ["ch7", "ch7-fig87", "illustrates"], ["ch7", "ch7-fig88", "illustrates"], ["ch7", "ch7-fig89", "illustrates"], ["ch8", "ch8-fig90", "illustrates"], ["ch8", "ch8-fig91", "illustrates"], ["ch8", "ch8-fig92", "illustrates"], ["ch1-scribe", "scribe", "defines"], ["ch1-hipaa", "hipaa", "explains"], ["hipaa", "phi", "protects"], ["phi", "min-necessary", "limited by"], ["ch2-anatomy", "anatomy", "teaches"], ["ch2-abdominal", "abd-regions", "teaches"], ["ch2-skeletal", "skeletal", "teaches"], ["ch2-language", "terminology", "teaches"], ["ch3-golden", "golden-rules", "states"], ["ch3-soap", "soap", "introduces"], ["ch3-cc", "cc", "details"], ["ch3-hpi", "hpi", "details"], ["ch3-ros", "ros", "details"], ["soap", "cc", "contains"], ["soap", "hpi", "contains"], ["soap", "ros", "contains"], ["soap", "phys-exam", "contains"], ["soap", "ap", "contains"], ["soap", "vitals", "contains"], ["soap", "pmhx", "contains"], ["hpi", "cc", "expands"], ["hpi", "terminology", "uses"], ["golden-rules", "soap", "governs"], ["ch4-vitals", "vitals", "details"], ["ch4-adult", "phys-exam", "adult exam"], ["ch4-peds", "phys-exam", "pediatric exam"], ["phys-exam", "vitals", "supported by"], ["phys-exam", "anatomy", "uses"], ["ch5-course", "clinical-course", "details"], ["ch5-results", "results", "details"], ["ch5-ap", "ap", "details"], ["ch5-mdm", "cdm", "details"], ["ch5-dx", "icd10", "details"], ["ch5-addenda", "addendum", "details"], ["ap", "cdm", "justified by"], ["ap", "icd10", "coded by"], ["ap", "results", "based on"], ["clinical-course", "results", "generates"], ["addendum", "medicolegal", "affects"], ["ch6a-annual", "annual-physical", "covers"], ["ch6a-prenatal", "prenatal", "covers"], ["ch6a-wcc", "wcc", "covers"], ["ch6a-chronic", "chronic", "covers"], ["primary-care", "soap", "uses"], ["primary-care", "annual-physical", "offers"], ["primary-care", "chronic", "manages"], ["primary-care", "prenatal", "offers"], ["primary-care", "wcc", "offers"], ["ch6b-process", "ed", "walks through"], ["ch6b-conditions", "chest-pain", "covers"], ["ch6b-conditions", "stroke", "covers"], ["ch6b-conditions", "abdo-ed", "covers"], ["ch6b-meds", "ed-meds", "covers"], ["ed", "triage", "starts with"], ["ed", "chest-pain", "treats"], ["ed", "abdo-ed", "treats"], ["ed", "stroke", "treats"], ["ed", "ed-meds", "administers"], ["ed", "soap", "uses"], ["chest-pain", "results", "orders"], ["stroke", "time-billing", "time-critical"], ["ch7-em", "em-levels", "details"], ["ch7-time", "time-billing", "details"], ["ch7-critical", "critical-care", "details"], ["ch7-necessity", "med-necessity", "details"], ["ch7-cms", "quality-measures", "details"], ["em-levels", "cdm", "driven by"], ["em-levels", "time-billing", "or"], ["critical-care", "time-billing", "subset of"], ["med-necessity", "icd10", "links to"], ["quality-measures", "em-levels", "affects"], ["quality-measures", "primary-care", "measures"], ["ch8-note", "chart-vs-note", "defines"], ["ch8-future", "future-readers", "describes"], ["ch8-medicolegal", "medicolegal", "describes"], ["chart-vs-note", "medicolegal", "evidence in"], ["future-readers", "medicolegal", "audience of"], ["future-readers", "addendum", "constrained by"], ["icd10", "ap", "codes"], ["chronic", "em-levels", "billed by"], ["annual-physical", "quality-measures", "scored by"], ["scribe", "golden-rules", "obeys"], ["scribe", "hipaa", "must follow"], ["scribe", "soap", "writes"], ["terminology", "anatomy", "describes"], ["anatomy", "abd-regions", "includes"], ["anatomy", "skeletal", "includes"]]}, "glossary": {"SOAP": "Subjective, Objective, Assessment, Plan — the standard medical note format.", "HPI": "History of Present Illness — narrative of the current complaint (OLDCARTS).", "ROS": "Review of Systems — head-to-toe inventory of positive/negative symptoms.", "CC": "Chief Complaint — the primary reason for the encounter, often in patient's words.", "PHI": "Protected Health Information — individually identifiable health data under HIPAA.", "ICD-10": "International Classification of Diseases, 10th revision — diagnosis coding system.", "E/M": "Evaluation and Management — billing category for office/ED visits (e.g., 99213).", "MDM": "Medical Decision Making — complexity of problems, data, and risk; sets E/M level.", "CDM": "Clinical Decision Making — same concept as MDM; documented reasoning.", "AWV": "Annual Wellness Visit — Medicare preventive visit with screening plan.", "WCC": "Well Child Check — scheduled pediatric preventive visit.", "VS": "Vital Signs — BP, pulse, respirations, temperature, oxygen saturation.", "ACS": "Acute Coronary Syndrome — heart attack/unstable angina spectrum.", "NIHSS": "National Institutes of Health Stroke Scale — stroke severity score.", "tPA": "Tissue plasminogen activator — clot-busting drug for ischemic stroke.", "ESI": "Emergency Severity Index — 5-level triage acuity scale.", "Addendum": "A later addition to a note, signed, dated, with reason; never erases originals.", "OLDCARTS": "Onset, Location, Duration, Character, Aggravating/Relieving, Timing, Severity — HPI elements.", "Proximal": "Closer to the trunk or point of attachment (opposite of distal).", "Distal": "Farther from the trunk or point of attachment.", "Superior": "Above or toward the head (cranial).", "Inferior": "Below or toward the feet (caudal).", "Tachycardia": "Heart rate over 100 bpm in adults.", "Bradycardia": "Heart rate under 60 bpm in adults.", "Dyspnea": "Shortness of breath or labored breathing.", "Differential": "List of plausible diagnoses considered before concluding.", "Disposition": "Where the patient goes after the ED visit (home, admit, transfer).", "Co-sign": "Provider signature validating the scribe-documented note.", "Syncope": "Medical term for fainting or transient loss of consciousness.", "Emesis": "Vomiting.", "Malaise": "General feeling of being unwell.", "Pyelonephritis": "Bacterial infection of the kidney (a 'kidney infection').", "Nephrolithiasis": "Kidney stones.", "Pancreatitis": "Inflammation of the pancreas; check lipase.", "Cholelithiasis": "Gallstones; biliary colic worse after fatty food.", "Rales": "Crackles — abnormal popping lung sounds on auscultation.", "Rhonchi": "Low-pitched snoring/gurgling lung sounds.", "Wheezing": "High-pitched whistling breathing sound.", "Edema": "Swelling caused by excess fluid, not redness.", "Erythema": "Redness of the skin.", "Cerumen": "Earwax.", "Umbilicus": "The navel / belly button.", "Inguinal": "Relating to the groin.", "Occipital": "Back of the head.", "Frontal": "Forehead region.", "Parietal": "Top/side scalp.", "Temporal": "Side of the head.", "Volar": "Palm side of the hand (plantar = sole of foot).", "Radial": "Thumb side of the forearm/hand.", "Ulnar": "Little-finger side of the forearm/hand.", "Hallux": "The big toe.", "-sclerosis": "Suffix meaning HARDENING (contrast -malacia = softening).", "prn": "Latin pro re nata — 'as needed'.", "DEXA": "Dual-energy X-ray absorptiometry — bone-density scan.", "Alendronate": "Bisphosphonate medication for osteoporosis.", "Metformin": "First-line oral medication for type II diabetes.", "Atorvastatin": "Statin medication for cholesterol (not diabetes).", "Coumadin": "Brand name for warfarin, an anticoagulant.", "D-dimer": "Clot-breakdown lab marker; screens for DVT/PE.", "Troponin": "Blood marker detecting heart-muscle damage.", "Lipase": "Enzyme lab test diagnosing pancreatitis.", "PHQ-9": "Nine-item depression screen (PHQ-2 is its short version; GAD-7 screens anxiety).", "Pantoprazole": "Proton pump inhibitor reducing stomach acid.", "McBurney's point": "RLQ tenderness landmark for appendicitis.", "FAST exam": "Focused Assessment with Sonography in Trauma — record each view seen."}, "flashcards": [{"front": "What does SOAP stand for?", "back": "Subjective, Objective, Assessment, Plan.", "tag": "Ch.3 Notes"}, {"front": "Name the OLDCARTS elements.", "back": "Onset, Location, Duration, Character, Aggravating/Relieving factors, Timing, Severity.", "tag": "Ch.3 HPI"}, {"front": "What is PHI?", "back": "Protected Health Information — any individually identifiable health data governed by HIPAA.", "tag": "Ch.1 HIPAA"}, {"front": "Rule for corrections after a note is signed?", "back": "Never delete — write an addendum that is dated, timed, attributed, and states the reason.", "tag": "Ch.5 Addenda"}, {"front": "Normal adult vitals: BP, HR, RR, SpO2?", "back": "About 120/80 (<130/80), 60–100 bpm, 12–20/min, at least 95% on room air.", "tag": "Ch.4 Vitals"}, {"front": "How many abdominal quadrants and regions?", "back": "4 quadrants (umbilical cross) or 9 regions (two horizontal + two vertical lines).", "tag": "Ch.2 Anatomy"}, {"front": "Proximal vs. distal?", "back": "Proximal = closer to trunk/attachment; distal = farther (elbow is proximal to wrist).", "tag": "Ch.2 Terms"}, {"front": "What drives E/M level selection since 2021 (outpatient)?", "back": "Medical Decision Making or total time on the date of the encounter.", "tag": "Ch.7 Billing"}, {"front": "ED critical care time threshold?", "back": "At least 30 minutes of continuous, high-intensity care; independently billed.", "tag": "Ch.7 Billing"}, {"front": "Door-to-ECG target for chest pain?", "back": "Within 10 minutes of arrival (ACS rule-out).", "tag": "Ch.6B ED"}, {"front": "What is 'medical necessity'?", "back": "The service must be justified by the patient's signs/symptoms/diagnosis — documented so payers accept it.", "tag": "Ch.7 Billing"}, {"front": "Who are the future readers of a chart?", "back": "Consultants, other providers, auditors/payers, lawyers, and the patient themselves.", "tag": "Ch.8 Big Picture"}, {"front": "Can a scribe write that the exam was 'normal'?", "back": "Only if the provider stated it; scribes record exactly what is said or done — never assume.", "tag": "Ch.3 Golden Rules"}, {"front": "What is the minimum necessary standard?", "back": "Access/use/disclose only the PHI required for the task at hand.", "tag": "Ch.1 HIPAA"}, {"front": "Medical term for fainting?", "back": "Syncope.", "tag": "Ch.3 Symptoms"}, {"front": "Rales are better known as…?", "back": "Crackles — brief popping sounds on inspiration.", "tag": "Ch.4 Lungs"}, {"front": "Which lab diagnoses pancreatitis?", "back": "Lipase (often with amylase).", "tag": "Ch.6B Labs"}, {"front": "Classic appendix pain location?", "back": "Right lower quadrant (McBurney's point).", "tag": "Ch.6B ED"}, {"front": "Low TSH means…?", "back": "Hyperthyroidism (high TSH suggests hypothyroidism).", "tag": "Ch.6A Chronic"}]}, "glossary": {"SOAP": "Subjective, Objective, Assessment, Plan — the standard medical note format.", "HPI": "History of Present Illness — narrative of the current complaint (OLDCARTS).", "ROS": "Review of Systems — head-to-toe inventory of positive/negative symptoms.", "CC": "Chief Complaint — the primary reason for the encounter, often in patient's words.", "PHI": "Protected Health Information — individually identifiable health data under HIPAA.", "ICD-10": "International Classification of Diseases, 10th revision — diagnosis coding system.", "E/M": "Evaluation and Management — billing category for office/ED visits (e.g., 99213).", "MDM": "Medical Decision Making — complexity of problems, data, and risk; sets E/M level.", "CDM": "Clinical Decision Making — same concept as MDM; documented reasoning.", "AWV": "Annual Wellness Visit — Medicare preventive visit with screening plan.", "WCC": "Well Child Check — scheduled pediatric preventive visit.", "VS": "Vital Signs — BP, pulse, respirations, temperature, oxygen saturation.", "ACS": "Acute Coronary Syndrome — heart attack/unstable angina spectrum.", "NIHSS": "National Institutes of Health Stroke Scale — stroke severity score.", "tPA": "Tissue plasminogen activator — clot-busting drug for ischemic stroke.", "ESI": "Emergency Severity Index — 5-level triage acuity scale.", "Addendum": "A later addition to a note, signed, dated, with reason; never erases originals.", "OLDCARTS": "Onset, Location, Duration, Character, Aggravating/Relieving, Timing, Severity — HPI elements.", "Proximal": "Closer to the trunk or point of attachment (opposite of distal).", "Distal": "Farther from the trunk or point of attachment.", "Superior": "Above or toward the head (cranial).", "Inferior": "Below or toward the feet (caudal).", "Tachycardia": "Heart rate over 100 bpm in adults.", "Bradycardia": "Heart rate under 60 bpm in adults.", "Dyspnea": "Shortness of breath or labored breathing.", "Differential": "List of plausible diagnoses considered before concluding.", "Disposition": "Where the patient goes after the ED visit (home, admit, transfer).", "Co-sign": "Provider signature validating the scribe-documented note.", "Syncope": "Medical term for fainting or transient loss of consciousness.", "Emesis": "Vomiting.", "Malaise": "General feeling of being unwell.", "Pyelonephritis": "Bacterial infection of the kidney (a 'kidney infection').", "Nephrolithiasis": "Kidney stones.", "Pancreatitis": "Inflammation of the pancreas; check lipase.", "Cholelithiasis": "Gallstones; biliary colic worse after fatty food.", "Rales": "Crackles — abnormal popping lung sounds on auscultation.", "Rhonchi": "Low-pitched snoring/gurgling lung sounds.", "Wheezing": "High-pitched whistling breathing sound.", "Edema": "Swelling caused by excess fluid, not redness.", "Erythema": "Redness of the skin.", "Cerumen": "Earwax.", "Umbilicus": "The navel / belly button.", "Inguinal": "Relating to the groin.", "Occipital": "Back of the head.", "Frontal": "Forehead region.", "Parietal": "Top/side scalp.", "Temporal": "Side of the head.", "Volar": "Palm side of the hand (plantar = sole of foot).", "Radial": "Thumb side of the forearm/hand.", "Ulnar": "Little-finger side of the forearm/hand.", "Hallux": "The big toe.", "-sclerosis": "Suffix meaning HARDENING (contrast -malacia = softening).", "prn": "Latin pro re nata — 'as needed'.", "DEXA": "Dual-energy X-ray absorptiometry — bone-density scan.", "Alendronate": "Bisphosphonate medication for osteoporosis.", "Metformin": "First-line oral medication for type II diabetes.", "Atorvastatin": "Statin medication for cholesterol (not diabetes).", "Coumadin": "Brand name for warfarin, an anticoagulant.", "D-dimer": "Clot-breakdown lab marker; screens for DVT/PE.", "Troponin": "Blood marker detecting heart-muscle damage.", "Lipase": "Enzyme lab test diagnosing pancreatitis.", "PHQ-9": "Nine-item depression screen (PHQ-2 is its short version; GAD-7 screens anxiety).", "Pantoprazole": "Proton pump inhibitor reducing stomach acid.", "McBurney's point": "RLQ tenderness landmark for appendicitis.", "FAST exam": "Focused Assessment with Sonography in Trauma — record each view seen."}, "flashcards": [{"front": "What does SOAP stand for?", "back": "Subjective, Objective, Assessment, Plan.", "tag": "Ch.3 Notes"}, {"front": "Name the OLDCARTS elements.", "back": "Onset, Location, Duration, Character, Aggravating/Relieving factors, Timing, Severity.", "tag": "Ch.3 HPI"}, {"front": "What is PHI?", "back": "Protected Health Information — any individually identifiable health data governed by HIPAA.", "tag": "Ch.1 HIPAA"}, {"front": "Rule for corrections after a note is signed?", "back": "Never delete — write an addendum that is dated, timed, attributed, and states the reason.", "tag": "Ch.5 Addenda"}, {"front": "Normal adult vitals: BP, HR, RR, SpO2?", "back": "About 120/80 (<130/80), 60–100 bpm, 12–20/min, at least 95% on room air.", "tag": "Ch.4 Vitals"}, {"front": "How many abdominal quadrants and regions?", "back": "4 quadrants (umbilical cross) or 9 regions (two horizontal + two vertical lines).", "tag": "Ch.2 Anatomy"}, {"front": "Proximal vs. distal?", "back": "Proximal = closer to trunk/attachment; distal = farther (elbow is proximal to wrist).", "tag": "Ch.2 Terms"}, {"front": "What drives E/M level selection since 2021 (outpatient)?", "back": "Medical Decision Making or total time on the date of the encounter.", "tag": "Ch.7 Billing"}, {"front": "ED critical care time threshold?", "back": "At least 30 minutes of continuous, high-intensity care; independently billed.", "tag": "Ch.7 Billing"}, {"front": "Door-to-ECG target for chest pain?", "back": "Within 10 minutes of arrival (ACS rule-out).", "tag": "Ch.6B ED"}, {"front": "What is 'medical necessity'?", "back": "The service must be justified by the patient's signs/symptoms/diagnosis — documented so payers accept it.", "tag": "Ch.7 Billing"}, {"front": "Who are the future readers of a chart?", "back": "Consultants, other providers, auditors/payers, lawyers, and the patient themselves.", "tag": "Ch.8 Big Picture"}, {"front": "Can a scribe write that the exam was 'normal'?", "back": "Only if the provider stated it; scribes record exactly what is said or done — never assume.", "tag": "Ch.3 Golden Rules"}, {"front": "What is the minimum necessary standard?", "back": "Access/use/disclose only the PHI required for the task at hand.", "tag": "Ch.1 HIPAA"}, {"front": "Medical term for fainting?", "back": "Syncope.", "tag": "Ch.3 Symptoms"}, {"front": "Rales are better known as…?", "back": "Crackles — brief popping sounds on inspiration.", "tag": "Ch.4 Lungs"}, {"front": "Which lab diagnoses pancreatitis?", "back": "Lipase (often with amylase).", "tag": "Ch.6B Labs"}, {"front": "Classic appendix pain location?", "back": "Right lower quadrant (McBurney's point).", "tag": "Ch.6B ED"}, {"front": "Low TSH means…?", "back": "Hyperthyroidism (high TSH suggests hypothyroidism).", "tag": "Ch.6A Chronic"}], "mcqs": {"ch1": [{"q": "Which of the following is considered PHI?", "opts": ["Patient’s name", "Patient’s phone number", "Patient’s address", "All of the above"], "a": [3], "why": "Names, phone numbers and addresses are all identifiers — everything about the patient's care counts as PHI.", "links": ["ch1-hipaa"]}, {"q": "Which of the following actions is a scribe prohibited from performing?", "opts": ["Documenting all performed elements of the physical exam", "Writing the final clinical decision making and assessment dictated by the provider", "Relaying verbal orders to nursing staff", "Alerting the physician if a patient’s chart is incomplete"], "a": [2], "why": "Scribes may not relay verbal orders to staff; that is a licensed-clinician task. They do document exams and dictated A&P, and may flag incomplete charts.", "links": ["ch1-scribe", "ch3-golden"]}, {"q": "PHI can never be accessed without a patient’s consent.", "opts": ["True", "False"], "a": [1], "why": "False — HIPAA permits access for treatment, payment and operations without explicit consent (minimum-necessary still applies).", "links": ["ch1-hipaa"]}, {"q": "What does PHI stand for?", "opts": ["Protected health information", "Patient heart information", "Protected human information", "Patient health information"], "a": [0], "why": "PHI = Protected Health Information.", "links": ["ch1-hipaa"]}, {"q": "Scribes are certified just like other healthcare providers.", "opts": ["True", "False"], "a": [1], "why": "False — there is no universal scribe certification/license; requirements vary by employer and state.", "links": ["ch1-scribe"]}, {"q": "Since scribes are a nationally-standardized role, scribe positions are the same from one employer to another.", "opts": ["True", "False"], "a": [1], "why": "False — the role is not nationally standardized; duties differ widely between employers.", "links": ["ch1-scribe"]}, {"q": "To be on the safe side, scribes should avoid discussing work-related topics on social media.", "opts": ["True", "False"], "a": [0], "why": "True — never discuss work or patients on social media; even vague posts risk a HIPAA violation.", "links": ["ch1-hipaa", "ch1-scribe"]}], "ch2": [{"q": "Which term best describes the location of the big toe on the foot?", "opts": ["Medial", "Lateral", "Proximal", "Ventral"], "a": [0], "why": "The big toe sits toward the body midline — medial. (Recall: hallux = great toe.)", "links": ["ch2-anatomy"]}, {"q": "Palms of the hand and soles of the feet can be described by which term?", "opts": ["Distal", "Dorsal", "Volar", "Posterior"], "a": [2], "why": "'Volar' describes the palm surface of the hand. Dorsal/posterior would be the back of the hand; plantar is reserved for the sole.", "links": ["ch2-upper", "ch2-foot"]}, {"q": "The belly button is more technically known by which term?", "opts": ["Epigastric region", "Pubis", "Periumbilical region", "Umbilicus"], "a": [3], "why": "The umbilicus is the technical name for the belly button.", "links": ["ch2-abdominal"]}, {"q": "True or False: the knee is distal to the foot.", "opts": ["True", "False"], "a": [1], "why": "False — the knee is PROXIMAL to the foot; distal means farther from the trunk.", "links": ["ch2-anatomy", "ch2-lower"]}, {"q": "True or False: the thumb is located on the ulnar aspect of the hand.", "opts": ["True", "False"], "a": [1], "why": "False — the thumb is on the radial aspect; the ulna runs along the little-finger side.", "links": ["ch2-upper", "ch2-hand"]}, {"q": "The back of the head is more technically known as which part of the scalp?", "opts": ["Occipital", "Temporal", "Parietal", "Frontal"], "a": [0], "why": "Occipital = back of the head; frontal = forehead; parietal = top; temporal = sides.", "links": ["ch2-head"]}, {"q": "Which description below best describes the location of a fingerprint?", "opts": ["Proximal volar phalanx", "Proximal dorsal phalanx", "Distal volar phalanx", "Distal plantar phalanx"], "a": [2], "why": "A fingerprint is on the distal (fingertip) volar (palm-side) phalanx.", "links": ["ch2-hand"]}, {"q": "Which term is NOT an anterior landmark?", "opts": ["Acromioclavicular joint", "Sternum", "Clavicles", "Costovertebral angle"], "a": [3], "why": "The costovertebral angle (CVA) is on the BACK — flank percussion for kidney tenderness. The others are anterior landmarks.", "links": ["ch2-thorax", "ch2-skeletal"]}, {"q": "The term -sclerosis refers to softening.", "opts": ["True", "False"], "a": [1], "why": "False — -sclerosis means HARDENING (e.g., multiple sclerosis); -malacia means softening.", "links": ["ch2-language"]}, {"q": "Which term describes low central abdominal pain?", "opts": ["Suprapubic", "Umbilical", "Supraumbilical", "Periumbilical"], "a": [3], "why": "Periumbilical = around the navel — the classic low-central abdominal descriptor (think early appendicitis). Umbilical names the point itself; suprapubic is lower.", "links": ["ch2-abdominal"]}, {"q": "Which root word refers to the liver?", "opts": ["Cardio", "Nephro", "Hepat", "Dermat"], "a": [2], "why": "Hepat/o = liver (hepatitis, hepatology). Cardio=heart, nephro=kidney, dermat=skin.", "links": ["ch2-language"]}, {"q": "What is the medical term for the “groin” area?", "opts": ["Suprapubic", "Periumbilical", "Inguinal", "Femoral"], "a": [2], "why": "Inguinal = the groin region (think: inguinal hernia).", "links": ["ch2-abdominal", "ch2-lower"]}, {"q": "The abbreviation “prn” means “as needed.”", "opts": ["True", "False"], "a": [0], "why": "True — prn is Latin pro re nata, 'as needed'.", "links": ["ch2-language"]}], "ch3": [{"q": "Which answer below would be an unacceptable chief complaint?", "opts": ["Urinary tract infection", "Dysuria", "Urinary frequency", "Cough", "Follow-up hypertension"], "a": [0], "why": "'Urinary tract infection' is a DIAGNOSIS, not a complaint. The CC should be the patient's problem in their words (dysuria, frequency, cough).", "links": ["ch3-cc", "ch3-golden"]}, {"q": "Which is a more technical term for “fainting?”", "opts": ["Emesis", "Dyspnea", "Malaise", "Syncope"], "a": [3], "why": "Syncope = medical term for fainting. Emesis=vomiting, dyspnea=breathlessness, malaise=general unwell feeling.", "links": ["ch3-hpi", "ch3-ros"]}, {"q": "Which answer is NOT a description of the quality of pain?", "opts": ["Sharp", "Severe", "Burning", "Dull"], "a": [1], "why": "'Severe' describes pain INTENSITY, not quality. Sharp/burning/dull are quality descriptors.", "links": ["ch3-hpi"]}, {"q": "Which symptom is NOT part of the constitutional system in the ROS?", "opts": ["Malaise", "Fever", "Fatigue", "All of the above are part of the constitutional system"], "a": [3], "why": "All three — malaise, fever and fatigue ARE constitutional symptoms in the ROS.", "links": ["ch3-ros"]}, {"q": "Most patients can relay all medications and dosage accurately.", "opts": ["True", "False"], "a": [1], "why": "False — patients frequently miss OTC meds, supplements, eye drops or recent changes; verify with bottles/lists.", "links": ["ch3-ros"]}, {"q": "Chief Complaint and Reason for Visit are the same.", "opts": ["True", "False"], "a": [1], "why": "False — the CC is the immediate complaint; the reason for visit can include follow-up/routine purposes.", "links": ["ch3-cc"]}, {"q": "A medication side effect is the same as an allergy.", "opts": ["True", "False"], "a": [1], "why": "False — a side effect (e.g., ACE-inhibitor cough) is not an allergy; document which it is and the reaction.", "links": ["ch3-ros", "ch3-golden"]}], "ch4": [{"q": "Which abnormal lung sound is also known as crackles?", "opts": ["Rales", "Rhonchi", "Wheezing", "Sputum"], "a": [0], "why": "Rales = crackles (also called coarse crackles). Rhonchi = snoring sounds, wheezing = whistling, sputum = mucus.", "links": ["ch4-adult"]}, {"q": "Which grade denotes a normal pulse strength?", "opts": ["1+", "2+", "3+", "4+"], "a": [1], "why": "2+ is normal pulse amplitude; 1+ diminished, 3+/4+ bounding.", "links": ["ch4-vitals", "ch4-adult"]}, {"q": "A rapid heart rate is known as what?", "opts": ["Tachypnea", "Tachycardia", "Bradycardia", "Hypoxia"], "a": [1], "why": "Tachycardia = fast heart rate (>100 adults). Tachypnea = fast breathing; bradycardia = slow; hypoxia = low O2.", "links": ["ch4-vitals", "ch2-language"]}, {"q": "Which term is NOT part of the neck exam?", "opts": ["Tenderness", "Lymphadenopathy", "Cerumen", "Thyromegaly"], "a": [2], "why": "Cerumen = earwax — that belongs to the EAR exam, not the neck (tenderness, lymphadenopathy, thyromegaly are neck findings).", "links": ["ch4-adult"]}, {"q": "Edema refers to redness surrounding an injury.", "opts": ["True", "False"], "a": [1], "why": "False — edema is SWELLING from fluid; redness is erythema.", "links": ["ch4-adult", "ch2-language"]}, {"q": "The physical exam generally includes:", "opts": ["Inspection", "Auscultation", "Palpation", "All of the above"], "a": [3], "why": "All of the above — inspection, auscultation and palpation (plus percussion) make up the physical exam.", "links": ["ch4-adult"]}, {"q": "Symptoms are often included in the physical exam.", "opts": ["True", "False"], "a": [1], "why": "False — SYMPTOMS (subjective) belong in the HPI/ROS; the exam documents SIGNS (objective findings).", "links": ["ch3-soap", "ch4-adult"]}], "ch5": [{"q": "What should be included in the Clinic/ED course?", "opts": ["Labs, imaging, therapies, consultations, and re-evaluations", "Labs, imaging, and therapies", "Consultations and re-evaluations", "Labs, therapies, and re-evaluations"], "a": [0], "why": "The course section captures everything during the stay: labs, imaging, therapies, consults AND re-evaluations.", "links": ["ch5-course"]}, {"q": "What does ICD stand for?", "opts": ["Important classification of disease", "International certification of disease", "International classification of disease", "Important certification of disease"], "a": [2], "why": "ICD = International Classification of Diseases (currently ICD-10-CM).", "links": ["ch5-dx"]}, {"q": "Which of the following should be included in an assessment?", "opts": ["Acute or chronic", "Stable or unstable", "Well-controlled or poorly-controlled", "All of the above"], "a": [3], "why": "All of the above — acute/chronic, stable/unstable, well/poorly-controlled qualify each diagnosis.", "links": ["ch5-ap"]}, {"q": "When is an addendum a necessary component to the note?", "opts": ["When changes are made to the note before being signed off", "When changes are made to the note after being signed off", "When changes are made to the note before or after being signed off", "Never — you can just edit the note"], "a": [1], "why": "An addendum is used for changes made AFTER the note is signed; earlier changes are edited within the draft.", "links": ["ch5-addenda"]}, {"q": "Since providers are able to see results very quickly in the EHR, there is no need to specify that the provider reviewed the results.", "opts": ["True", "False"], "a": [1], "why": "False — documentation must still state what results were reviewed and their interpretation.", "links": ["ch5-results"]}, {"q": "A clinic visit should only list 1–2 diagnoses to reduce confusion.", "opts": ["True", "False"], "a": [1], "why": "False — list every diagnosis addressed; under-documenting hides medical necessity and harms billing/care.", "links": ["ch5-dx", "ch7-necessity"]}, {"q": "Medication errors are common, so the Plan should specify all medications to be started, continued, or stopped.", "opts": ["True", "False"], "a": [0], "why": "True — spell out start/continue/discontinue and exact doses to prevent medication errors.", "links": ["ch5-meds", "ch5-plan"]}], "ch6a": [{"q": "Bone density testing is primarily done in women.", "opts": ["Adult", "Post-menopausal", "Teenage", "Elderly"], "a": [1], "why": "Post-menopausal women have the highest osteoporosis risk — bone-density (DEXA) screening focuses there.", "links": ["ch6a-bone"]}, {"q": "Osteoporosis can be treated with which of the following items?", "opts": ["Calcium", "Vitamin D", "Alendronate", "All of the above"], "a": [3], "why": "All of the above — calcium, vitamin D and alendronate (a bisphosphonate) are standard osteoporosis care.", "links": ["ch6a-bone"]}, {"q": "Monofilament testing assesses for early signs of a condition associated with type II diabetes mellitus.", "opts": ["Hypertension", "Nephropathy", "Neuropathy", "Retinopathy"], "a": [2], "why": "Monofilament testing screens diabetic PERIPHERAL NEUROPATHY (loss of protective sensation).", "links": ["ch6a-chronic"]}, {"q": "Diabetic nephropathy is assessed via which of these tests?", "opts": ["Monofilament testing", "Hemoglobin A1c", "Lipid panel", "Urine microalbumin"], "a": [3], "why": "Urine microalbumin detects early diabetic nephropathy. A1c=glycemic control, lipids=cholesterol, monofilament=neuropathy.", "links": ["ch6a-chronic"]}, {"q": "True or False: Hypertension is defined as a blood pressure of greater than 140/90 on a single measurement.", "opts": ["True", "False"], "a": [1], "why": "False — hypertension is diagnosed on repeated measurements across visits, not one reading (though ≥180/120 acts sooner).", "links": ["ch6a-chronic"]}, {"q": "Which medication below is NOT used to treat type II diabetes?", "opts": ["Atorvastatin", "Glimepiride", "Glipizide", "Metformin"], "a": [0], "why": "Atorvastatin treats cholesterol (statin), not diabetes. Glimepiride/glipizide (sulfonylureas) and metformin are diabetes meds.", "links": ["ch6a-chronic", "ch2-language"]}, {"q": "A “kidney infection” is more technically known as what?", "opts": ["Peptic ulcer disease", "Nephrosis", "Nephrolithiasis", "Pyelonephritis"], "a": [3], "why": "Pyelonephritis = kidney infection (pyelo=pelvis, nephro=kidney, -itis=inflammation). Nephrosis = kidney degeneration; nephrolithiasis = stones.", "links": ["ch6a-acute", "ch2-language"]}, {"q": "Which medication is not an opioid?", "opts": ["Dilaudid", "Morphine", "Hydrocodone", "Hydrochlorothiazide"], "a": [3], "why": "Hydrochlorothiazide is a diuretic for blood pressure — not an opioid. Dilaudid, morphine, hydrocodone are opioids.", "links": ["ch6a-chronic", "ch6b-meds"]}, {"q": "Which questionnaires are used to gauge a patient’s likelihood of having depression?", "opts": ["GAD-7; PHQ-2", "TSH; A1c", "PHQ-9, GAD-7", "PHQ-2; PHQ-9"], "a": [3], "why": "PHQ-2 and PHQ-9 screen depression (GAD-7 screens anxiety — the depression pair is PHQ-2; PHQ-9).", "links": ["ch6a-complex"]}, {"q": "Which diagnostic study is NOT usually part of the normal screening recommendations for a 70-year-old patient?", "opts": ["DEXA scan", "PSA", "Colonoscopy", "Mammogram"], "a": [1], "why": "PSA screening is NOT a routine recommendation for a 70-year-old (shared decision-making generally ends by then); DEXA, colonoscopy and mammogram screening do apply.", "links": ["ch6a-annual"]}, {"q": "True or False: A low TSH level is indicative of hypothyroidism.", "opts": ["True", "False"], "a": [1], "why": "False — LOW TSH suggests HYPERthyroidism; high TSH suggests hypothyroidism.", "links": ["ch6a-chronic", "ch2-language"]}], "ch6b": [{"q": "A “kidney infection” is more technically known as what?", "opts": ["Peptic ulcer disease", "Nephrosis", "Nephrolithiasis", "Pyelonephritis"], "a": [3], "why": "Pyelonephritis = kidney infection.", "links": ["ch6b-conditions", "ch2-language"]}, {"q": "Which condition is NOT typically characterized by epigastric pain?", "opts": ["Peptic ulcer disease", "Pancreatitis", "Cholelithiasis", "Colitis"], "a": [3], "why": "Colitis causes LOWER abdominal (often LLQ) pain with stool changes — not epigastric. PUD, pancreatitis and gallstones are classic epigastric/RUQ.", "links": ["ch6b-conditions", "ch2-abdominal"]}, {"q": "Which lab test is used to diagnose pancreatitis?", "opts": ["Lipase", "Alkaline phosphatase (ALP)", "D-dimer", "Troponin"], "a": [0], "why": "Lipase (with amylase) diagnoses pancreatitis. Troponin=heart, D-dimer=clot, ALP=biliary/liver.", "links": ["ch6b-conditions"]}, {"q": "Which of these medications is a risk factor for hemorrhagic stroke?", "opts": ["cephalexin", "coumadin", "ciprofloxacin", "caffeine"], "a": [1], "why": "Coumadin (warfarin) is an anticoagulant — bleeding risk for HEMORRHAGIC stroke. The others don't raise it.", "links": ["ch6b-conditions", "ch6b-meds"]}, {"q": "What is the most common source of clot in a pulmonary embolus?", "opts": ["Appendicitis", "Heart atria", "DVT", "Varicose veins"], "a": [2], "why": "Most PE clots originate in deep leg veins (DVT) that embolize to the lungs.", "links": ["ch6b-conditions"]}, {"q": "Which lab test can detect trace amounts of myocardial cell death?", "opts": ["Troponin", "D-dimer", "Hemoglobin", "Lipase"], "a": [0], "why": "Troponin detects trace myocardial cell death — the ACS biomarker.", "links": ["ch6b-conditions", "ch5-results"]}, {"q": "Acute appendicitis presents with focal pain in which abdominal region?", "opts": ["Right upper quadrant (RUQ)", "Left upper quadrant (LUQ)", "Left lower quadrant (LLQ)", "Right lower quadrant (RLQ)"], "a": [3], "why": "Appendicitis classically localizes to the RIGHT LOWER QUADRANT (McBurney's point).", "links": ["ch6b-conditions", "ch2-abdominal"]}, {"q": "Which proton pump inhibitor helps reduce acid secretion in the stomach in patients with PUD?", "opts": ["Zantac", "Pantoprazole", "Nitroglycerin", "Hydrochlorothiazide"], "a": [1], "why": "Pantoprazole is a proton pump inhibitor (-prazole). Zantac (ranitidine) is an H2 blocker.", "links": ["ch6b-meds", "ch2-language"]}, {"q": "True or False: Abdominal pain that is worse after eating fatty foods is concerning for cholelithiasis.", "opts": ["True", "False"], "a": [0], "why": "True — fatty-food-triggered pain suggests biliary colic/cholecystitis (gallbladder squeezes against stones).", "links": ["ch6b-conditions"]}, {"q": "Which lab test helps detect the presence of a blood clot?", "opts": ["D-dimer", "Troponin", "Lipase", "ALP"], "a": [0], "why": "D-dimer detects clot breakdown products — a sensitive screen for DVT/PE.", "links": ["ch6b-conditions"]}, {"q": "PE and stroke from atrial fibrillation are both caused by embolism.", "opts": ["True", "False"], "a": [0], "why": "True — both are embolic events: clots traveling to lung (PE) or brain (stroke).", "links": ["ch6b-conditions"]}, {"q": "This is acceptable procedure documentation: “Physician performed FAST exam and no intra-abdominal fluid was seen.”", "opts": ["True", "False"], "a": [1], "why": "False — procedure documentation must record what was viewed/seen in detail ('no free fluid in the four views'), not just a conclusion.", "links": ["ch6b-note", "ch3-golden"]}, {"q": "If a patient denies seeing blood in the stool, a GI bleed is not possible.", "opts": ["True", "False"], "a": [1], "why": "False — a GI bleed can still be possible; denial of visible blood doesn't exclude occult bleeding.", "links": ["ch6b-conditions", "ch3-ros"]}], "ch7": [{"q": "True or False: an E/M level of 5 has a moderate level of complexity.", "opts": ["True", "False"], "a": [1], "why": "False — E/M level 5 is HIGH complexity, not moderate.", "links": ["ch7-em", "ch7-mdm"]}, {"q": "How many systems must be listed in the ROS for an ER E/M level 5?", "opts": ["1", "5", "10", "8"], "a": [2], "why": "A level-5 ED history requires ROS of 10 systems (complete review).", "links": ["ch7-edem", "ch3-ros"]}, {"q": "Which of the following cannot be counted within critical care time?", "opts": ["Trauma", "Respiratory failure", "Intubation procedure", "Acute MI"], "a": [2], "why": "Performing a discrete procedure such as intubation is separately billable — it does not count inside critical-care time. Trauma, respiratory failure and acute MI define qualifying crit-care presentations.", "links": ["ch7-critical", "ch7-procedure"]}, {"q": "Documenting an EKG interpretation as “normal” is billable.", "opts": ["True", "False"], "a": [1], "why": "False — a bare 'normal EKG' isn't a billable interpretation; the provider must document a formal read.", "links": ["ch7-ekg"]}, {"q": "Since the 2021 outpatient clinic E/M guidelines no longer count elements in the history, it is OK to just write a sentence or two and skip the rest.", "opts": ["True", "False"], "a": [1], "why": "False — even though MDM/time drives the level, the medically appropriate history & exam remain part of the note and support the service.", "links": ["ch7-em", "ch7-summary"]}, {"q": "Quality measures promote quality care without financial consequence.", "opts": ["True", "False"], "a": [1], "why": "False — CMS payers tie reimbursement and penalties to quality-measure performance.", "links": ["ch7-cms"]}, {"q": "Providers can bill the E/M level OR a procedure from a single encounter, but not both.", "opts": ["True", "False"], "a": [1], "why": "False — providers can bill BOTH the E/M (when significant, separately identifiable) and the procedure.", "links": ["ch7-procedure"]}, {"q": "Patients understand that procedures have risks, so consent is not needed.", "opts": ["True", "False"], "a": [1], "why": "False — informed consent documenting risks/benefits/alternatives is required before procedures.", "links": ["ch7-procedure"]}]}};</script>
+<script>// Scribe Academy v0.4 — application logic (from scratch)
+(function(){
+'use strict';
+const DATA = window.__APP_DATA__;            // {kg, glossary, flashcards, mcqs}
+const KG = DATA.kg;
+const MCQS = DATA.mcqs;                      // chId -> [{q, opts:[...], a:[idx], why, links:[secIds]}]
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- node type registry: hue + shape + texture (never color alone) ---------- */
+const TYPES = {
+  chapter:   {hue:256, label:'Chapter',  shape:'ring'},
+  topic:     {hue:210, label:'Topic',    shape:'circle'},
+  concept:   {hue:250, label:'Concept',  shape:'circle'},
+  rule:      {hue:27,  label:'Rule',     shape:'hex'},
+  role:      {hue:315, label:'Role',     shape:'circle'},
+  objective: {hue:55,  label:'Objective',shape:'rect'},
+  section:   {hue:175, label:'Section',  shape:'rect'},
+  figure:    {hue:200, label:'Figure',   shape:'diamond'},
+  billing:   {hue:91,  label:'Billing',  shape:'diamond'},
+  setting:   {hue:152, label:'Setting',  shape:'hex'},
+  encounter: {hue:220, label:'Encounter',shape:'diamond'},
+  condition: {hue:355, label:'Condition',shape:'circle'},
+};
+const TEX_OF_SHAPE = {circle:'dots', hex:'stripes', rect:'grid', diamond:'cross', ring:'rings'};
+const nodeColor = t => { const h=(TYPES[t]||TYPES.concept).hue;
+  return {fill:`var(--tc-${t})`, stroke:`var(--ts-${t})`}; };
+// inject per-type oklch vars for light + dark
+(function(){
+  let css=':root{'; let dk='[data-theme="dark"]{';
+  for(const [t,cfg] of Object.entries(TYPES)){
+    css+=`--tc-${t}:oklch(87% 0.07 ${cfg.hue});--ts-${t}:oklch(48% 0.14 ${cfg.hue});`;
+    dk +=`--tc-${t}:oklch(34% 0.08 ${cfg.hue});--ts-${t}:oklch(75% 0.13 ${cfg.hue});`;
+  }
+  const st=document.createElement('style'); st.textContent=css+'}'+dk+'}'; document.head.appendChild(st);
+})();
+
+/* ---------- storage ---------- */
+const store = {
+  get(k,d){ try{const v=localStorage.getItem('scribe04_'+k); return v==null?d:JSON.parse(v);}catch(e){return d;} },
+  set(k,v){ try{localStorage.setItem('scribe04_'+k,JSON.stringify(v));}catch(e){} },
+  keys(){ const out=[]; for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i); if(k&&k.startsWith('scribe04_'))out.push(k.slice(9));} return out; }
+};
+let highlights = store.get('highlights',{});   // hash -> {color,text,section,note?}
+let mcqState   = store.get('mcq',{});          // "ch:i" -> picked index
+let lastChapter= store.get('lastChapter','ch1');
+
+/* ============================ BOOK ============================ */
+const bookContent=$('#book-content'), tocList=$('#toc-list');
+const chapters=Array.from(bookContent.querySelectorAll('.chapter'));
+const CH_LABEL={}; chapters.forEach(ch=>{CH_LABEL[ch.id]=(ch.querySelector('h2')?.textContent||'').trim();});
+
+function hashText(t){let h=5381;for(let i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))>>>0;return 'h'+h.toString(36);}
+function sectionOf(el){const h3=prevH3(el);return h3?(h3.id||(h3.id='sec-'+hashText(h3.textContent.slice(0,40)))):'top';}
+function prevH3(el){ let n=el; while(n){ if(n.nodeType===1){ if(n.tagName==='H3'&&n.id)return n;
+  const p=n.previousElementSibling; if(p){const q=p.querySelector? p : p; if(p.tagName==='H3'&&p.id)return p;
+    const inner=p.querySelectorAll?('h3[id]'):null; if(inner&&inner.length)return inner[inner.length-1];} }
+  n=n.parentElement; } return null; }
+
+/* build TOC from the book itself (chapters + h3 sections) */
+function buildTOC(){
+  tocList.innerHTML='';
+  const nav=[['graph-view','🗺 Knowledge Map'],['flashcards-view','🃏 Flashcards'],['mcq-view','✅ MCQ Practice'],
+             ['glossary-view','📖 Glossary'],['settings-view','⚙ Settings']];
+  chapters.forEach((ch,i)=>{
+    const title=(ch.querySelector('h2')?.textContent||ch.id).trim();
+    const li=document.createElement('li');
+    const num=/^(\d+[AB]?)/.exec(title);
+    li.innerHTML=`<a class="toc-link" data-ch="${ch.id}"><span class="toc-chapter-label">`+
+      `<span class="toc-num">${esc(num?num[1]:String(i+1))}</span><span>${esc(title.replace(/^\d+[AB]?\.?\s*/,''))}</span></a>`;
+    const sub=document.createElement('ul'); sub.className='toc-sublist';
+    ch.querySelectorAll('h3[id]').forEach(h3=>{
+      const sli=document.createElement('li');
+      sli.innerHTML=`<a class="toc-link toc-section-link" data-jump="${h3.id}">${esc(h3.textContent)}</a>`;
+      sub.appendChild(sli);
+    });
+    li.appendChild(sub); tocList.appendChild(li);
+  });
+  const navLi=document.createElement('li'); navLi.innerHTML='<div class="pm-divider"></div>';
+  tocList.appendChild(navLi);
+  nav.forEach(([v,l])=>{ const li=document.createElement('li');
+    li.innerHTML=`<a class="toc-link" data-viewbtn="${v}">${l}</a>`; tocList.appendChild(li); });
+}
+
+/* wrap stored highlights on load (text-match placement, tolerant) */
+function restoreHighlights(){
+  const bySec={};
+  for(const [h,o] of Object.entries(highlights)){(bySec[o.section]=bySec[o.section]||[]).push([h,o]);}
+  $$('#book-content h3[id]').forEach(h3=>{
+    const sec=h3.id; let el=h3.nextElementSibling; const stop=t=>t&&(t.tagName==='H3'||t.tagName==='H2');
+    const scope=[]; while(el&&!stop(el)){scope.push(el);el=el.nextElementSibling;}
+    (bySec[sec]||[]).forEach(([hash,o])=>{ if(wrapIn(scope,o.text,hash,o.color)) delete needs[hash]; });
+  });
+  // global fallback scan for anything not found in its section
+  for(const [hash,o] of Object.entries(highlights)){
+    if(o.removed||document.querySelector(`#book-content .hl[data-h="${hash}"]`))continue;
+    if(!wrapIn([bookContent],o.text,hash,o.color)){ /* stale text; keep in notes list */ }
+  }
+}
+const needs={};
+function wrapIn(scopeEls,text,hash,color){
+  const needle=text.trim(); if(!needle)return false;
+  const walker=document.createTreeWalker(scopeEls.length?scopeEls[0].parentElement||scopeEls[0]:bookContent,NodeFilter.SHOW_TEXT,{
+    acceptNode(n){ if(!n.nodeValue.trim())return NodeFilter.FILTER_REJECT;
+      const p=n.parentElement; if(!p||p.closest('.quiz,.results-pop,script,style'))return NodeFilter.FILTER_REJECT;
+      if(p.classList.contains('hl'))return NodeFilter.FILTER_REJECT; return NodeFilter.FILTER_ACCEPT; }});
+  let n; while((n=walker.nextNode())){
+    const idx=n.nodeValue.indexOf(needle);
+    if(idx>=0){
+      const range=document.createRange(); range.setStart(n,idx); range.setEnd(n,idx+needle.length);
+      const span=document.createElement('span'); span.className='hl hl-'+color; span.dataset.h=hash;
+      try{range.surroundContents(span);}catch(e){return false;}
+      return true;
+    }
+  }
+  return false;
+}
+
+/* selection popup */
+const popup=$('#popup-menu'); let pendingSel=null;
+document.addEventListener('mouseup',e=>{
+  if(e.target.closest('.popup-menu'))return;
+  setTimeout(()=>{
+    const sel=window.getSelection();
+    const text=sel? sel.toString().trim():'';
+    if(text && text.length<=400 && bookContent.contains(sel&&sel.anchorNode)){
+      pendingSel={text, rect:sel.getRangeAt(0).getBoundingClientRect()}; showPopup(pendingSel.rect);
+    } else if(!e.target.closest('#popup-menu') && !e.target.closest('.hl')){ hidePopup(); }
+  },10);
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape')hidePopup(); });
+function showPopup(rect){
+  popup.classList.add('open');
+  const pw=popup.offsetWidth||250, ph=popup.offsetHeight||190;
+  let x=rect.left+rect.width/2-pw/2, y=rect.bottom+8;
+  x=Math.max(8,Math.min(x,innerWidth-pw-8)); if(y+ph>innerHeight-8)y=Math.max(70,rect.top-ph-8);
+  popup.style.left=x+scrollX+'px'; popup.style.top=y+scrollY+'px';
+  $('#pm-count').textContent=Object.keys(highlights).length+' saved';
+}
+function hidePopup(){popup.classList.remove('open');}
+$$('.pm-swatch').forEach(b=>b.addEventListener('click',()=>{
+  if(!pendingSel)return; const color=b.dataset.color; const hash=hashText(pendingSel.text);
+  const el=document.querySelector(`.hl[data-h="${hash}"]`);
+  if(el){el.className='hl hl-'+color;}
+  highlights[hash]={color,text:pendingSel.text,section:sectionOf(el||bookContent),...(highlights[hash]?.note?{note:highlights[hash].note}:{})};
+  store.set('highlights',highlights); updateNotesBadge(); hidePopup(); window.getSelection().removeAllRanges();
+}));
+$('#pm-add-note').addEventListener('click',()=>{
+  if(!pendingSel)return; const hash=hashText(pendingSel.text);
+  const old=highlights[hash]?.note||''; const note=prompt('Note about this passage:',old);
+  if(note!=null){ highlights[hash]={...(highlights[hash]||{}),text:pendingSel.text,color:highlights[hash]?.color||'yellow',
+    section:sectionOf(document.querySelector(`.hl[data-h="${hash}"]`)||bookContent),note:note.trim()};
+    store.set('highlights',highlights); renderNotes(); }
+  hidePopup();
+});
+$('#pm-remove-highlight').addEventListener('click',()=>{
+  if(!pendingSel)return; const hash=hashText(pendingSel.text);
+  const el=document.querySelector(`.hl[data-h="${hash}"]`);
+  if(el){const p=el.parentNode;p.replaceChild(document.createTextNode(el.textContent),el);p.normalize();}
+  delete highlights[hash]; store.set('highlights',highlights); updateNotesBadge(); hidePopup();
+});
+/* click existing highlight → recolor/remove */
+bookContent.addEventListener('click',e=>{
+  const hl=e.target.closest('.hl'); if(!hl)return;
+  const hash=hl.dataset.h; const r=hl.getBoundingClientRect();
+  pendingSel={text:hl.textContent,rect:r};
+  popup.classList.add('open');
+  const pw=popup.offsetWidth,ph=popup.offsetHeight;
+  popup.style.left=Math.max(8,Math.min(r.left+r.width/2-pw/2,innerWidth-pw-8))+scrollX+'px';
+  popup.style.top=(r.bottom+8+ph>innerHeight?Math.max(70,r.top-ph-8):r.bottom+8)+scrollY+'px';
+  $$('.hl-current').forEach(x=>x.classList.remove('hl-current')); hl.classList.add('hl-current');
+  $('#pm-count').textContent=highlights[hash]?.note?('note: '+highlights[hash].note.slice(0,40)+'…'):'saved';
+});
+
+/* notes panel */
+const notesPanel=$('#notes-panel');
+function updateNotesBadge(){const n=Object.keys(highlights).length;const b=$('#notes-count');b.style.display=n?'':'none';b.textContent=n;}
+function renderNotes(){
+  const list=$('#notes-list'); list.innerHTML='';
+  const items=Object.entries(highlights);
+  if(!items.length){list.innerHTML='<div class="np-empty">Select any text in the book to highlight it — four textures mean four kinds of meaning:<br>hatch = key fact · dots = definition · grid = procedure · stripes = watch out.</div>';}
+  items.sort((a,b)=>(a[1].section||'').localeCompare(b[1].section||'')).forEach(([hash,o])=>{
+    const card=document.createElement('div');card.className='note-card';
+    card.innerHTML=`<div class="note-quote">${esc(o.text.slice(0,160))}</div>`+
+      (o.note?`<div style="font-size:12.5px;margin-bottom:6px">${esc(o.note)}</div>`:'')+
+      `<div class="note-meta"><span class="tf-dot" style="background:var(--hl-${o.color}-soft);border:1px solid var(--hl-${o.color}-ink)"></span>`+
+      `<span>${esc(CH_LABEL[(o.section||'').split('-')[0]]||o.section||'')}</span>`+
+      `<button class="note-jump">Go</button><button class="note-del" title="Delete">✕</button></div>`;
+    card.querySelector('.note-jump').onclick=()=>{
+      showView('book');
+      const el=document.querySelector(`.hl[data-h="${hash}"]`);
+      if(el)el.scrollIntoView({behavior:'smooth',block:'center'});
+      else{const t=$('#book-content').querySelector(`#${CSS.escape(o.section)}`);if(t)t.scrollIntoView({behavior:'smooth'});}
+    };
+    card.querySelector('.note-del').onclick=()=>{
+      const el=document.querySelector(`.hl[data-h="${hash}"]`);
+      if(el){const p=el.parentNode;p.replaceChild(document.createTextNode(el.textContent),p.lastChild===el?el:el);p.normalize();}
+      delete highlights[hash];store.set('highlights',highlights);renderNotes();updateNotesBadge();};
+    list.appendChild(card);
+  });
+}
+$('#notes-panel-toggle').onclick=()=>{renderNotes();notesPanel.classList.toggle('open');};
+$('#notes-close').onclick=()=>notesPanel.classList.remove('open');
+
+/* reading progress + scroll spy */
+const progressBar=$('.progress-bar');
+addEventListener('scroll',()=>{
+  const h=document.documentElement; const max=h.scrollHeight-h.clientHeight;
+  if(progressBar)progressBar.style.width=(max>0?100*h.scrollTop/max:0)+'%';
+},{passive:true});
+
+/* ============================ VIEWS / NAV ============================ */
+const sidebar=$('#sidebar'),overlay=$('#overlay');
+function showView(v){
+  $$('.view').forEach(s=>s.classList.toggle('active',s.id===v+'-view'));
+  $$('.toc-link').forEach(a=>a.classList.toggle('active',(a.dataset.viewbtn||a.dataset.ch)===(v==='book'?lastChapter:v)));
+  closeSidebar();
+  if(v==='graph'&&!Graph.built)Graph.build();
+  if(v==='graph')setTimeout(()=>Graph.fit(),30);
+  if(v==='mcq')MCQ.renderNav();
+  location.hash=v==='book'?'':v;
+}
+function openChapter(id,sec){
+  showView('book'); lastChapter=id;store.set('lastChapter',id);
+  const target=sec?document.getElementById(sec):document.getElementById(id);
+  if(target)setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'start'}),40);
+  $$('.toc-link').forEach(a=>a.classList.toggle('active',a.dataset.ch===id&&!sec));
+}
+function closeSidebar(){sidebar.classList.remove('open');overlay.classList.remove('visible');}
+$('#menu-toggle').onclick=()=>{const o=!sidebar.classList.contains('open');sidebar.classList.toggle('open',o);overlay.classList.toggle('visible',o);};
+$('#toc-close').onclick=closeSidebar; overlay.onclick=closeSidebar;
+tocList.addEventListener('click',e=>{
+  const a=e.target.closest('a'); if(!a)return; e.preventDefault();
+  if(a.dataset.ch)openChapter(a.dataset.ch);
+  else if(a.dataset.jump){const id=a.dataset.jump;const cid=id.split('-')[0].replace(/fig\d+$/,'');openChapter(cid.startsWith('ch')?cid:lastChapter,id);}
+  else if(a.dataset.viewbtn)showView(a.dataset.viewbtn.replace('-view',''));
+});
+
+/* ============================ SEARCH (book) ============================ */
+const searchInput=$('#search-input'),searchResults=$('#search-results');
+let selIdx=-1,lastResults=[];
+function collectIndex(){
+  const idx=[];
+  chapters.forEach(ch=>{
+    const chTitle=(ch.querySelector('h2')?.textContent||'').trim();
+    let cur={title:chTitle,id:ch.id,ch:ch.id,body:ch};
+    ch.querySelectorAll('h2,h3,p,li,td,caption,.caption').forEach(el=>{
+      if(el.closest('.quiz')&&el.tagName!=='H4')return;
+      if(el.tagName==='H3'&&el.id){cur={title:el.textContent.trim(),id:el.id,ch:ch.id,body:el};return;}
+      const t=(el.textContent||'').trim(); if(t.length<3)return;
+      idx.push({title:(el.tagName==='H3'?t:cur.title),ctx:t.slice(0,180),anchor:cur.id,ch:ch.id,el});
+    });
+  });
+  return idx;
+}
+let INDEX=null;
+function doSearch(q){
+  if(!INDEX)INDEX=collectIndex();
+  const ql=q.toLowerCase();
+  const seen=new Set();
+  return INDEX.filter(r=>{const k=r.ctx.slice(0,60);if(seen.has(k))return false;seen.add(k);return r.ctx.toLowerCase().includes(ql)||r.title.toLowerCase().includes(ql);}).slice(0,12);
+}
+function renderResults(q){
+  if(!q){searchResults.classList.remove('open');clearMarks();return;}
+  lastResults=doSearch(q);selIdx=-1;
+  searchResults.innerHTML=lastResults.map((r,i)=>
+    `<div class="result-item" data-i="${i}"><div class="result-title">${hlMark(r.title,q)}</div><div class="result-context">${hlMark(r.ctx,q)}</div></div>`).join('')
+    ||'<div class="result-item">No matches</div>';
+  searchResults.classList.add('open');
+}
+function hlMark(t,q){const i=t.toLowerCase().indexOf(q.toLowerCase());if(i<0)return esc(t);
+  return esc(t.slice(Math.max(0,i-30),i))+'<mark>'+esc(t.slice(i,i+q.length))+'</mark>'+esc(t.slice(i+q.length,i+q.length+80));}
+function clearMarks(){$$('#book-content mark.sr').forEach(m=>m.replaceWith(m.textContent));}
+function gotoResult(i){
+  const r=lastResults[i];if(!r)return;
+  showView('book');searchResults.classList.remove('open');
+  const anchor=document.getElementById(r.anchor)||document.getElementById(r.ch);
+  if(anchor)anchor.scrollIntoView({behavior:'smooth',block:'start'});
+  if(r.el&&r.el.tagName!=='H3'){setTimeout(()=>{r.el.querySelectorAll?0:0;
+    const m=document.createRange();try{r.el.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}},60);}
+}
+searchInput.addEventListener('input',()=>renderResults(searchInput.value.trim()));
+searchInput.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();
+    selIdx=Math.max(0,Math.min(lastResults.length-1,selIdx+(e.key==='ArrowDown'?1:-1)));
+    $$('.result-item').forEach((el,i)=>el.classList.toggle('sel',i===selIdx));}
+  else if(e.key==='Enter'){gotoResult(selIdx<0?0:selIdx);}
+  else if(e.key==='Escape'){searchInput.blur();searchResults.classList.remove('open');}
+});
+searchResults.addEventListener('click',e=>{const it=e.target.closest('.result-item');if(it)gotoResult(+it.dataset.i);});
+document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))searchResults.classList.remove('open');});
+
+/* ============================ KNOWLEDGE GRAPH ============================ */
+const Graph={built:false,nodes:[],links:[],svg:null,zoom:1,pan:{x:0,y:0},hidden:new Set(store.get('graphHidden',[])),selected:null,focusMode:false};
+function shapeSVG(shape,x,y,r,fill,stroke,texId){
+  let el='';
+  if(shape==='circle')el=`<circle r="${r}" cx="0" cy="0"/>`;
+  else if(shape==='rect')el=`<rect x="${-r*1.25}" y="${-r*0.8}" width="${r*2.5}" height="${r*1.6}" rx="4"/>`;
+  else if(shape==='diamond')el=`<polygon points="0,${-r*1.15} ${r*1.15},0 0,${r*1.15} ${-r*1.15},0"/>`;
+  else if(shape==='hex'){const pts=[];for(let i=0;i<6;i++){const a=Math.PI/3*i-Math.PI/6;pts.push(`${(r*1.1*Math.cos(a)).toFixed(1)},${(r*1.1*Math.sin(a)).toFixed(1)}`);}el=`<polygon points="${pts.join(' ')}"/>`;}
+  else if(shape==='ring')el=`<circle r="${r}" cx="0" cy="0"/><circle r="${r*0.55}" cx="0" cy="0"/>`;
+  return `<g transform="translate(${x},${y})" class="node-shape" fill="${fill}" stroke="${stroke}">${el}</g>`;
+}
+Graph.build=function(){
+  Graph.built=true;
+  const wrap=$('#graph-canvas-wrap'),svg=$('#graph-svg');Graph.svg=svg;
+  const W=wrap.clientWidth||900,H=wrap.clientHeight||600;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  // defs: one texture pattern per node type
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  let dtex='';
+  for(const [t,cfg] of Object.entries(TYPES)){
+    const kind=TEX_OF_SHAPE[cfg.shape];const ink=`oklch(48% 0.14 ${cfg.hue})`;const a=`oklch(30% 0.12 ${cfg.hue})`;
+    let tile='';
+    if(kind==='dots')tile=`<circle cx="3" cy="3" r="1.1" fill="${a}"/>`;
+    else if(kind==='stripes')tile=`<path d="M-2,6 l8,-8 M0,10 l10,-10 M6,12 l6,-6" stroke="${a}" stroke-width="1.5"/>`;
+    else if(kind==='grid')tile=`<path d="M0,3 h6 M3,0 v6" stroke="${a}" stroke-width="0.9"/>`;
+    else if(kind==='cross')tile=`<path d="M0,0 l6,6 M6,0 l-6,6" stroke="${a}" stroke-width="1"/>`;
+    else tile=`<circle cx="3" cy="3" r="2.1" fill="none" stroke="${a}" stroke-width="0.8"/>`;
+    dtex+=`<pattern id="tex-${t}" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="${ink}"/>${tile}</pattern>`;
+  }
+  defs.innerHTML=dtex;svg.insertBefore(defs,svg.firstChild);
+  // layout: chapters on a ring, satellites around their chapter
+  const nodes=KG.nodes,links=KG.links;
+  const chIds=nodes.filter(n=>n.type==='chapter').map(n=>n.id);
+  const pos={};
+  const R=Math.min(W,H)*0.36,cx=W/2,cy=H/2;
+  chIds.forEach((id,i)=>{const a=2*Math.PI*i/chIds.length-Math.PI/2;pos[id]={x:cx+R*Math.cos(a),y:cy+R*Math.sin(a)};});
+  const sat={};nodes.forEach(n=>{if(n.type!=='chapter'){(sat[n.ch]=sat[n.ch]||[]).push(n.id);}});
+  for(const [ch,list] of Object.entries(sat)){
+    const p=pos[ch]||{x:cx,y:cy};const base=Math.atan2(p.y-cy,p.x-cx);
+    const spread=Math.min(2.4,0.5+list.length*0.16);const rad=R*0.34+Math.min(list.length,14)*4;
+    list.forEach((id,j)=>{const t=list.length===1?0:(j/(list.length-1))*2-1;
+      const a=base+t*spread;pos[id]={x:p.x+rad*Math.cos(a)+(Math.random()-0.5)*14,y:p.y+rad*Math.sin(a)+(Math.random()-0.5)*14};});
+  }
+  // relax a little
+  const arr=nodes.map(n=>({...n,...(pos[n.id]||{x:cx,y:cy})}));
+  const byId={};arr.forEach(n=>byId[n.id]=n);
+  for(let it=0;it<60;it++){
+    for(let i=0;i<arr.length;i++)for(let j=i+1;j<arr.length;j++){
+      const a=arr[i],b=arr[j];let dx=a.x-b.x,dy=a.y-b.y,d2=dx*dx+dy*dy;
+      if(d2<1){dx=Math.random();dy=Math.random();d2=1;}
+      const minD=(a.type==='chapter'?110:46);
+      if(d2<minD*minD){const d=Math.sqrt(d2),f=(minD-d)/d*0.18;a.x+=dx*f;a.y+=dy*f;b.x-=dx*f;b.y-=dy*f;}
+    }
+    links.forEach(([s,t])=>{const A=byId[s],B=byId[t];if(!A||!B)return;
+      const dx=B.x-A.x,dy=B.y-A.y,d=Math.hypot(dx,dy)||1;const ideal=A.type==='chapter'?150:96;const f=(d-ideal)/d*0.02;
+      A.x+=dx*f;A.y+=dy*f;B.x-=dx*f;B.y-=dy*f;});
+  }
+  Graph.nodes=arr;Graph.byId=byId;
+  // render
+  const lg=$('#graph-links'),ng=$('#graph-nodes');
+  lg.innerHTML=links.map(([s,t,r],i)=>{const A=byId[s],B=byId[t];if(!A||!B)return '';
+    return `<line class="link" data-s="${s}" data-t="${t}" x1="${A.x.toFixed(1)}" y1="${A.y.toFixed(1)}" x2="${B.x.toFixed(1)}" y2="${B.y.toFixed(1)}" stroke="var(--app-border)" stroke-width="1.2"/>`;}).join('');
+  ng.innerHTML=arr.map(n=>{
+    const cfg=TYPES[n.type]||TYPES.concept;const r=n.type==='chapter'?20:(n.type==='figure'?9:13);
+    return `<g class="node" data-id="${n.id}" transform="translate(${n.x.toFixed(1)},${n.y.toFixed(1)})">`+
+      shapeSVG(cfg.shape,0,0,r,`url(#tex-${n.type})`.replace(`tex-${n.type}`,`tex-${n.type}`),'var(--ts-'+n.type+')','')
+      .replace('class="node-shape"',`class="node-shape" data-r="${r}"`)+
+      `<text class="node-label" y="${r+13}">${esc(n.label.length>26?n.label.slice(0,24)+'…':n.label)}</text></g>`;
+  }).join('');
+  // type filter chips
+  const tf=$('#graph-typefilters');
+  tf.innerHTML=Object.entries(TYPES).filter(([t])=>arr.some(n=>n.type===t)).map(([t,cfg])=>
+    `<span class="tf-chip${Graph.hidden.has(t)?' off':''}" data-type="${t}"><span class="tf-dot" style="background:oklch(70% 0.12 ${cfg.hue})"></span>${cfg.label}</span>`).join('');
+  tf.querySelectorAll('.tf-chip').forEach(c=>c.onclick=()=>{const t=c.dataset.type;
+    if(Graph.hidden.has(t))Graph.hidden.delete(t);else Graph.hidden.add(t);
+    c.classList.toggle('off');store.set('graphHidden',[...Graph.hidden]);applyFilters();});
+  bindGraphCanvas();applyGraphSearchUI();Graph.builtFlag=true;
+};
+function applyFilters(){
+  const q=($('#graph-search').value||'').toLowerCase();
+  $$('#graph-nodes .node').forEach(g=>{
+    const n=Graph.byId[g.dataset.id];const hid=Graph.hidden.has(n.type);
+    g.classList.toggle('hidden',hid);
+    if(!hid&&q){const m=(n.label+' '+n.desc).toLowerCase().includes(q);g.classList.toggle('dimmed',!m);g.classList.toggle('match',m);}
+    else{g.classList.remove('dimmed','match');}
+  });
+  $$('#graph-links .link').forEach(l=>{
+    const s=Graph.byId[l.dataset.s],t=Graph.byId[l.dataset.t];
+    l.classList.toggle('dimmed',Graph.hidden.has(s.type)||Graph.hidden.has(t.type)||(q&&!( (s.label+' '+s.desc).toLowerCase().includes(q)||(t.label+' '+t.desc).toLowerCase().includes(q))));
+  });
+  const cnt=$('#graph-match-count');
+  if(q){const m=Graph.nodes.filter(n=>!Graph.hidden.has(n.type)&&(n.label+' '+n.desc).toLowerCase().includes(q)).length;cnt.textContent=m+' match'+(m===1?'':'es');}
+  else cnt.textContent='';
+}
+Graph.focus=function(id){
+  const nb=new Set([id]);
+  KG.links.forEach(([a,b])=>{if(a===id)nb.add(b);if(b===id)nb.add(a);});
+  $$('#graph-nodes .node').forEach(g=>g.classList.toggle('dimmed',!nb.has(g.dataset.id)));
+  $$('#graph-links .link').forEach(l=>l.classList.toggle('dimmed',!(l.dataset.s===id||l.dataset.t===id)));
+};
+function nodeInfo(n){
+  $('#node-info').classList.add('open');
+  $('#ni-label').textContent=n.label;
+  const cfg=TYPES[n.type]||TYPES.concept;
+  const badge=$('#ni-type');badge.textContent=cfg.label;badge.style.borderColor=`oklch(60% 0.13 ${cfg.hue})`;badge.style.color=`oklch(60% 0.13 ${cfg.hue})`;
+  $('#ni-desc').textContent=n.desc||'';
+  const rel=KG.links.filter(([a,b])=>a===n.id||b===n.id).slice(0,6)
+    .map(([a,b,r])=>{const other=a===n.id?b:a;return `${r} → ${(Graph.byId[other]||{label:other}).label}`;});
+  $('#ni-links').innerHTML=rel.length?('<b>Links:</b> '+rel.map(esc).join(' · ')):'';
+  Graph.selected=n;
+  $('#ni-open-book').dataset.goto=n.id;
+}
+function bindGraphCanvas(){
+  const svg=$('#graph-svg'),grp=$('#graph-transform-group');
+  let drag=null;
+  function setT(){grp.setAttribute('transform',`translate(${Graph.pan.x},${Graph.pan.y}) scale(${Graph.zoom})`);}
+  Graph.setT=setT;
+  svg.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,px:Graph.pan.x,py:Graph.pan.y,moved:false};svg.classList.add('grabbing');});
+  svg.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+    if(Math.abs(dx)+Math.abs(dy)>3)drag.moved=true;Graph.pan.x=drag.px+dx;Graph.pan.y=drag.py+dy;setT();});
+  addEventListener('pointerup',()=>{drag=null;svg.classList.remove('grabbing');});
+  svg.addEventListener('wheel',e=>{e.preventDefault();const k=e.deltaY<0?1.12:0.89;
+    Graph.zoom=Math.max(0.3,Math.min(4,Graph.zoom*k));setT();},{passive:false});
+  svg.addEventListener('click',e=>{const g=e.target.closest('.node');if(!g||drag&&false)return;
+    const n=Graph.byId[g.dataset.id];nodeInfo(n);Graph.focus(n.id);});
+  $('#ni-close').onclick=()=>{$('#node-info').classList.remove('open');applyFilters();};
+  $('#ni-open-book').onclick=e=>{const n=Graph.byId[e.currentTarget.dataset.goto];if(!n)return;
+    if(n.type==='chapter')openChapter(n.id);
+    else if(n.type==='figure'){openChapter(n.ch);}
+    else openChapter(n.ch,n.id);};
+  $('#ni-focus').onclick=()=>Graph.focus(Graph.selected.id);
+  $('#zoom-in').onclick=()=>{Graph.zoom=Math.min(4,Graph.zoom*1.2);setT();};
+  $('#zoom-out').onclick=()=>{Graph.zoom=Math.max(0.3,Graph.zoom/1.2);setT();};
+  $('#zoom-fit').onclick=()=>Graph.fit();
+  $('#graph-reset').onclick=()=>{Graph.zoom=1;Graph.pan={x:0,y:0};setT();$('#graph-search').value='';applyFilters();$('#graph-search-clear').style.display='none';applyFilters();};
+  Graph.fit=function(){const wrap=$('#graph-canvas-wrap');
+    const xs=Graph.nodes.map(n=>n.x),ys=Graph.nodes.map(n=>n.y);
+    const minX=Math.min(...xs)-60,maxX=Math.max(...xs)+60,minY=Math.min(...ys)-60,maxY=Math.max(...ys)+70;
+    const sx=wrap.clientWidth/(maxX-minX),sy=wrap.clientHeight/(maxY-minY);
+    Graph.zoom=Math.max(0.3,Math.min(2,Math.min(sx,sy)));
+    Graph.pan={x:(wrap.clientWidth-(maxX+minX)*Graph.zoom)/2,y:(wrap.clientHeight-(maxY+minY)*Graph.zoom)/2};setT();};
+}
+function applyGraphSearchUI(){
+  const inp=$('#graph-search');
+  inp.addEventListener('input',()=>{$('#graph-search-clear').style.display=inp.value?'':'none';applyFilters();
+    const q=inp.value.toLowerCase();const first=Graph.nodes.find(n=>!Graph.hidden.has(n.type)&&(n.label+' '+n.desc).toLowerCase().includes(q));
+    if(first&&q){const wrap=$('#graph-canvas-wrap');
+      Graph.zoom=Math.max(Graph.zoom,1);Graph.pan={x:wrap.clientWidth/2-first.x*Graph.zoom,y:wrap.clientHeight/2-first.y*Graph.zoom};Graph.setT();}});
+  $('#graph-search-clear').onclick=()=>{inp.value='';$('#graph-search-clear').style.display='none';applyFilters();};
+}
+
+/* ============================ FLASHCARDS ============================ */
+const FC={i:0,deck:DATA.flashcards.slice(),flipped:false};
+function fcRender(){
+  const c=FC.deck[FC.i];$('#fc-tag').textContent=c.tag||'';
+  $('#fc-front').outerHTML=FC.flipped?`<div class="fc-back" id="fc-front">${esc(c.back)}</div>`:`<div class="fc-face" id="fc-front">${esc(c.front)}</div>`;
+  $('#flash-progress').textContent=(FC.i+1)+' / '+FC.deck.length;
+}
+$('#flash-card').onclick=()=>{FC.flipped=!FC.flipped;fcRender();};
+$('#next-card').onclick=()=>{FC.i=(FC.i+1)%FC.deck.length;FC.flipped=false;fcRender();};
+$('#prev-card').onclick=()=>{FC.i=(FC.i-1+FC.deck.length)%FC.deck.length;FC.flipped=false;fcRender();};
+$('#shuffle-cards').onclick=()=>{FC.deck.sort(()=>Math.random()-0.5);FC.i=0;FC.flipped=false;fcRender();};
+
+/* ============================ MCQ PRACTICE ============================ */
+const MCQ={ch:Object.keys(MCQS)[0]};
+MCQ.renderNav=function(){
+  const nav=$('#mcq-nav');nav.innerHTML='';
+  Object.keys(MCQS).forEach(cid=>{
+    const qs=MCQS[cid];const done=qs.reduce((n,_,i)=>n+(mcqState[cid+':'+i]!=null?1:0),0);
+    const right=qs.reduce((n,_,i)=>{const p=mcqState[cid+':'+i];return n+(p!=null&&qs[i].a.includes(p)?1:0);},0);
+    const b=document.createElement('button');b.className='mcq-chip'+(cid===MCQ.ch?' active':'');
+    b.innerHTML=`${esc(CH_LABEL[cid]||cid)} <span class="chip-score">${done}/${qs.length}${done===qs.length?' · ✓'+right:''}</span>`;
+    b.onclick=()=>{MCQ.ch=cid;MCQ.renderNav();MCQ.renderBook();};
+    nav.appendChild(b);
+  });
+  MCQ.renderBook();
+};
+MCQ.renderBook=function(){
+  const box=$('#mcq-book');box.innerHTML='';
+  const cid=MCQ.ch,qs=MCQS[cid]||[];
+  if(!qs.length){box.innerHTML='<p class="pv-sub">No practice questions for this chapter yet.</p>';return;}
+  qs.forEach((q,i)=>{
+    const picked=mcqState[cid+':'+i];
+    const wrap=document.createElement('div');wrap.style.marginBottom='26px';
+    let html=`<div style="font-weight:600;margin-bottom:8px">${i+1}. ${esc(q.q)}</div>`;
+    q.opts.forEach((o,j)=>{
+      let cls='mcq-opt';
+      if(picked!=null){
+        if(q.a.includes(j))cls+=' correct';
+        else if(j===picked)cls+=' wrong';
+        else cls+=' dim';
+      }
+      html+=`<button class="${cls}" data-q="${i}" data-o="${j}" ${picked!=null?'disabled':''}><span class="mcq-key">${'ABCD'[j]}.</span><span>${esc(o)}</span></button>`;
+    });
+    const showExp=picked!=null;
+    const links=(q.links||[]).map(l=>{
+      const el=document.getElementById(l);const title=el?el.textContent:l;
+      return `<a class="mcq-link" data-goto="${l}" href="javascript:void 0">📚 Study: ${esc(title)}</a>`;}).join('');
+    html+=`<div class="mcq-explain${showExp?' show':''}">${showExp?('<b>'+(q.a.includes(picked)?'Correct. ':'Not quite. ')+'</b>'+esc(q.why)+(links?`<div class="mcq-links">${links}</div>`:'')):''}</div>`;
+    wrap.innerHTML=html;box.appendChild(wrap);
+  });
+  const foot=document.createElement('div');foot.className='mcq-foot';
+  const total=qs.length,done=qs.reduce((n,_,i)=>n+(mcqState[cid+':'+i]!=null?1:0),0),
+        right=qs.reduce((n,q,i)=>{const p=mcqState[cid+':'+i];return n+(p!=null&&q.a.includes(p)?1:0);},0);
+  foot.innerHTML=`<span class="mcq-score">${right}/${total} correct · ${done}/${total} answered</span><button class="mcq-reset">Reset chapter</button>`;
+  foot.querySelector('.mcq-reset').onclick=()=>{qs.forEach((_,i)=>delete mcqState[cid+':'+i]);store.set('mcq',mcqState);MCQ.renderNav();};
+  box.appendChild(foot);
+};
+$('#mcq-book').addEventListener('click',e=>{
+  const opt=e.target.closest('.mcq-opt');
+  if(opt&&opt.disabled===false){const i=+opt.dataset.q,j=+opt.dataset.o;
+    mcqState[MCQ.ch+':'+i]=j;store.set('mcq',mcqState);MCQ.renderNav();return;}
+  const link=e.target.closest('.mcq-link');
+  if(link){const id=link.dataset.goto;const el=document.getElementById(id);
+    const cid=(id.match(/^ch\d+[ab]?/)||[''])[0];openChapter(cid||lastChapter,el?id:null);}
+});
+
+/* ============================ GLOSSARY ============================ */
+function renderGlossary(filter){
+  const list=$('#glossary-list');const f=(filter||'').toLowerCase();
+  const entries=Object.entries(DATA.glossary).filter(([t,d])=>t.toLowerCase().includes(f)||d.toLowerCase().includes(f));
+  list.innerHTML=entries.map(([t,d])=>`<div class="gloss-card"><div class="gloss-term">${esc(t)}</div><div class="gloss-def">${esc(d)}</div></div>`).join('')
+   ||'<div class="np-empty">No matching terms.</div>';
+}
+$('#glossary-search').addEventListener('input',e=>renderGlossary(e.target.value));
+
+/* ============================ THEME & SETTINGS ============================ */
+function setTheme(t){document.documentElement.setAttribute('data-theme',t);store.set('theme',t);
+  $('#theme-select').value=t;
+  $('#theme-icon').innerHTML=t==='dark'?'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/>'
+    :'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>';}
+$('#theme-toggle').onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+$('#theme-select').onchange=e=>setTheme(e.target.value);
+function bindSlider(id,out,fmt,cb){const s=$(id),o=$(out);
+  const upd=()=>{o.textContent=fmt(s.value);cb(s.value);store.set(id, s.value);};
+  s.addEventListener('input',upd);const v=store.get(id,null);if(v!=null){s.value=v;}upd();}
+bindSlider('#font-scale-slider','#font-scale-value',v=>Math.round(v*100)+'%',v=>document.documentElement.style.setProperty('--font-scale',v));
+bindSlider('#line-spacing-slider','#line-spacing-value',v=>Number(v).toFixed(2),v=>document.documentElement.style.setProperty('--line-gap',v));
+bindSlider('#letter-spacing-slider','#letter-spacing-value',v=>Number(v).toFixed(3)+'em',v=>document.documentElement.style.setProperty('--track',v));
+$('#clear-all-data').onclick=()=>{if(confirm('Delete all highlights, notes and quiz progress?')){
+  store.keys().forEach(k=>{try{localStorage.removeItem('scribe04_'+k);}catch(e){}});location.reload();}};
+(function storageStatus(){let ok=true;try{store.set('_t',1);store.get('_t');localStorage.removeItem('scribe04__t');}catch(e){ok=false;}
+  $('#storage-status').textContent=ok?'Saved locally in this browser ('+Object.keys(highlights).length+' highlights).':'Storage unavailable — bookmarks won\'t persist.';})();
+
+/* ============================ KEYBOARD ============================ */
+addEventListener('keydown',e=>{
+  const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();searchInput.focus();searchInput.select();return;}
+  if(typing)return;
+  if(e.key==='['||e.key===']'){
+    const ids=chapters.map(c=>c.id);let i=ids.indexOf(lastChapter);
+    i=(e.key===']'?i+1:i-1+ids.length)%ids.length;openChapter(ids[i]);}
+  if(e.key==='Escape'){hidePopup();closeSidebar();notesPanel.classList.remove('open');searchResults.classList.remove('open');$('#node-info').classList.remove('open');}
+  if($('#flashcards-view').classList.contains('active')){
+    if(e.key===' '){e.preventDefault();FC.flipped=!FC.flipped;fcRender();}
+    if(e.key==='ArrowRight')$('#next-card').click();if(e.key==='ArrowLeft')$('#prev-card').click();}
+});
+
+/* ============================ INIT ============================ */
+buildTOC();
+restoreHighlights();
+updateNotesBadge();
+fcRender();
+renderGlossary('');
+setTheme(store.get('theme',matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+const initial=location.hash.replace('#','');
+if(['graph','flashcards','mcq','glossary','settings'].includes(initial))showView(initial);
+else openChapter(lastChapter);
+addEventListener('hashchange',()=>{const v=location.hash.replace('#','');
+  if(['graph','flashcards','mcq','glossary','settings'].includes(v))showView(v);});
+})();
+</script>
 </body>
 </html>
