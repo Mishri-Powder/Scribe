@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Image Placeholder Manager</title>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<style>
+  :root{ --bg:#0f1420; --panel:#1a2233; --panel2:#232d42; --line:#2f3b56;
+    --text:#e8edf6; --muted:#93a1bb; --accent:#4da3ff; --ok:#3ecf8e; --warn:#ffb454; --danger:#ff6b6b; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
+  header{position:sticky;top:0;z-index:10;background:rgba(15,20,32,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:14px 22px}
+  h1{font-size:18px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:12.5px;margin:0}
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+  .stats{font-size:13px;color:var(--muted);margin-right:auto}
+  .stats b{color:var(--text)} .stats .ok{color:var(--ok)} .stats .miss{color:var(--warn)}
+  input[type=search]{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 12px;font-size:13px;width:240px;outline:none}
+  input[type=search]:focus{border-color:var(--accent)}
+  select{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 10px;font-size:13px}
+  button{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;transition:.15s}
+  button:hover{border-color:var(--accent);color:var(--accent)}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#061018;font-weight:600}
+  button.primary:hover{filter:brightness(1.12);color:#061018}
+  button.danger:hover{border-color:var(--danger);color:var(--danger)}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  main{padding:20px 22px 60px}
+  #grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;outline-offset:2px}
+  .card.filled{border-color:rgba(62,207,142,.45)}
+  .thumb{position:relative;aspect-ratio:4/3;background:repeating-linear-gradient(45deg,#1c2536 0 12px,#182031 12px 24px);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden}
+  .thumb img.preview{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff}
+  .thumb .ph{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:12px;text-align:center;padding:10px}
+  .thumb .ph svg{width:34px;height:34px;opacity:.55}
+  .overlay{position:absolute;inset:0;background:rgba(10,14,22,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;transition:opacity .15s;padding:10px;text-align:center}
+  .card:hover .overlay,.card:focus-within .overlay{opacity:1}
+  .overlay .hint{font-size:12px;color:var(--muted)}
+  kbd{background:var(--panel2);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px;font-size:11px;font-family:inherit}
+  .overlay .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .overlay button{padding:5px 10px;font-size:12px}
+  .meta{padding:10px 12px 12px;display:flex;flex-direction:column;gap:5px}
+  .fname{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--accent);word-break:break-all;line-height:1.35}
+  .alt{font-size:11.5px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
+  .status{font-size:11px;font-weight:600;letter-spacing:.3px}
+  .status.missing{color:var(--warn)} .status.ready{color:var(--ok)}
+  .badge{position:absolute;top:8px;left:8px;background:rgba(62,207,142,.92);color:#04150d;font-size:10.5px;font-weight:700;border-radius:6px;padding:2px 7px;display:none;z-index:2}
+  .card.filled .badge{display:block}
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line);padding:10px 18px;border-radius:10px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:100;max-width:80vw;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+  #toast.show{opacity:1}
+  .empty{color:var(--muted);text-align:center;padding:60px 0;font-size:14px;display:none}
+  @media (max-width:640px){#grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}input[type=search]{width:100%}}
+</style>
+</head>
+<body>
+<header>
+  <h1>&#128214; Book Image Placeholder Manager</h1>
+  <p class="sub">Every image placeholder referenced by the book (the same set is used across all versions). Hover a tile &rarr; press <kbd>Ctrl</kbd>+<kbd>V</kbd> to paste an image into it, or click <em>Upload file</em>. Then export everything at once with the exact filenames the site expects.</p>
+  <div class="toolbar">
+    <div class="stats" id="stats"></div>
+    <input type="search" id="search" placeholder="Filter by filename or description&#8230;">
+    <select id="filterSel">
+      <option value="all">All tiles</option>
+      <option value="missing">Missing only</option>
+      <option value="filled">Pasted only</option>
+    </select>
+    <button class="primary" id="btnZip">&#128230; Export all as ZIP</button>
+    <button id="btnIndiv" title="Download pasted images individually, correctly named">&#128229; Download individually</button>
+    <button id="btnSaveState" title="Save progress to a file so you can continue later">&#128190; Save session</button>
+    <button id="btnLoadState" title="Restore a previously saved session file">&#128194; Load session</button>
+    <button class="danger" id="btnClear">Clear all</button>
+    <input type="file" id="fileInput" accept="image/*" hidden>
+    <input type="file" id="bulkInput" accept="image/*" multiple hidden>
+    <input type="file" id="stateInput" accept=".json" hidden>
+  </div>
+  <div class="toolbar">
+    <button id="btnBulk" title="Select many images at once &#8212; auto-matches by filename">&#128257; Bulk import matching files&#8230;</button>
+    <span class="sub">Bonus: files already named like the placeholders (e.g. <code>hipaa-logo.png</code>) are matched automatically.</span>
+  </div>
+</header>
+<main>
+  <div id="grid"></div>
+  <div class="empty" id="empty">No tiles match your filter.</div>
+</main>
+<div id="toast"></div>
+
+<script>
+"use strict";
+const PLACEHOLDERS = [{"file": "images/hipaa-logo.png", "alt": "HIPAA logo — caduceus with wings and the acronym HIPAA"}, {"file": "images/hipaa-patient-rights.png", "alt": "Infographic showing patient right to health information: Electronic Health Records, Mobile Device Apps, Laboratories, Hospitals, Web-Based Portals, Health Insurance Plans, Physicians, Pharmacies, Medical Staff"}, {"file": "images/cyber-security.png", "alt": "Cyber Security graphic with padlock"}, {"file": "images/fig2-1-superior-inferior.png", "alt": "Figure showing Superior vs. Inferior anatomical terms on a human figure"}, {"file": "images/fig2-2-proximal-distal.png", "alt": "Figure showing Proximal vs. Distal on an arm"}, {"file": "images/fig2-3-medial-lateral.png", "alt": "Figure showing Medial vs. Lateral on a human figure"}, {"file": "images/fig2-4-abduction-adduction.png", "alt": "Figure showing Abduction vs. Adduction on a human figure"}, {"file": "images/fig2-5-anterior-posterior.png", "alt": "Figure showing Anterior vs. Posterior views of a human figure"}, {"file": "images/fig2-6-dorsal-ventral.png", "alt": "Figure showing Dorsal vs. Ventral on a dog"}, {"file": "images/fig2-7-volar-dorsal.png", "alt": "Figure showing Volar (palm) vs. Dorsal (back of hand) on a hand"}, {"file": "images/fig2-8-dorsal-plantar.png", "alt": "Figure showing Dorsal vs. Plantar on a foot"}, {"file": "images/fig2-9-abdominal-quadrants.png", "alt": "Figure showing the four abdominal quadrants: RUQ, LUQ, RLQ, LLQ"}, {"file": "images/fig2-10-abdominal-regions.png", "alt": "Figure showing Epigastric, Periumbilical, Suprapubic, and Inguinal regions"}, {"file": "images/fig2-11-skeleton.png", "alt": "Figure showing the major bones and joints of the human skeleton"}, {"file": "images/fig2-12-thorax.png", "alt": "Figure showing bones and joints of the thorax, including clavicles, scapulae, ribs, sternum"}, {"file": "images/fig2-13-radius-ulna.png", "alt": "Figure showing Radius and ulna of right arm in supinated and pronated positions"}, {"file": "images/fig2-14-hand-bones.png", "alt": "Figure showing bones of the hand and numbering system in anterior and posterior views"}, {"file": "images/fig2-15-hand-joints.png", "alt": "Figure showing joints of the hand: CMC, MCP, PIP, DIP"}, {"file": "images/fig2-16-lower-extremities.png", "alt": "Figure showing bones and joints of the lower extremities"}, {"file": "images/fig2-17-knee-anatomy.png", "alt": "Figure showing schematic knee anatomy: femur, patella, tibia, fibula, menisci, ligaments"}, {"file": "images/fig2-18-foot-bones.png", "alt": "Figure showing bones and joints of the foot: phalanges, metatarsals, tarsals, TMT, MTP, IP joints"}, {"file": "images/fig2-19-female-internal.png", "alt": "Figure showing internal female reproductive anatomy, sagittal view: uterus, fundus, ovary, fallopian tube, endometrium, myometrium"}, {"file": "images/fig2-20-female-external.png", "alt": "Figure showing external female reproductive anatomy: mons pubis, labia majora, labia minora, clitoris, vulva vestibule"}, {"file": "images/medications-pills.png", "alt": "Photograph of assorted pills and capsules"}, {"file": "images/fig3-2-healthcare-screening.png", "alt": "Screenshot of healthcare screening data entry in an EHR showing Blood Pressure Screening, Mammogram, Cervical Cancer Screening, Colorectal cancer screening, Hep C Screening, Influenza immunization, Shingles Vaccination, Td/Tdap Adult Booster"}, {"file": "images/fig3-3-smoking-documentation.png", "alt": "Screenshot of smoking documentation in one EHR showing Former Smoker quit date, readiness to quit, counseling given"}, {"file": "images/fig4-1-click-exam.png", "alt": "Screenshot of click-based exam entry in an EHR showing General, HEENT, Respiratory, Cardiovascular, Gastrointestinal, Lymphatic sections"}, {"file": "images/pulse-oximeter.png", "alt": "Photograph of a pulse oximeter on a finger"}, {"file": "images/fig4-2-ear-anatomy.png", "alt": "Figure showing ear anatomy: auricle/pinna, external auditory canal, tympanic membrane, semicircular canals, cochlea, eustachian tube"}, {"file": "images/fig4-3-normal-tm.png", "alt": "Figure showing normal tympanic membrane appearance"}, {"file": "images/fig4-5-cervical-lymph-nodes.png", "alt": "Figure showing cervical lymph nodes: submandibular, anterior cervical, posterior cervical"}, {"file": "images/fig4-6-peripheral-pulses.png", "alt": "Figure showing peripheral pulse locations: carotid, brachial, radial, femoral, popliteal, posterior tibial, dorsalis pedis"}, {"file": "images/fig4-7-pelvic-exam-position.png", "alt": "Figure showing positioning for a full pelvic exam, lithotomy position"}, {"file": "images/breast-exam.png", "alt": "Photograph of a clinical breast exam"}, {"file": "images/fig4-8-skin-lesions.png", "alt": "Figure showing types of skin lesions: crust, cyst, macule, papule, pustule, ulcer, vesicle, wheal"}, {"file": "images/fig4-9-shoulder-dislocation.png", "alt": "Figure showing obvious deformity due to a shoulder dislocation"}, {"file": "images/pediatric-exam.png", "alt": "Photograph of a pediatric physical exam"}, {"file": "images/fig5-1-urine-dipstick.png", "alt": "Figure showing POC urine dipstick"}, {"file": "images/fig5-4-diagnosis-entry.png", "alt": "Screenshot of diagnosis entry example, highlighting patient visibility checkbox"}, {"file": "images/fig6-1-clinic-flow.png", "alt": "Figure showing typical patient flow through a clinic: Patient → Registration (Insurance, Miscellaneous paperwork) → MA/RN (Chief complaint, Vital signs, Review medications) → Physician (History, Physical exam, Orders) → Disposition (Diagnostic work-up, Procedures)"}, {"file": "images/fig6-2-aging-population.png", "alt": "Graph showing rise in the percentage of the population over 65"}, {"file": "images/fig6-3-colonoscopy.png", "alt": "Schematic of colonoscopy procedure"}, {"file": "images/fig6-4-bone-density.png", "alt": "Figure showing areas evaluated for bone density: femoral neck and spinal column"}, {"file": "images/fig6-5-prostate.png", "alt": "Figure showing normal prostate vs. enlarged prostate with urinary retention"}, {"file": "images/fig6-6-pap-smear.png", "alt": "Figure showing the Pap smear and cervical appearance, with normal, early stage, mid stage, late stage views"}, {"file": "images/fig6-7-mammogram.png", "alt": "Photograph of a mammogram being performed"}, {"file": "images/fig6-8-mammogram-images.png", "alt": "Photograph of mammogram images on a viewing screen"}, {"file": "images/fig6-19-fundal-height.png", "alt": "Photograph of measuring fundal height"}, {"file": "images/fig6-9-neonate-jaundice.png", "alt": "Figure showing icteric sclera in a neonate"}, {"file": "images/fig6-10-growth-chart.png", "alt": "Growth chart for boys 0–24 months old"}, {"file": "images/sports-physical.png", "alt": "Illustration of youth sports activities"}, {"file": "images/fig6-preop.png", "alt": "Screenshot of a pre-op visit template in an EHR"}, {"file": "images/normal-vs-diabetic-retina.png", "alt": "Figure showing normal retina vs. diabetic retinopathy with hemorrhages, aneurysms, hard exudates, and cotton wool spots"}, {"file": "images/fig6-12-diabetic-foot-exam.png", "alt": "Figure showing sensory testing sites for the diabetic foot exam"}, {"file": "images/fig6-13-htn-complications.png", "alt": "Figure showing complications of persistent hypertension: brain (stroke, encephalopathy), retina (hypertensive retinopathy), heart (MI, heart failure), kidneys (nephropathy, chronic renal failure), blood (elevated sugar levels)"}, {"file": "images/fig6-14-vertebra.png", "alt": "Figure showing anatomy of a vertebra, disk, and exiting nerve"}, {"file": "images/headache-illustration.png", "alt": "Illustration of a person with a headache"}, {"file": "images/uri-droplets.png", "alt": "Photograph of a person coughing or sneezing, showing droplet spread"}, {"file": "images/fig6-15-cystitis.png", "alt": "Figure showing cystitis — harmful pathogens enter bladder causing inflammation"}, {"file": "images/complex-patient.png", "alt": "Photograph of an elderly patient with multiple medications"}, {"file": "images/fig6-1-ed-patient-flow.png", "alt": "Figure showing typical patient flow through an ED: Private car/EMS → Triage nurse → Room → Nursing assessment → Provider → Workup → Discharge, Admit, or Transfer"}, {"file": "images/fig6-3-coronary-arteries.png", "alt": "Figure showing the heart and the coronary arteries"}, {"file": "images/fig6-4-normal-ekg.png", "alt": "Normal EKG with flat ST segments"}, {"file": "images/fig6-5-elevated-st.png", "alt": "EKG with elevated ST segments"}, {"file": "images/fig6-6-cardiac-catheterization.png", "alt": "Figure showing cardiac catheterization"}, {"file": "images/fig6-7-pe-schematic.png", "alt": "Figure showing a pulmonary embolism schematic"}, {"file": "images/fig6-8-abdominal-organs.png", "alt": "Figure showing abdominal organs: liver, gallbladder, stomach, pancreas, small intestine, colon, appendix, rectum, anus"}, {"file": "images/fig6-9-colon.png", "alt": "Figure showing the colon: right colic flexure, transverse colon, ascending colon, ileum, cecum, vermiform appendix, anal canal, rectum, sigmoid colon, descending colon, left colic flexure"}, {"file": "images/fig6-10-epigastrium.png", "alt": "Figure showing organs and ducts of the epigastrium"}, {"file": "images/fig6-11-gallbladder-us.png", "alt": "Gallbladder ultrasound"}, {"file": "images/female-reproductive-anatomy.png", "alt": "Figure showing female reproductive anatomy"}, {"file": "images/fig6-12-early-iup-us.png", "alt": "Early IUP ultrasound"}, {"file": "images/fig6-13-ovarian-anatomy.png", "alt": "Figure showing simple ovarian anatomy"}, {"file": "images/fig6-14-male-urinary-anatomy.png", "alt": "Figure showing simple male urinary anatomy"}, {"file": "images/fig6-15-vertebral-anatomy.png", "alt": "Figure showing vertebral anatomy with bulging disc"}, {"file": "images/fig6-16-cerebrum-landmarks.png", "alt": "Figure showing functional landmarks of the cerebrum: Broca's area, Wernicke's area, motor cortex, sensory cortex, visual cortex, cerebellum"}, {"file": "images/fig6-17-nih-stroke-scale.png", "alt": "Modified NIH Stroke Scale with sections for questions, commands, gaze, visual fields, motor function, sensory, language, neglect"}, {"file": "images/fig6-18-thrombotic-cva.png", "alt": "Schematic of thrombotic CVA with blood clot in a blood vessel"}, {"file": "images/fig6-19-embolic-cva.png", "alt": "Schematic of embolic CVA"}, {"file": "images/alcohol-glasses.png", "alt": "Photograph of two glasses of beer"}, {"file": "images/breathalyzer.png", "alt": "Photograph of a breathalyzer test"}, {"file": "images/suicide-prevention-lifeline.png", "alt": "National Suicide Prevention Lifeline logo with 1-800-273-TALK"}, {"file": "images/car-accident.png", "alt": "Photograph of an overturned car after an accident"}, {"file": "images/fig6-20-intubation.png", "alt": "Figure showing orotracheal intubation"}, {"file": "images/fig6-21-backboard-c-collar.png", "alt": "Figure showing EMS backboard and C-collar"}, {"file": "images/fig6-22-dental-abscess.png", "alt": "Figure showing dental abscess"}, {"file": "images/fig7-1-sdoh-template.png", "alt": "Screenshot of EHR template for click entry of socioeconomic determinants of health, including questions about housing, food security, and financial strain"}, {"file": "images/fig7-2-mips-measures.png", "alt": "List of available MIPS quality measures for primary care (updated 2020), including health condition management, patient safety, screening topics"}, {"file": "images/fig7-3-ed-mips-measures.png", "alt": "List of available ED MIPS quality measures (updated 2020)"}, {"file": "images/fig8-1-choosing-assessment.png", "alt": "Screenshot of choosing an assessment in an EHR, showing search results for type 2 diabetes mellitus with various ICD-10 codes"}, {"file": "images/fig8-2-narrowing-differential.png", "alt": "Figure showing narrowing the differential: thousands of possibilities → after HPI → labs/imaging → discussed in CDM → final diagnosis"}, {"file": "images/fig8-3-patient-portal.png", "alt": "Screenshot of an online patient portal (MyChart) showing health summary, current health issues, medications, allergies, immunizations, preventive care"}];
+
+// ---------- state ----------
+const LS_KEY = 'bookImagePlaceholders_v1';
+let data = {};            // "images/x.png" -> {dataUrl, w, h, name}
+let focusedCard = null;   // tile that will receive a clipboard paste
+let activeTarget = null;  // tile targeted via the file picker
+try { data = JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch(e) { data = {}; }
+
+const $ = s => document.querySelector(s);
+const grid = $('#grid');
+const toastEl = $('#toast');
+let toastTimer;
+function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 2600); }
+function persist(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(data)); }catch(e){ toast('\u26A0 Browser storage full \u2014 use "Save session" to keep your work.'); } updateStats(); }
+
+const PH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M3 17l5-5 4 4 3-3 6 6"/></svg>';
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(s){ return escHtml(s).replace(/"/g,'&quot;'); }
+
+// ---------- render grid ----------
+PLACEHOLDERS.forEach(p => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.file = p.file;
+  card.tabIndex = 0;
+  card.innerHTML =
+    '<div class="thumb">' +
+      '<span class="badge">\u2713 ready</span>' +
+      '<div class="ph">' + PH_SVG + '<span>Paste here</span></div>' +
+      '<div class="overlay">' +
+        '<div class="hint">Hover this tile, then press <kbd>Ctrl</kbd>+<kbd>V</kbd> to paste<br>\u2014 or \u2014</div>' +
+        '<div class="row">' +
+          '<button class="upl" type="button">Upload file</button>' +
+          '<button class="clr danger" type="button">Remove</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="meta">' +
+      '<div class="fname">' + escHtml(p.file) + '</div>' +
+      '<div class="alt" title="' + escAttr(p.alt) + '">' + escHtml(p.alt) + '</div>' +
+      '<div class="status"></div>' +
+    '</div>';
+  card.addEventListener('mouseenter', () => setFocused(card));
+  card.addEventListener('focus',      () => setFocused(card));
+  card.addEventListener('click', e => { if(e.target.closest('button')) return; triggerFile(card); });
+  card.querySelector('.upl').addEventListener('click', e => { e.stopPropagation(); triggerFile(card); });
+  card.querySelector('.clr').addEventListener('click', e => { e.stopPropagation(); removeImage(p.file); });
+  grid.appendChild(card);
+});
+const cards = Array.from(grid.children);
+cards.forEach(applyTile);
+
+function setFocused(card){ focusedCard = card; card.focus({preventScroll:true}); }
+function cardFor(file){ return grid.querySelector('.card[data-file="' + CSS.escape(file) + '"]'); }
+
+function applyTile(card){
+  const f = card.dataset.file, rec = data[f];
+  const thumbBox = card.querySelector('.thumb');
+  const ph = card.querySelector('.ph'), st = card.querySelector('.status');
+  let old = thumbBox.querySelector('img.preview'); if(old) old.remove();
+  if(rec){
+    card.classList.add('filled');
+    const img = document.createElement('img');
+    img.className = 'preview'; img.alt = ''; img.src = rec.dataUrl;
+    thumbBox.insertBefore(img, thumbBox.querySelector('.overlay'));
+    ph.style.display = 'none';
+    st.className = 'status ready';
+    st.textContent = 'READY \u00B7 ' + rec.w + '\u00D7' + rec.h + 'px';
+  } else {
+    card.classList.remove('filled');
+    ph.style.display = '';
+    st.className = 'status missing';
+    st.textContent = 'MISSING \u2014 paste or upload';
+  }
+}
+
+function removeImage(file){ delete data[file]; const c = cardFor(file); if(c) applyTile(c); persist(); toast('Removed ' + file); }
+
+function updateStats(){
+  const total = PLACEHOLDERS.length;
+  const have = PLACEHOLDERS.filter(p => data[p.file]).length;
+  $('#stats').innerHTML = '<b>' + have + '</b>/<b>' + total + '</b> placed \u00B7 <span class="ok">' + have + ' ready</span> \u00B7 <span class="miss">' + (total-have) + ' missing</span>';
+  $('#btnZip').disabled = have === 0;
+  $('#btnIndiv').disabled = have === 0;
+}
+
+// ---------- filtering ----------
+function applyFilter(){
+  const q = $('#search').value.trim().toLowerCase();
+  const mode = $('#filterSel').value;
+  let shown = 0;
+  cards.forEach(c => {
+    const p = PLACEHOLDERS.find(x => x.file === c.dataset.file);
+    const has = !!data[c.dataset.file];
+    let vis = true;
+    if(q && !(c.dataset.file.toLowerCase().includes(q) || p.alt.toLowerCase().includes(q))) vis = false;
+    if(mode === 'missing' && has) vis = false;
+    if(mode === 'filled' && !has) vis = false;
+    c.style.display = vis ? '' : 'none';
+    if(vis) shown++;
+  });
+  $('#empty').style.display = shown ? 'none' : 'block';
+}
+$('#search').addEventListener('input', applyFilter);
+$('#filterSel').addEventListener('change', applyFilter);
+
+// ---------- attach image ----------
+function attachBlob(file, blob){
+  return new Promise(resolve => {
+    if(!blob || !blob.type.startsWith('image/')){ toast('Not an image \u2014 ignored.'); return resolve(false); }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        data[file] = { dataUrl: reader.result, w: img.naturalWidth, h: img.naturalHeight, name: blob.name || '' };
+        const c = cardFor(file); if(c) applyTile(c);
+        persist();
+        resolve(true);
+      };
+      img.onerror = () => { toast('Could not decode an image for ' + file); resolve(false); };
+      img.src = reader.result;
+    };
+    reader.onerror = () => resolve(false);
+    reader.readAsDataURL(blob);
+  });
+}
+
+// ---------- paste (clipboard) ----------
+document.addEventListener('paste', async e => {
+  if(!focusedCard){ toast('Hover (or Tab to) a placeholder tile first, then paste.'); return; }
+  const items = Array.from((e.clipboardData && e.clipboardData.items) || []).filter(i => i.type.startsWith('image/'));
+  if(!items.length){ toast('Clipboard contains no image.'); return; }
+  e.preventDefault();
+  const target = focusedCard.dataset.file;
+  const ok = await attachBlob(target, items[0].getAsFile());
+  if(ok) toast('\u2714 Pasted into ' + target);
+});
+
+// ---------- single-tile file upload ----------
+function triggerFile(card){ setFocused(card); activeTarget = card.dataset.file; $('#fileInput').value=''; $('#fileInput').click(); }
+$('#fileInput').addEventListener('change', async e => {
+  const f = e.target.files[0];
+  if(f && activeTarget){ const ok = await attachBlob(activeTarget, f); if(ok) toast('\u2714 Set ' + activeTarget); }
+});
+
+// ---------- bulk import matched by filename ----------
+$('#btnBulk').addEventListener('click', () => { $('#bulkInput').value=''; $('#bulkInput').click(); });
+$('#bulkInput').addEventListener('change', async e => {
+  const files = Array.from(e.target.files || []);
+  if(!files.length) return;
+  const known = {};
+  PLACEHOLDERS.forEach(p => { known[p.file.split('/').pop().toLowerCase()] = p.file; });
+  let matched = 0; const skipped = [];
+  for(const f of files){
+    const base = f.name.toLowerCase();
+    const stem = base.replace(/\.[a-z0-9]+$/, '');
+    let target = known[base] || known[stem + '.png'] || known[stem + '.jpg'] || known[stem + '.jpeg'];
+    if(!target){ for(const k in known){ if(k.replace(/\.[a-z0-9]+$/, '') === stem){ target = known[k]; break; } } }
+    if(target){ if(await attachBlob(target, f)) matched++; }
+    else skipped.push(f.name);
+  }
+  toast('Bulk import: ' + matched + ' matched' + (skipped.length ? (', ' + skipped.length + ' skipped (no placeholder with that filename)') : ''));
+});
+
+// ---------- export helpers ----------
+function extOf(dataUrl){
+  if(dataUrl.startsWith('data:image/png')) return '.png';
+  if(dataUrl.startsWith('data:image/jpeg')) return '.jpg';
+  if(dataUrl.startsWith('data:image/gif')) return '.gif';
+  if(dataUrl.startsWith('data:image/webp')) return '.webp';
+  if(dataUrl.startsWith('data:image/bmp')) return '.bmp';
+  if(dataUrl.startsWith('data:image/svg')) return '.svg';
+  return '.png';
+}
+function outName(p, dataUrl){
+  const origBase = p.file.split('/').pop();
+  const stem = origBase.replace(/\.[a-z0-9]+$/, '');
+  return stem + extOf(dataUrl); // keeps the identity the book references; extension reflects real bytes
+}
+function dataUrlToBlob(u){
+  const parts = u.split(',');
+  const mime = parts[0].match(/:(.*?);/)[1];
+  const bin = atob(parts[1]);
+  const arr = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) arr[i] = bin.charCodeAt(i);
+  return new Blob([arr], {type:mime});
+}
+function dl(blob, name){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+$('#btnZip').addEventListener('click', async () => {
+  const filled = PLACEHOLDERS.filter(p => data[p.file]);
+  if(!filled.length){ toast('Nothing pasted yet.'); return; }
+  if(typeof JSZip === 'undefined'){
+    toast('ZIP library unavailable offline \u2014 falling back to individual downloads.');
+    return downloadIndividually(filled);
+  }
+  toast('Zipping ' + filled.length + ' images\u2026');
+  const zip = new JSZip();
+  const folder = zip.folder('images');
+  filled.forEach(p => folder.file(outName(p, data[p.file].dataUrl), dataUrlToBlob(data[p.file].dataUrl)));
+  zip.file('manifest.json', JSON.stringify({
+    generated: new Date().toISOString(),
+    included: filled.map(p => ({saveAs: 'images/' + outName(p, data[p.file].dataUrl), referencedInBookAs: p.file, alt: p.alt})),
+    stillMissing: PLACEHOLDERS.filter(p => !data[p.file]).map(p => p.file)
+  }, null, 2));
+  const blob = await zip.generateAsync({type:'blob'});
+  dl(blob, 'book-images.zip');
+  toast('\u2714 book-images.zip downloaded \u2014 upload its images/ contents to the site.');
+});
+
+async function downloadIndividually(list){
+  toast('Downloading ' + list.length + ' files (allow multiple downloads if prompted)\u2026');
+  for(const p of list){
+    dl(dataUrlToBlob(data[p.file].dataUrl), outName(p, data[p.file].dataUrl));
+    await new Promise(r => setTimeout(r, 400));
+  }
+}
+$('#btnIndiv').addEventListener('click', () => downloadIndividually(PLACEHOLDERS.filter(p => data[p.file])));
+
+// ---------- session save / load ----------
+$('#btnSaveState').addEventListener('click', () => {
+  dl(new Blob([JSON.stringify({v:1, data})], {type:'application/json'}), 'book-image-session.json');
+  toast('Session file downloaded. Restore later with "Load session".');
+});
+$('#btnLoadState').addEventListener('click', () => { $('#stateInput').value=''; $('#stateInput').click(); });
+$('#stateInput').addEventListener('change', e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      const j = JSON.parse(r.result);
+      data = j.data || j;
+      cards.forEach(applyTile); persist(); applyFilter();
+      toast('\u2714 Session restored.');
+    }catch(err){ toast('Invalid session file.'); }
+  };
+  r.readAsText(f);
+});
+
+$('#btnClear').addEventListener('click', () => {
+  if(confirm('Remove ALL pasted images from this browser?')){ data = {}; cards.forEach(applyTile); persist(); }
+});
+
+updateStats(); applyFilter();
+</script>
+</body>
+</html>
