@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-"""v0.4 MCQ answer keys + study links, authored against Scribe0.1 chapter quizzes."""
+"""MCQ answer keys + study links, authored against the Scribe0.1 chapter quizzes.
+
+Each entry aligns 1:1 with the questions extracted from the book source
+(Scribe0.1.html), in order. 'a' lists correct option indices, 'why' explains
+the answer, 'links' point at section ids inside the book for study jumps."""
 
 MCQS = {
 "ch1": [

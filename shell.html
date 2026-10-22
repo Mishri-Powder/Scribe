@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scribe Academy v0.4</title>
+<style>__CSS__</style>
+</head>
+<body>
+<div class="topbar">
+  <button id="menu-toggle" class="icon-btn" aria-label="Toggle sidebar"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="search-input" type="text" placeholder="Search notes, graph, glossary…" autocomplete="off" spellcheck="false" aria-label="Search">
+    <span id="search-shortcut">Ctrl K</span>
+    <div id="search-results" class="results-pop" role="listbox"></div>
+  </div>
+  <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme"><svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg></button>
+  <button id="notes-panel-toggle" class="icon-btn" aria-label="Notes"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg><span id="notes-count" style="display:none;font-size:11px;font-weight:700;background:var(--app-accent);color:oklch(99% 0 0);border-radius:999px;padding:1px 6px;margin-left:2px"></span></button>
+</div>
+
+<div class="sidebar" id="sidebar">
+  <div class="toc-header"><span class="toc-title">Contents</span><button class="toc-close" id="toc-close" aria-label="Close">×</button></div>
+  <ul class="toc-list" id="toc-list"></ul>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<div class="notes-panel" id="notes-panel">
+  <div class="np-head"><span class="np-title">Highlights &amp; Notes</span><button class="toc-close" id="notes-close" aria-label="Close">×</button></div>
+  <div id="notes-list"></div>
+</div>
+
+<div class="popup-menu" id="popup-menu">
+  <div class="pm-row">
+    <button class="pm-swatch" data-color="yellow" title="Yellow hatch"><span class="pm-name">Key fact</span></button>
+    <button class="pm-swatch" data-color="green" title="Green dots"><span class="pm-name">Definition</span></button>
+    <button class="pm-swatch" data-color="blue" title="Blue grid"><span class="pm-name">Procedure</span></button>
+    <button class="pm-swatch" data-color="pink" title="Pink stripes"><span class="pm-name">Watch out</span></button>
+  </div>
+  <div class="pm-divider"></div>
+  <button class="pm-note" id="pm-add-note"><i></i> Add note…</button>
+  <button class="pm-danger" id="pm-remove-highlight">Remove highlight</button>
+  <div class="pm-divider"></div>
+  <span class="pm-count" id="pm-count"></span>
+</div>
+
+<main>
+  <section class="view active" id="book-view">
+    <div class="book-container"><div class="paper" id="book-content"></div></div>
+  </section>
+
+  <section class="view" id="graph-view">
+    <div class="graph-toolbar">
+      <div class="graph-search">
+        <svg class="gs-icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="graph-search" type="text" placeholder="Search the map — topics, sections, figures…" autocomplete="off" spellcheck="false">
+        <button class="gs-clear" id="graph-search-clear" aria-label="Clear">×</button>
+      </div>
+      <span class="gs-count" id="graph-match-count"></span>
+      <span class="gs-count" id="graph-reset" style="cursor:pointer;color:var(--app-accent)">reset view</span>
+    </div>
+    <div class="graph-typefilters" id="graph-typefilters" style="padding:8px 16px;background:var(--app-panel);border-bottom:1px solid var(--app-border)"></div>
+    <div class="graph-canvas-wrap" id="graph-canvas-wrap">
+      <svg class="graph-svg" id="graph-svg"><g id="graph-transform-group"><g id="graph-links"></g><g id="graph-nodes"></g></g></svg>
+      <div class="graph-controls">
+        <button id="zoom-in" aria-label="Zoom in">+</button><button id="zoom-out" aria-label="Zoom out">−</button><button id="zoom-fit" aria-label="Fit">⤢</button>
+      </div>
+      <div class="node-info" id="node-info">
+        <button class="ni-close" id="ni-close" aria-label="Close">×</button>
+        <div class="ni-title"><span id="ni-label"></span><span class="ni-badge" id="ni-type"></span></div>
+        <p class="ni-desc" id="ni-desc"></p>
+        <div class="ni-links" id="ni-links"></div>
+        <div class="ni-btns"><button class="ni-btn primary" id="ni-open-book">Open in book</button><button class="ni-btn" id="ni-focus">Focus connections</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="flashcards-view"><div class="panel-view">
+    <h2 class="pv-title">Flashcards</h2><p class="pv-sub">Tap the card to flip. Space flips, arrows navigate.</p>
+    <div class="flash-wrap">
+      <div class="flash-card" id="flash-card"><span class="fc-tag" id="fc-tag"></span><div class="fc-face" id="fc-front"></div><span class="fc-hint">click / space to flip</span></div>
+      <div class="flash-nav"><button id="prev-card">← Prev</button><span class="flash-progress" id="flash-progress"></span><button id="next-card">Next →</button><button id="shuffle-cards">Shuffle</button></div>
+    </div>
+  </div></section>
+
+  <section class="view" id="mcq-view"><div class="panel-view">
+    <h2 class="pv-title">Chapter MCQs — Practice Mode</h2>
+    <p class="pv-sub">Every end-of-chapter question, now interactive: pick an answer, get the reasoning, and jump straight to the section to study.</p>
+    <div class="mcq-nav" id="mcq-nav"></div>
+    <div class="mcq-book" id="mcq-book"></div>
+  </div></section>
+
+  <section class="view" id="glossary-view"><div class="panel-view">
+    <h2 class="pv-title">Glossary</h2><p class="pv-sub">Terms from the whole book, searchable.</p>
+    <input class="gloss-search" id="glossary-search" type="text" placeholder="Filter terms…" autocomplete="off">
+    <div class="gloss-grid" id="glossary-list"></div>
+  </div></section>
+
+  <section class="view" id="settings-view"><div class="panel-view">
+    <h2 class="pv-title">Settings</h2><p class="pv-sub">Reading comfort and stored data.</p>
+    <div class="settings-group"><h3 class="sg-title">Reading</h3>
+      <div class="sg-row"><label for="font-scale-slider">Font size</label><input id="font-scale-slider" type="range" min="0.8" max="1.6" step="0.05" value="1"><output id="font-scale-value">100%</output></div>
+      <div class="sg-row"><label for="line-spacing-slider">Line spacing</label><input id="line-spacing-slider" type="range" min="1.4" max="2.4" step="0.05" value="1.75"><output id="line-spacing-value">1.75</output></div>
+      <div class="sg-row"><label for="letter-spacing-slider">Letter spacing</label><input id="letter-spacing-slider" type="range" min="-0.02" max="0.08" step="0.005" value="0"><output id="letter-spacing-value">0em</output></div>
+      <div class="sg-row"><label for="theme-select">Theme</label><select id="theme-select"><option value="light">Light</option><option value="dark">Dark</option></select></div>
+    </div>
+    <div class="settings-group"><h3 class="sg-title">Data</h3>
+      <div class="sg-row"><span id="storage-status" style="flex:1"></span><button class="danger-btn" id="clear-all-data">Clear all data</button></div>
+    </div>
+    <div class="settings-group"><h3 class="sg-title">Keyboard shortcuts</h3>
+      <table class="shortcuts-table"><tbody>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>K</kbd></td><td>Focus search</td></tr>
+        <tr><td><kbd>[</kbd> / <kbd>]</kbd></td><td>Previous / next chapter</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Close popups · leave panels</td></tr>
+        <tr><td><kbd>Space</kbd></td><td>Flip flashcard (in Flashcards)</td></tr>
+      </tbody></table>
+    </div>
+  </div></section>
+</main>
+
+<script>window.__APP_DATA__=__DATA_JSON__;</script>
+<script>__JS__</script>
+</body>
+</html>
