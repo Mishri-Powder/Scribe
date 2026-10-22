@@ -421,6 +421,10 @@ dialog.scribe-dlg::backdrop { background: rgba(0,0,0,.5); backdrop-filter: blur(
   #search-results { width: 92vw; right: -60px; }
 }
 
+.img-placeholder { display:flex; align-items:center; justify-content:center; min-height:120px; margin:14px auto; padding:18px;
+  border:2px dashed var(--app-border); border-radius:10px; background:var(--app-panel); color:var(--app-muted);
+  font-family:system-ui,sans-serif; font-size:.9rem; text-align:center; max-width:640px; }
+
 </style>
 </head>
 <body>
@@ -5114,26 +5118,47 @@ function sectionOf(node){
   return best?best.id:(chapters[0]&&chapters[0].id)||'top';
 }
 function restoreHighlights(){
+  const main=$('#scribe-main');
   getHL().forEach(hl=>{
+    if(document.querySelector('mark[data-hlid="'+hl.id+'"]')) return;
     const anchor=document.getElementById(hl.sec); if(!anchor) return;
-    const scope=anchor.parentNode||document;
-    const walker=document.createTreeWalker(scope, NodeFilter.SHOW_TEXT,{acceptNode(n){
-      if(!n.parentElement) return NodeFilter.FILTER_REJECT;
-      if(n.parentElement.closest('mark.scribe-hl')) return NodeFilter.FILTER_REJECT;
-      if(['SCRIPT','STYLE','DIALOG'].includes(n.parentElement.tagName)) return NodeFilter.FILTER_REJECT;
-      if(anchor.compareDocumentPosition(n.parentElement)&Node.DOCUMENT_POSITION_PRECEDING) return NodeFilter.FILTER_SKIP;
-      return n.nodeValue.includes(hl.text)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP;
-    }});
-    const first=walker.nextNode();
-    if(first){
-      const idx=first.nodeValue.indexOf(hl.text);
-      const range=document.createRange();
-      range.setStart(first,idx); range.setEnd(first,idx+hl.text.length);
+    const want=hl.text.replace(/\s+/g,' ').replace(/…$/,'').trim();
+    // candidate paragraphs after the section heading
+    const ps=Array.from(main.querySelectorAll('p,li,td,blockquote')).filter(el=>
+      el.textContent.includes(want.slice(0,60)) && (anchor.compareDocumentPosition(el)&Node.DOCUMENT_POSITION_FOLLOWING));
+    for(const el of ps){
+      // build flat string + char map across descendant text nodes
+      const tn=[]; const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,{acceptNode(n){
+        if(n.parentElement.closest('mark.scribe-hl')) return NodeFilter.FILTER_REJECT; return NodeFilter.FILTER_ACCEPT; }});
+      let t; while((t=w.nextNode())) tn.push(t);
+      let flat=''; const map=[];
+      tn.forEach(node=>{ for(let c=0;c<node.nodeValue.length;c++){ flat+=node.nodeValue[c]; map.push([node,c]); } });
+      const norm=flat.replace(/\s+/g,' ');
+      // find position in normalized space, then map back to raw indices
+      const posInNorm=norm.indexOf(want);
+      if(posInNorm<0) continue;
+      // rebuild: walk raw chars counting collapsed whitespace
+      let normIdx=0, startRaw=-1, endRaw=-1, prevSpace=true;
+      for(let k=0;k<flat.length;k++){
+        const ch=flat[k]; const isSp=/\s/.test(ch);
+        if(!isSp || !prevSpace || normIdx<=posInNorm){ /*count*/ }
+        if(!isSp || !prevSpace){ // this char begins a new normalized token/space
+          if(normIdx===posInNorm && !isSp) startRaw=k;
+          normIdx++;
+        }
+        if(normIdx===posInNorm+want.length){ endRaw=k; break; }
+        prevSpace=isSp;
+      }
+      if(startRaw<0||endRaw<0||endRaw<=startRaw) continue;
+      const [nA,oA]=map[startRaw], [nB,oB]=map[endRaw];
+      const range=document.createRange(); range.setStart(nA,oA); range.setEnd(nB,oB+1);
       const mk=document.createElement('mark'); mk.className='scribe-hl'; mk.dataset.hlid=hl.id; mk.dataset.color=hl.color;
-      try{ range.surroundContents(mk);}catch(e){}
+      try{ mk.appendChild(range.extractContents()); range.insertNode(mk); }catch(e){ continue; }
+      break;
     }
   });
 }
+
 const hlBar=$('#hl-toolbar');
 let pendingRange=null;
 document.addEventListener('mouseup',e=>{
@@ -5155,7 +5180,8 @@ hlBar.querySelectorAll('[data-color]').forEach(btn=>{
   btn.onclick=()=>{
     if(!pendingRange) return;
     const color=btn.dataset.color;
-    const text=pendingRange.toString().trim().slice(0,400);
+    let text=pendingRange.toString().trim();
+    if(text.length>250){ const cut=text.lastIndexOf(' ',250); text=text.slice(0,cut>100?cut:250)+'…'; }
     const sec=sectionOf(pendingRange.startContainer);
     const id='h'+Date.now()+Math.floor(Math.random()*999);
     const mk=document.createElement('mark'); mk.className='scribe-hl'; mk.dataset.hlid=id; mk.dataset.color=color;
@@ -5412,8 +5438,25 @@ function setupProgressMarks(){
   refreshChecks();
 }
 
+
+/* ---------- Image resilience (v0.1 references images/ that may be missing) ---------- */
+function linkifyImages(){
+  $$('#scribe-main img').forEach(img=>{
+    img.loading='lazy';
+    img.addEventListener('error',function onErr(){
+      img.removeEventListener('error',onErr);
+      const fig=img.closest('figure')||img.parentNode;
+      const cap=(fig&&fig.querySelector('figcaption'))?fig.querySelector('figcaption').textContent.trim():'';
+      const ph=document.createElement('div');
+      ph.className='img-placeholder';
+      ph.textContent = '🖼 '+(cap||img.alt||img.src.split('/').pop());
+      if(img.parentNode) img.replaceWith(ph);
+    });
+  });
+}
 /* ---------- Boot ---------- */
 window.addEventListener('DOMContentLoaded',()=>{
+  linkifyImages();
   buildTOC(); setupScroll(); buildPager(); linkifyGlossary(); restoreHighlights(); setupProgressMarks();
   if(window.requestIdleCallback) requestIdleCallback(buildSearchIndex,{timeout:2000}); else setTimeout(buildSearchIndex,300);
   addEventListener('hashchange',()=>{ const el=document.getElementById(location.hash.slice(1)); if(el){ const y=el.getBoundingClientRect().top+scrollY-64; scrollTo({top:y,behavior:'smooth'}); } });

@@ -9,7 +9,7 @@ with sync_playwright() as p:
         print("no browser:",e); sys.exit(2)
     pg=b.new_page(viewport={'width':1400,'height':900})
     pg.on('pageerror', lambda e: errors.append(str(e)))
-    pg.on('console', lambda m: errors.append(m.text) if m.type=='error' else None)
+    pg.on('console', lambda m: errors.append(m.text) if (m.type=='error' and 'Failed to load resource' not in m.text) else None)
     pg.goto('file:///workspace/scribe0.3.html')
     pg.wait_for_timeout(1500)
 
@@ -78,6 +78,8 @@ with sync_playwright() as p:
     pg.reload(); pg.wait_for_timeout(1200)
     dark2 = pg.get_attribute('html','data-theme'); print('Theme persisted:', dark2)
     marks2 = pg.locator('mark.scribe-hl').count(); print('Highlights restored after reload:', marks2)
+    assert marks2>=1, 'highlight restore failed'
+    ph = pg.locator('.img-placeholder').count(); print('Image placeholders rendered:', ph)
 
     # 9 pager & progress
     prog = pg.evaluate('document.getElementById("reading-progress").style.width')
