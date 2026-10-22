@@ -11,6 +11,18 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 
 src = open(SRC, encoding='utf-8').read()
 
+# Graceful image handling: the book source references images/ *.png files that
+# may not ship alongside the single-file build. Swap broken <img> tags for a
+# tasteful CSS placeholder that keeps the alt text visible, so the artifact is
+# fully self-contained and works opened directly from disk with no assets.
+def _img_placeholder(m):
+    tag = m.group(0)
+    am = re.search(r'alt="([^"]*)"', tag)
+    alt = am.group(1) if am else 'Figure'
+    return '<span class="img-placeholder" role="img" aria-label="%s">%s</span>' % (alt, alt)
+
+src = re.sub(r'<img\b[^>]*>', _img_placeholder, src)
+
 # ---- book content extraction ----
 # Take everything from the title page down to the colophon rule at the end of ch8,
 # then wrap in a .container div so the original stylesheet rules still apply.
@@ -128,11 +140,11 @@ for cid,qs in merged.items():
 book=re.sub(r'<div class="quiz" id="(ch[0-9ab]+)-quiz">', r'<div class="quiz" data-ch="\1" id="\1-quiz">', book)
 
 # ---- graph data ----
-kg=DATA.build({'labels':labels,'sections':sections,'figures':figures})
-app_data={'kg':kg,'glossary':kg['glossary'],'flashcards':kg['flashcards'],
+kgfull=DATA.build({'labels':labels,'sections':sections,'figures':figures}); kg=kgfull['kg']
+app_data={'kg':kg,'glossary':kgfull['glossary'],'flashcards':kgfull['flashcards'],
           'mcqs':{cid:[{'q':q['q'],'opts':q['opts'],'a':q['a'],'why':q['why'],'links':q['links']} for q in qs]
                  for cid,qs in merged.items()}}
-print('graph nodes:',len(kg['kg']['nodes']),'links:',len(kg['kg']['links']))
+print('graph nodes:',len(kg['nodes']),'links:',len(kg['links']))
 
 # ---- assemble ----
 shell=open(os.path.join(HERE,'shell.html'),encoding='utf-8').read()
@@ -164,6 +176,6 @@ for cid in MCQS.MCQS:
 src_css_left = bool(re.search(r'--quiz-bg:\s*#', html))
 print('source stylesheet leaked:', src_css_left)
 assert not src_css_left, 'old beige hex styles still present'
-hexes=re.findall(r'#[0-9a-fA-F]{3,8}\b(?![0-9a-fA-F])', re.sub(r"data:image/svg\+xml,[^'"]*",'',html))
+hexes=re.findall(r'#[0-9a-fA-F]{3,8}\\b(?![0-9a-fA-F])', re.sub(r'data:image/svg\\+xml,[^\x27\x22]*','',html))
 print('raw hex tokens remaining (excl. svg-data-uris):', len(hexes), set(hexes) if hexes else '')
 print('ALL CHECKS PASSED')

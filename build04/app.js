@@ -1,7 +1,7 @@
 // Scribe Academy v0.4 — application logic (from scratch)
 (function(){
 'use strict';
-const DATA = window.__APP_DATA__;            // {kg, glossary, flashcards, mcqs}
+const DATA = window.SCRIBE_DATA;       // {kg, glossary, flashcards, mcqs}
 const KG = DATA.kg;
 const MCQS = DATA.mcqs;                      // chId -> [{q, opts:[...], a:[idx], why, links:[secIds]}]
 const $ = s => document.querySelector(s);
