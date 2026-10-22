@@ -1,0 +1,138 @@
+</style>
+<style id="scribe-app">
+__APP_CSS__
+</style>
+</head>
+<body>
+
+<!-- ===== Top bar ===== -->
+<header id="scribe-topbar" role="banner">
+  <button id="btn-sidebar" title="Toggle contents (sidebar)" aria-label="Toggle table of contents">☰</button>
+  <div class="tb-title">📝 Medical Note Mastery <small>· Scribe Edition v0.3</small></div>
+  <button id="btn-graph" title="Knowledge graph (g)">🕸 Graph</button>
+  <button id="btn-study" title="Flashcards & spaced repetition (s)">🃏 Study</button>
+  <button id="btn-notes" title="My highlights & notes (n)">📝 Notes</button>
+  <button id="btn-tts" title="Read current chapter aloud">🔊 Read</button>
+  <button id="btn-font-dec" title="Smaller text">A−</button>
+  <button id="btn-font-inc" title="Larger text">A+</button>
+  <button id="btn-theme" title="Toggle dark mode">🌙 Dark</button>
+  <div id="scribe-search-wrap">
+    <input id="search-input" type="search" placeholder="Search the book…  (press /)" aria-label="Search the book">
+    <div id="search-results" role="listbox"></div>
+  </div>
+  <div class="tb-progress" id="reading-progress" aria-hidden="true"></div>
+</header>
+
+<!-- ===== Sidebar TOC ===== -->
+<nav id="scribe-sidebar" aria-label="Table of contents">
+  <h3>Contents</h3>
+  <div id="toc"><em style="color:#888;font-size:.85rem">Loading…</em></div>
+  <div style="margin-top:18px;padding:0 6px;font-size:.75rem;color:var(--app-muted)">
+    Shortcuts: <kbd>/</kbd> search · <kbd>g</kbd> graph · <kbd>s</kbd> study · <kbd>n</kbd> notes · <kbd>Alt+←/→</kbd> chapters<br><br>
+    <a href="#top" style="color:var(--app-accent)">⤒ Back to start</a>
+  </div>
+</nav>
+
+<!-- ===== Main book content ===== -->
+<main id="scribe-main" role="main">
+__BOOK_CONTENT__
+<div id="chapter-pager" aria-label="Chapter navigation"></div>
+</main>
+
+<!-- ===== Floating UI ===== -->
+<div id="hl-toolbar" role="toolbar" aria-label="Highlight color">
+  <button data-color="yellow" title="Yellow highlight"><span class="swatch" style="background:#ffd54d"></span></button>
+  <button data-color="green"  title="Green — key rule"><span class="swatch" style="background:#5ec45e"></span></button>
+  <button data-color="blue"   title="Blue — example"><span class="swatch" style="background:#5b9bd5"></span></button>
+  <button data-color="pink"   title="Pink — exam alert"><span class="swatch" style="background:#f06292"></span></button>
+</div>
+<div id="gloss-pop" role="tooltip"></div>
+<div id="scribe-toast" role="status" aria-live="polite"></div>
+
+<!-- ===== Knowledge Graph dialog ===== -->
+<dialog id="dlg-graph" class="scribe-dlg" aria-label="Knowledge graph">
+  <div class="dlg-head">
+    <h2>🕸 Concept Knowledge Graph</h2>
+    <div class="dlg-tools">
+      <select id="kg-ch-filter" title="Filter by chapter">
+        <option value="all">All chapters</option>
+        <option value="ch1">Ch.1 Introduction</option>
+        <option value="ch2">Ch.2 Terminology</option>
+        <option value="ch3">Ch.3 Subjective</option>
+        <option value="ch4">Ch.4 Physical Exam</option>
+        <option value="ch5">Ch.5 Objective / A&amp;P</option>
+        <option value="ch6a">Ch.6A Primary Care</option>
+        <option value="ch6b">Ch.6B Emergency Dept.</option>
+        <option value="ch7">Ch.7 Billing</option>
+        <option value="ch8">Ch.8 Big Picture</option>
+      </select>
+      <button id="btn-fit" title="Re-run layout">⟳ Layout</button>
+      <button class="dlg-close" data-close="dlg-graph" title="Close">✕</button>
+    </div>
+  </div>
+  <div class="dlg-body">
+    <div id="kg-graphwrap">
+      <svg id="kg-svg" role="img" aria-label="Interactive concept map. Drag nodes, click to inspect."></svg>
+      <aside id="kg-panel"></aside>
+      <div id="kg-legend">
+        <span><i style="background:#8e44ad"></i>role</span><span><i style="background:#c0392b"></i>rule</span>
+        <span><i style="background:#2980b9"></i>concept</span><span><i style="background:#16a085"></i>note section</span>
+        <span><i style="background:#d35400"></i>objective</span><span><i style="background:#f1c40f"></i>billing</span>
+        <span><i style="background:#27ae60"></i>setting</span><span><i style="background:#e84393"></i>condition</span>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- ===== Study / Flashcards dialog ===== -->
+<dialog id="dlg-study" class="scribe-dlg" aria-label="Flashcard study">
+  <div class="dlg-head">
+    <h2>🃏 Spaced-Repetition Study</h2>
+    <div class="dlg-tools">
+      <select id="fc-filter" title="Choose deck"></select>
+      <button id="btn-add-card" title="Add your own card">＋ Card</button>
+      <button class="dlg-close" data-close="dlg-study" title="Close">✕</button>
+    </div>
+  </div>
+  <div class="dlg-body">
+    <div class="fc-stage">
+      <div class="fc-card" id="fc-card" tabindex="0" aria-label="Flashcard — click or press space to flip">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><div class="fc-tag" id="fc-tag"></div><div id="fc-front">…</div><p style="font-size:.75rem;color:var(--app-muted);margin-top:14px">click / space to flip</p></div>
+          <div class="fc-face fc-back"><div class="fc-tag" id="fc-tag2">Answer</div><div id="fc-back">…</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-meta"><span id="fc-pos"></span> · grades saved on this device</div>
+    <div class="fc-controls" id="fc-controls">
+      <button class="again" data-q="0">Again</button>
+      <button class="hard" data-q="1">Hard</button>
+      <button class="good" data-q="2">Good</button>
+      <button class="easy" data-q="3">Easy</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- ===== Notes dialog ===== -->
+<dialog id="dlg-notes" class="scribe-dlg" aria-label="My highlights and notes">
+  <div class="dlg-head">
+    <h2>📝 My Highlights &amp; Notes <small style="color:var(--app-muted)">(saved locally)</small></h2>
+    <div class="dlg-tools">
+      <button id="btn-export-notes" title="Download as JSON">⬇ Export</button>
+      <button id="btn-clear-notes" title="Delete all">🗑 Clear</button>
+      <button class="dlg-close" data-close="dlg-notes" title="Close">✕</button>
+    </div>
+  </div>
+  <div class="dlg-body"><div id="notes-list"></div></div>
+</dialog>
+
+<script type="application/json" id="scribe-data">__DATA_JSON__</script>
+<script>
+(function(){ document.addEventListener('click',function(e){ const b=e.target.closest('.dlg-close'); if(b){ const d=document.getElementById(b.dataset.close); if(d) d.close(); } }); })();
+</script>
+<script id="scribe-app-js">
+__APP_JS__
+</script>
+<noscript><p style="padding:20px;font-family:sans-serif;background:#fff3cd">This book is fully readable without JavaScript — interactive tools (graph, search, highlights, flashcards) require it enabled.</p></noscript>
+</body>
+</html>
