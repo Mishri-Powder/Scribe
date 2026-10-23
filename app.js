@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 const DATA = window.__APP_DATA__;            // {kg, glossary, flashcards, mcqs}
-const KG = DATA.kg;
+const KG = DATA.kg.kg || DATA.kg; // data.py wraps as {"kg": {nodes, links}}
 const MCQS = DATA.mcqs;                      // chId -> [{q, opts:[...], a:[idx], why, links:[secIds]}]
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
