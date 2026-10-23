@@ -4471,7 +4471,7 @@ kbd{border:1px solid var(--app-border);border-bottom-width:2px;border-radius:5px
 (function(){
 'use strict';
 const DATA = window.__APP_DATA__;            // {kg, glossary, flashcards, mcqs}
-const KG = DATA.kg;
+const KG = DATA.kg.kg || DATA.kg; // data.py wraps as {"kg": {nodes, links}}
 const MCQS = DATA.mcqs;                      // chId -> [{q, opts:[...], a:[idx], why, links:[secIds]}]
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
@@ -4526,6 +4526,7 @@ function prevH3(el){ let n=el; while(n){ if(n.nodeType===1){ if(n.tagName==='H3'
   const p=n.previousElementSibling; if(p){const q=p.querySelector? p : p; if(p.tagName==='H3'&&p.id)return p;
     const inner=p.querySelectorAll?('h3[id]'):null; if(inner&&inner.length)return inner[inner.length-1];} }
   n=n.parentElement; } return null; }
+function sectionOfSafe(el){ try{return sectionOf(el);}catch(e){return 'top';} }
 
 /* build TOC from the book itself (chapters + h3 sections) */
 function buildTOC(){
@@ -4566,6 +4567,11 @@ function restoreHighlights(){
     if(o.removed||document.querySelector(`#book-content .hl[data-h="${hash}"]`))continue;
     if(!wrapIn([bookContent],o.text,hash,o.color)){ /* stale text; keep in notes list */ }
   }
+  // re-apply current colors so stored recolors survive reload
+  for(const [hash,o] of Object.entries(highlights)){
+    const el=document.querySelector(`#book-content .hl[data-h="${hash}"]`);
+    if(el&&o.color)el.className='hl hl-'+o.color;
+  }
 }
 const needs={};
 function wrapIn(scopeEls,text,hash,color){
@@ -4589,13 +4595,14 @@ function wrapIn(scopeEls,text,hash,color){
 /* selection popup */
 const popup=$('#popup-menu'); let pendingSel=null;
 document.addEventListener('mouseup',e=>{
-  if(e.target.closest('.popup-menu'))return;
+  const tgt=e.target&&e.target.nodeType===1?e.target:null; // e.target may be a text node
+  if(tgt&&tgt.closest('.popup-menu'))return;
   setTimeout(()=>{
     const sel=window.getSelection();
     const text=sel? sel.toString().trim():'';
     if(text && text.length<=400 && bookContent.contains(sel&&sel.anchorNode)){
       pendingSel={text, rect:sel.getRangeAt(0).getBoundingClientRect()}; showPopup(pendingSel.rect);
-    } else if(!e.target.closest('#popup-menu') && !e.target.closest('.hl')){ hidePopup(); }
+    } else if(!(tgt&&tgt.closest('#popup-menu')) && !(tgt&&tgt.closest('.hl'))){ hidePopup(); }
   },10);
 });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape')hidePopup(); });
@@ -4612,14 +4619,14 @@ $$('.pm-swatch').forEach(b=>b.addEventListener('click',()=>{
   if(!pendingSel)return; const color=b.dataset.color; const hash=hashText(pendingSel.text);
   const el=document.querySelector(`.hl[data-h="${hash}"]`);
   if(el){el.className='hl hl-'+color;}
-  highlights[hash]={color,text:pendingSel.text,section:sectionOf(el||bookContent),...(highlights[hash]?.note?{note:highlights[hash].note}:{})};
+  highlights[hash]={color,text:pendingSel.text,section:sectionOfSafe(el||bookContent),...(highlights[hash]?.note?{note:highlights[hash].note}:{})};
   store.set('highlights',highlights); updateNotesBadge(); hidePopup(); window.getSelection().removeAllRanges();
 }));
 $('#pm-add-note').addEventListener('click',()=>{
   if(!pendingSel)return; const hash=hashText(pendingSel.text);
   const old=highlights[hash]?.note||''; const note=prompt('Note about this passage:',old);
   if(note!=null){ highlights[hash]={...(highlights[hash]||{}),text:pendingSel.text,color:highlights[hash]?.color||'yellow',
-    section:sectionOf(document.querySelector(`.hl[data-h="${hash}"]`)||bookContent),note:note.trim()};
+    section:sectionOfSafe(document.querySelector(`.hl[data-h="${hash}"]`)||bookContent),note:note.trim()};
     store.set('highlights',highlights); renderNotes(); }
   hidePopup();
 });
