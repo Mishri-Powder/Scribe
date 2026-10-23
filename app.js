@@ -70,7 +70,7 @@ function sectionOfSafe(el){ try{return sectionOf(el);}catch(e){return 'top';} }
 function buildTOC(){
   tocList.innerHTML='';
   const nav=[['graph-view','🗺 Knowledge Map'],['flashcards-view','🃏 Flashcards'],['mcq-view','✅ MCQ Practice'],
-             ['glossary-view','📖 Glossary'],['settings-view','⚙ Settings']];
+             ['glossary-view','📖 Glossary'],['scratchpad-view','🧠 Scratchpad'],['settings-view','⚙ Settings']];
   chapters.forEach((ch,i)=>{
     const title=(ch.querySelector('h2')?.textContent||ch.id).trim();
     const li=document.createElement('li');
@@ -233,6 +233,7 @@ function showView(v){
   if(v==='graph'&&!Graph.built)Graph.build();
   if(v==='graph')setTimeout(()=>Graph.fit(),30);
   if(v==='mcq')MCQ.renderNav();
+  $$('#view-tabs .vt-btn').forEach(b=>b.classList.toggle('active',b.dataset.viewbtn===v));
   location.hash=v==='book'?'':v;
 }
 function openChapter(id,sec){
@@ -244,6 +245,7 @@ function openChapter(id,sec){
 function closeSidebar(){sidebar.classList.remove('open');overlay.classList.remove('visible');}
 $('#menu-toggle').onclick=()=>{const o=!sidebar.classList.contains('open');sidebar.classList.toggle('open',o);overlay.classList.toggle('visible',o);};
 $('#toc-close').onclick=closeSidebar; overlay.onclick=closeSidebar;
+$('#view-tabs').addEventListener('click',e=>{const b=e.target.closest('.vt-btn');if(!b)return;e.preventDefault();showView(b.dataset.viewbtn);});
 tocList.addEventListener('click',e=>{
   const a=e.target.closest('a'); if(!a)return; e.preventDefault();
   if(a.dataset.ch)openChapter(a.dataset.ch);
@@ -522,6 +524,66 @@ $('#mcq-book').addEventListener('click',e=>{
     const cid=(id.match(/^ch\d+[ab]?/)||[''])[0];openChapter(cid||lastChapter,el?id:null);}
 });
 
+/* ============================ IN-BOOK QUIZZES (end of each chapter) ============================ */
+(function initQuizzes(){
+  $$('.quiz[data-ch]').forEach(box=>{
+    const cid=box.dataset.ch,qs=MCQS[cid]||[];
+    if(!qs.length)return;
+    const lis=[...box.querySelectorAll(':scope > ol > li')];
+    box.addEventListener('click',e=>{
+      const opt=e.target.closest('li');if(!opt)return;
+      const gopt=e.target.closest('.q-explain a.mcq-link');
+      if(gopt){const id=gopt.dataset.goto;const el=document.getElementById(id);
+        const cid2=(id.match(/^ch\d+[ab]?/)||[''])[0];openChapter(cid2||lastChapter,el?id:null);return;}
+      const qLi=opt.parentElement.closest('li');if(!qLi)return;
+      const qi=lis.indexOf(qLi);if(qi<0||qi>=qs.length)return;
+      const oi=[...opt.parentElement.children].indexOf(opt);
+      const key='book:'+cid+':'+qi;
+      if(mcqState[key]!=null)return;                       // forgiving: answers lock once given
+      mcqState[key]=oi;store.set('mcq',mcqState);
+      const correct=qs[qi].a.includes(oi);
+      opt.classList.add(correct?'q-opt-correct':'q-opt-wrong');
+      if(!correct)qs[qi].a.forEach(ci=>{const c=qLi.querySelector('ol.options').children[ci];if(c)c.classList.add('q-opt-correct');});
+      [...qLi.querySelectorAll('ol.options > li')].forEach(li=>{if(li!==opt&&!li.classList.contains('q-opt-correct'))li.classList.add('q-opt-dim');});
+      let exp=qLi.querySelector('.q-explain');
+      if(!exp){exp=document.createElement('div');exp.className='q-explain';qLi.appendChild(exp);}
+      const links=(qs[qi].links||[]).map(l=>{const el=document.getElementById(l);
+        return `<a class="mcq-link" data-goto="${l}" href="javascript:void 0">📚 Study: ${esc(el?el.textContent:l)}</a>`;}).join('');
+      exp.innerHTML=`<b>${correct?'Correct ✓':'Not quite.'}</b> ${esc(qs[qi].why||'')}${links?`<span class="q-links">${links}</span>`:''}`;
+      exp.classList.add('show');
+      updateQuizScore(box,cid,qs);
+    });
+    restoreQuiz(box,cid,qs,lis);
+    updateQuizScore(box,cid,qs);
+  });
+  function restoreQuiz(box,cid,qs,lis){
+    qs.forEach((q,i)=>{const picked=mcqState['book:'+cid+':'+i];if(picked==null)return;
+      const qLi=lis[i];if(!qLi)return;const opts=qLi.querySelector('ol.options');if(!opts)return;
+      const chosen=opts.children[picked];
+      if(chosen)chosen.classList.add(q.a.includes(picked)?'q-opt-correct':'q-opt-wrong');
+      q.a.forEach(ci=>{const c=opts.children[ci];if(c)c.classList.add('q-opt-correct');});
+      [...opts.children].forEach(li=>{if(!li.classList.contains('q-opt-correct')&&li!==chosen)li.classList.add('q-opt-dim');});
+      let exp=qLi.querySelector('.q-explain');
+      if(!exp){exp=document.createElement('div');exp.className='q-explain';qLi.appendChild(exp);}
+      exp.innerHTML=`<b>${q.a.includes(picked)?'Correct ✓':'Not quite.'}</b> ${esc(q.why||'')}`;
+      exp.classList.add('show');
+    });
+  }
+  function updateQuizScore(box,cid,qs){
+    let s=box.querySelector('.quiz-score');
+    if(!s){s=document.createElement('div');s.className='quiz-score';box.appendChild(s);
+      s.addEventListener('click',e=>{if(e.target.closest('.quiz-reset')){
+        qs.forEach((_,i)=>delete mcqState['book:'+cid+':'+i]);store.set('mcq',mcqState);
+        box.querySelectorAll('li').forEach(li=>li.classList.remove('q-opt-correct','q-opt-wrong','q-opt-dim'));
+        box.querySelectorAll('.q-explain').forEach(x=>x.remove());updateQuizScore(box,cid,qs);}});}
+    const done=qs.reduce((n,_,i)=>n+(mcqState['book:'+cid+':'+i]!=null?1:0),0);
+    const right=qs.reduce((n,q,i)=>{const p=mcqState['book:'+cid+':'+i];return n+(p!=null&&q.a.includes(p)?1:0);},0);
+    s.innerHTML=done?`<span>${right}/${qs.length} correct · ${done}/${qs.length} answered</span>`+
+      (done===qs.length&&right<qs.length?' <em>Review the red ones above, then reset and try again.</em>':'')+
+      `<button class="quiz-reset" type="button">Reset quiz</button>`:`<span>Tap an answer to check it instantly — progress saves automatically.</span><button class="quiz-reset" type="button">Reset quiz</button>`;
+  }
+})();
+
 /* ============================ GLOSSARY ============================ */
 function renderGlossary(filter){
   const list=$('#glossary-list');const f=(filter||'').toLowerCase();
@@ -549,6 +611,22 @@ $('#clear-all-data').onclick=()=>{if(confirm('Delete all highlights, notes and q
 (function storageStatus(){let ok=true;try{store.set('_t',1);store.get('_t');localStorage.removeItem('scribe04__t');}catch(e){ok=false;}
   $('#storage-status').textContent=ok?'Saved locally in this browser ('+Object.keys(highlights).length+' highlights).':'Storage unavailable — bookmarks won\'t persist.';})();
 
+/* ============================ SCRATCHPAD (brain dump) ============================ */
+(function scratchpad(){
+  const area=$('#scratchpad-area'),status=$('#scratchpad-status');
+  if(!area)return;
+  let saved=''; try{saved=localStorage.getItem('scribe04_scratchpad')||'';}catch(e){}
+  area.value=saved;
+  let timer=null;
+  function flash(msg){status.textContent=msg;}
+  area.addEventListener('input',()=>{
+    flash('Saving…');clearTimeout(timer);
+    timer=setTimeout(()=>{try{localStorage.setItem('scribe04_scratchpad',area.value);flash('Saved ✓ '+new Date().toLocaleTimeString());}
+      catch(e){flash('Could not save (storage full or blocked)');}},400);
+  });
+  $('#scratchpad-clear').onclick=()=>{if(confirm('Clear the scratchpad?')){area.value='';try{localStorage.removeItem('scribe04_scratchpad');}catch(e){}flash('Cleared ✓');}};
+})();
+
 /* ============================ KEYBOARD ============================ */
 addEventListener('keydown',e=>{
   const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
@@ -571,8 +649,8 @@ fcRender();
 renderGlossary('');
 setTheme(store.get('theme',matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
 const initial=location.hash.replace('#','');
-if(['graph','flashcards','mcq','glossary','settings'].includes(initial))showView(initial);
+if(['graph','flashcards','mcq','glossary','scratchpad','settings'].includes(initial))showView(initial);
 else openChapter(lastChapter);
 addEventListener('hashchange',()=>{const v=location.hash.replace('#','');
-  if(['graph','flashcards','mcq','glossary','settings'].includes(v))showView(v);});
+  if(['graph','flashcards','mcq','glossary','scratchpad','settings'].includes(v))showView(v);});
 })();
