@@ -280,8 +280,49 @@ kbd{border:1px solid var(--app-border);border-bottom-width:2px;border-radius:5px
 .shortcuts-table td{border-bottom:1px solid var(--rule);padding:6px 10px;background:transparent}
 .shortcuts-table tr:nth-child(even) td{background:var(--table-alt)}
 
+/* ---------- top view tabs (dedicated buttons for every section) ---------- */
+.view-tabs{display:flex;align-items:center;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.view-tabs::-webkit-scrollbar{display:none}
+.vt-btn{white-space:nowrap;padding:6px 10px;border-radius:9px;border:1px solid transparent;background:transparent;
+ color:var(--app-muted);font-size:12.5px;font-weight:600;cursor:pointer;transition:background .15s,color .15s}
+.vt-btn:hover{background:var(--app-hover,rgba(127,127,127,.12));color:var(--app-text)}
+.vt-btn.active{background:var(--app-accent);color:oklch(99% 0 0)}
+@media(max-width:900px){.view-tabs .vt-btn{padding:6px 7px;font-size:11.5px}}
+
+/* ---------- scratchpad ---------- */
+.sp-wrap{display:flex;flex-direction:column;gap:10px}
+#scratchpad-area{width:100%;min-height:340px;resize:vertical;padding:16px;border-radius:12px;
+ border:1px solid var(--app-border);background:var(--app-bg);color:var(--app-text);
+ font:inherit;font-size:1em;line-height:1.7;outline:none}
+#scratchpad-area:focus{border-color:var(--app-accent)}
+.sp-meta{display:flex;align-items:center;justify-content:space-between}
+#scratchpad-status{font-size:13px;color:var(--app-muted)}
+
+/* ---------- in-book interactive quizzes ---------- */
+.quiz ol > li{cursor:pointer;border-radius:8px;padding:2px 6px;transition:background .15s}
+.quiz ol.options > li{cursor:pointer;border:1px solid transparent;border-radius:8px;padding:3px 10px;transition:background .15s,border-color .15s,opacity .15s}
+.quiz ol.options > li:hover{background:var(--app-hover,rgba(127,127,127,.12))}
+.quiz ol.options > li.q-opt-correct{background:oklch(92% .06 150);border-color:oklch(60% .12 150);color:oklch(35% .1 150)}
+.quiz ol.options > li.q-opt-wrong{background:oklch(92% .06 25);border-color:oklch(60% .15 25);color:oklch(40% .15 25)}
+.quiz ol.options > li.q-opt-dim{opacity:.45}
+[data-theme=dark] .quiz ol.options > li.q-opt-correct{background:oklch(30% .07 150);color:oklch(85% .1 150)}
+[data-theme=dark] .quiz ol.options > li.q-opt-wrong{background:oklch(30% .08 25);color:oklch(85% .1 25)}
+.q-explain{display:none;margin:.6em 0 .2em;padding:10px 14px;border-left:3px solid var(--app-accent);
+ background:var(--app-bg);border-radius:0 10px 10px 0;font-size:.95em;line-height:1.5}
+.q-explain.show{display:block}
+.q-explain b{color:var(--primary)}
+.q-links{display:inline-flex;gap:10px;flex-wrap:wrap;margin-left:8px}
+.q-links a,.mcq-link{color:var(--app-accent);text-decoration:none;font-weight:600;font-size:.92em}
+.q-links a:hover,.mcq-link:hover{text-decoration:underline}
+.quiz-score{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px;padding:10px 14px;
+ border-radius:10px;background:var(--app-bg);border:1px solid var(--rule);font-size:.95em;color:var(--app-muted)}
+.quiz-score em{font-style:normal;color:var(--warn,var(--accent))}
+.quiz-reset{margin-left:auto;padding:6px 12px;border-radius:8px;border:1px solid var(--app-border);
+ background:transparent;color:var(--app-text);font-size:12.5px;font-weight:600;cursor:pointer}
+.quiz-reset:hover{border-color:var(--app-accent);color:var(--app-accent)}
+
 @media print{
- .topbar,.sidebar,.overlay,.notes-panel,.popup-menu{display:none!important}
+ .topbar,.sidebar,.overlay,.notes-panel,.popup-menu,.view-tabs{display:none!important}
  #book-view.active{display:block}
  .book-container{padding:0}.paper{border:0;box-shadow:none;max-width:100%}
  body::before{display:none}
