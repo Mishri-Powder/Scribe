@@ -5,10 +5,10 @@ import re, json, sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import data as DATA, mcqs as MCQS, css_tokens, css_book
 
-SRC = 'Scribe0.1.html'                    # repo-root source book (v0.1)
-OUT = 'scribe0.4.html'                    # standalone single-file build
 HERE = os.path.dirname(os.path.abspath(__file__)) or '.'
-SITE_DIR = 'site'                         # GitHub Pages deploy folder
+SRC = os.path.join(HERE, 'Scribe0.1.html')        # repo-root source book (v0.1)
+OUT = os.path.join(HERE, 'scribe0.4.html')        # standalone single-file build
+SITE_DIR = os.path.join(HERE, 'site')             # GitHub Pages deploy folder
 
 src = open(SRC, encoding='utf-8').read()
 
