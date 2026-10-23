@@ -67,10 +67,11 @@ function prevH3(el){ let n=el; while(n){ if(n.nodeType===1){ if(n.tagName==='H3'
 function sectionOfSafe(el){ try{return sectionOf(el);}catch(e){return 'top';} }
 
 /* build TOC from the book itself (chapters + h3 sections) */
+const sbHover=$('#sidebar'); let sbPinned=store.get('sbPinned',true);
 function buildTOC(){
   tocList.innerHTML='';
   const nav=[['graph-view','🗺 Knowledge Map'],['flashcards-view','🃏 Flashcards'],['mcq-view','✅ MCQ Practice'],
-             ['glossary-view','📖 Glossary'],['scratchpad-view','🧠 Scratchpad'],['settings-view','⚙ Settings']];
+             ['glossary-view','📖 Glossary'],['settings-view','⚙ Settings']];
   chapters.forEach((ch,i)=>{
     const title=(ch.querySelector('h2')?.textContent||ch.id).trim();
     const li=document.createElement('li');
@@ -98,7 +99,7 @@ function restoreHighlights(){
   $$('#book-content h3[id]').forEach(h3=>{
     const sec=h3.id; let el=h3.nextElementSibling; const stop=t=>t&&(t.tagName==='H3'||t.tagName==='H2');
     const scope=[]; while(el&&!stop(el)){scope.push(el);el=el.nextElementSibling;}
-    (bySec[sec]||[]).forEach(([hash,o])=>{ if(wrapIn(scope,o.text,hash,o.color)) delete needs[hash]; });
+    (bySec[sec]||[]).forEach(([hash,o])=>{ wrapIn(scope,o.text,hash,o.color); });
   });
   // global fallback scan for anything not found in its section
   for(const [hash,o] of Object.entries(highlights)){
@@ -110,8 +111,8 @@ function restoreHighlights(){
     const el=document.querySelector(`#book-content .hl[data-h="${hash}"]`);
     if(el&&o.color)el.className='hl hl-'+o.color;
   }
+  linkHlToKg();   // bidirectional: every highlight knows its graph node(s)
 }
-const needs={};
 function wrapIn(scopeEls,text,hash,color){
   const needle=text.trim(); if(!needle)return false;
   const walker=document.createTreeWalker(scopeEls.length?scopeEls[0].parentElement||scopeEls[0]:bookContent,NodeFilter.SHOW_TEXT,{
@@ -132,10 +133,12 @@ function wrapIn(scopeEls,text,hash,color){
 
 /* selection popup */
 const popup=$('#popup-menu'); let pendingSel=null;
+let suppressPopup=false;   // set when interacting with popups themselves
 document.addEventListener('mouseup',e=>{
   const tgt=e.target&&e.target.nodeType===1?e.target:null; // e.target may be a text node
-  if(tgt&&tgt.closest('.popup-menu'))return;
+  if(tgt&&(tgt.closest('.popup-menu')||tgt.closest('.note-editor')||tgt.closest('.graph-peek')))return;
   setTimeout(()=>{
+    if(suppressPopup){suppressPopup=false;return;}
     const sel=window.getSelection();
     const text=sel? sel.toString().trim():'';
     if(text && text.length<=400 && bookContent.contains(sel&&sel.anchorNode)){
@@ -143,7 +146,7 @@ document.addEventListener('mouseup',e=>{
     } else if(!(tgt&&tgt.closest('#popup-menu')) && !(tgt&&tgt.closest('.hl'))){ hidePopup(); }
   },10);
 });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape')hidePopup(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){hidePopup();closePeek();} });
 function showPopup(rect){
   popup.classList.add('open');
   const pw=popup.offsetWidth||250, ph=popup.offsetHeight||190;
@@ -152,29 +155,70 @@ function showPopup(rect){
   popup.style.left=x+scrollX+'px'; popup.style.top=y+scrollY+'px';
   $('#pm-count').textContent=Object.keys(highlights).length+' saved';
 }
-function hidePopup(){popup.classList.remove('open');}
+function hidePopup(){popup.classList.remove('open');$$('.hl-current').forEach(x=>x.classList.remove('hl-current'));}
 $$('.pm-swatch').forEach(b=>b.addEventListener('click',()=>{
   if(!pendingSel)return; const color=b.dataset.color; const hash=hashText(pendingSel.text);
-  const el=document.querySelector(`.hl[data-h="${hash}"]`);
-  if(el){el.className='hl hl-'+color;}
+  // wrap the live selection so the highlight appears immediately (and section is exact)
+  const sel=window.getSelection();
+  let el=document.querySelector(`.hl[data-h="${hash}"]`);
+  if(!el && sel.rangeCount && bookContent.contains(sel.anchorNode)){
+    const range=sel.getRangeAt(0);
+    if(range.toString().trim()===pendingSel.text){
+      el=document.createElement('span'); el.className='hl hl-'+color; el.dataset.h=hash;
+      try{range.surroundContents(el);}catch(err){el=null;}
+    }
+  }
+  if(el&&!el.isConnected)el=null;
+  if(el){el.className='hl hl-'+color;el.dataset.kg=el.dataset.kg||'';}
   highlights[hash]={color,text:pendingSel.text,section:sectionOfSafe(el||bookContent),...(highlights[hash]?.note?{note:highlights[hash].note}:{})};
-  store.set('highlights',highlights); updateNotesBadge(); hidePopup(); window.getSelection().removeAllRanges();
+  store.set('highlights',highlights); updateNotesBadge(); renderNotes(); hidePopup(); window.getSelection().removeAllRanges();
+  toast('Highlighted ✓');
 }));
+/* ---- note editor popup (replaces prompt()) ---- */
+const noteEditor=$('#note-editor'),neArea=$('#ne-area'); let editingHash=null;
+function openNoteEditor(hash,text,existing){
+  editingHash=hash; $('#ne-quote').textContent='“'+text.slice(0,220)+'”';
+  neArea.value=existing||''; noteEditor.classList.add('open');
+  setTimeout(()=>{neArea.focus();neArea.setSelectionRange(neArea.value.length,neArea.value.length);},30);
+}
+function closeNoteEditor(){noteEditor.classList.remove('open');editingHash=null;}
 $('#pm-add-note').addEventListener('click',()=>{
   if(!pendingSel)return; const hash=hashText(pendingSel.text);
-  const old=highlights[hash]?.note||''; const note=prompt('Note about this passage:',old);
-  if(note!=null){ highlights[hash]={...(highlights[hash]||{}),text:pendingSel.text,color:highlights[hash]?.color||'yellow',
-    section:sectionOfSafe(document.querySelector(`.hl[data-h="${hash}"]`)||bookContent),note:note.trim()};
-    store.set('highlights',highlights); renderNotes(); }
+  openNoteEditor(hash,pendingSel.text,highlights[hash]?.note||'');
   hidePopup();
 });
+$('#ne-cancel').onclick=closeNoteEditor;
+$('#ne-save').onclick=()=>{ saveNoteFromEditor(); };
+neArea.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();saveNoteFromEditor();}
+  if(e.key==='Escape'){e.stopPropagation();closeNoteEditor();}
+});
+function saveNoteFromEditor(){
+  if(!editingHash)return; const note=neArea.value.trim();
+  const src=pendingSel||highlights[editingHash]||{};
+  const el=document.querySelector(`.hl[data-h="${editingHash}"]`);
+  if(el){ // make sure it exists in the DOM (create wrapper from stored text if needed)
+    el.insertAdjacentElement; // no-op guard
+  }
+  if(!el && src.text){ wrapIn([bookContent],src.text,editingHash,highlights[editingHash]?.color||'yellow'); }
+  const target=document.querySelector(`.hl[data-h="${editingHash}"]`)||bookContent;
+  const prev=highlights[editingHash]||{text:src.text||'',color:'yellow'};
+  highlights[editingHash]={...prev,color:prev.color||'yellow',text:prev.text||src.text||'',
+    section:prev.section||sectionOfSafe(target),note:note};
+  if(!note)delete highlights[editingHash].note;
+  store.set('highlights',highlights); renderNotes(); updateNotesBadge();
+  closeNoteEditor(); toast(note?'Note saved ✓':'Note removed');
+}
 $('#pm-remove-highlight').addEventListener('click',()=>{
   if(!pendingSel)return; const hash=hashText(pendingSel.text);
-  const el=document.querySelector(`.hl[data-h="${hash}"]`);
-  if(el){const p=el.parentNode;p.replaceChild(document.createTextNode(el.textContent),el);p.normalize();}
-  delete highlights[hash]; store.set('highlights',highlights); updateNotesBadge(); hidePopup();
+  removeHighlightDom(hash); delete highlights[hash];
+  store.set('highlights',highlights); updateNotesBadge(); renderNotes(); hidePopup();
 });
-/* click existing highlight → recolor/remove */
+function removeHighlightDom(hash){
+  const el=document.querySelector(`#book-content .hl[data-h="${hash}"]`);
+  if(el){const p=el.parentNode;p.replaceChild(document.createTextNode(el.textContent),el);p.normalize();}
+}
+/* click existing highlight → recolor/remove/edit-note menu */
 bookContent.addEventListener('click',e=>{
   const hl=e.target.closest('.hl'); if(!hl)return;
   const hash=hl.dataset.h; const r=hl.getBoundingClientRect();
@@ -186,32 +230,74 @@ bookContent.addEventListener('click',e=>{
   $$('.hl-current').forEach(x=>x.classList.remove('hl-current')); hl.classList.add('hl-current');
   $('#pm-count').textContent=highlights[hash]?.note?('note: '+highlights[hash].note.slice(0,40)+'…'):'saved';
 });
+/* hover over a highlighted passage → floating mini-note card (Obsidian-style) */
+let hlHoverCard=null,hlHoverTimer=null;
+bookContent.addEventListener('mouseover',e=>{
+  const hl=e.target.closest('.hl'); if(!hl)return;
+  const hash=hl.dataset.h; const o=highlights[hash]; if(!o||!o.note)return;
+  clearTimeout(hlHoverTimer);
+  hlHoverTimer=setTimeout(()=>{
+    if(hlHoverCard)hlHoverCard.remove();
+    hlHoverCard=document.createElement('div'); hlHoverCard.className='graph-peek open';
+    hlHoverCard.innerHTML=`<div style="font-size:11px;font-weight:700;color:var(--app-muted);margin-bottom:4px">📝 Note</div>`+
+      `<div style="white-space:pre-wrap;line-height:1.5">${esc(o.note)}</div>`;
+    document.body.appendChild(hlHoverCard);
+    positionPeek(hlHoverCard,hl.getBoundingClientRect());
+  },450);
+});
+bookContent.addEventListener('mouseout',e=>{
+  if(!e.relatedTarget||!(e.relatedTarget.closest&&e.relatedTarget.closest('.hl'))){
+    clearTimeout(hlHoverTimer);
+    setTimeout(()=>{if(hlHoverCard&&!hlHoverCard.matches(':hover')){hlHoverCard.remove();hlHoverCard=null;}},250);
+  }
+});
 
-/* notes panel */
+/* notes panel — grouped by chapter, live editing */
 const notesPanel=$('#notes-panel');
 function updateNotesBadge(){const n=Object.keys(highlights).length;const b=$('#notes-count');b.style.display=n?'':'none';b.textContent=n;}
+function chOfSection(sec){
+  if(!sec||sec==='top')return 'top';
+  const m=/^(ch\d+[ab]?)/.exec(sec); if(m&&CH_LABEL[m[1]])return m[1];
+  // section ids look like ch3-golden; also handle h3 ids that lost the prefix via fallback scan
+  const el=document.getElementById(sec);
+  if(el){const ch=el.closest('.chapter');if(ch)return ch.id;}
+  return m?m[1]:'top';
+}
 function renderNotes(){
   const list=$('#notes-list'); list.innerHTML='';
   const items=Object.entries(highlights);
-  if(!items.length){list.innerHTML='<div class="np-empty">Select any text in the book to highlight it — four textures mean four kinds of meaning:<br>hatch = key fact · dots = definition · grid = procedure · stripes = watch out.</div>';}
-  items.sort((a,b)=>(a[1].section||'').localeCompare(b[1].section||'')).forEach(([hash,o])=>{
-    const card=document.createElement('div');card.className='note-card';
-    card.innerHTML=`<div class="note-quote">${esc(o.text.slice(0,160))}</div>`+
-      (o.note?`<div style="font-size:12.5px;margin-bottom:6px">${esc(o.note)}</div>`:'')+
-      `<div class="note-meta"><span class="tf-dot" style="background:var(--hl-${o.color}-soft);border:1px solid var(--hl-${o.color}-ink)"></span>`+
-      `<span>${esc(CH_LABEL[(o.section||'').split('-')[0]]||o.section||'')}</span>`+
-      `<button class="note-jump">Go</button><button class="note-del" title="Delete">✕</button></div>`;
-    card.querySelector('.note-jump').onclick=()=>{
-      showView('book');
-      const el=document.querySelector(`.hl[data-h="${hash}"]`);
-      if(el)el.scrollIntoView({behavior:'smooth',block:'center'});
-      else{const t=$('#book-content').querySelector(`#${CSS.escape(o.section)}`);if(t)t.scrollIntoView({behavior:'smooth'});}
-    };
-    card.querySelector('.note-del').onclick=()=>{
-      const el=document.querySelector(`.hl[data-h="${hash}"]`);
-      if(el){const p=el.parentNode;p.replaceChild(document.createTextNode(el.textContent),p.lastChild===el?el:el);p.normalize();}
-      delete highlights[hash];store.set('highlights',highlights);renderNotes();updateNotesBadge();};
-    list.appendChild(card);
+  if(!items.length){list.innerHTML='<div class="np-empty">Select any text in the book to highlight it — four textures mean four kinds of meaning:<br>hatch = key fact · dots = definition · grid = procedure · stripes = watch out.<br><br>Hover a highlighted passage to read its note; click it to recolor or edit.</div>';return;}
+  const groups={};
+  items.forEach(([hash,o])=>{const cid=chOfSection(o.section);(groups[cid]=groups[cid]||[]).push([hash,o]);});
+  const order=chapters.map(c=>c.id).filter(id=>groups[id]);
+  if(groups.top)order.push('top');
+  order.forEach(cid=>{
+    const head=document.createElement('div');head.className='note-group-head';
+    head.textContent=cid==='top'?'Uncategorized':(CH_LABEL[cid]||cid);
+    list.appendChild(head);
+    groups[cid].sort((a,b)=>(a[1].section||'').localeCompare(b[1].section||'')).forEach(([hash,o])=>{
+      const card=document.createElement('div');card.className='note-card';
+      card.innerHTML=`<div class="note-quote" title="${esc(o.text)}">${esc(o.text.slice(0,160))}</div>`+
+        `<textarea class="note-edit" rows="2" placeholder="Add a note…">${esc(o.note||'')}</textarea>`+
+        `<div class="note-meta"><span class="tf-dot" style="background:var(--hl-${o.color}-soft);border:1px solid var(--hl-${o.color}-ink)"></span>`+
+        `<span>${esc(document.getElementById(o.section)?.textContent?.slice(0,40)||'')}</span>`+
+        `<button class="note-jump">Go</button><button class="note-del" title="Delete">✕</button></div>`;
+      const ta=card.querySelector('.note-edit');let tTimer=null;
+      ta.addEventListener('input',()=>{clearTimeout(tTimer);tTimer=setTimeout(()=>{
+        if(!highlights[hash])return;
+        const v=ta.value.trim();
+        if(v)highlights[hash].note=v;else delete highlights[hash].note;
+        store.set('highlights',highlights);},350);});
+      card.querySelector('.note-jump').onclick=()=>{
+        showView('book');
+        const el=document.querySelector(`.hl[data-h="${hash}"]`);
+        if(el){el.scrollIntoView({behavior:'smooth',block:'center'});flashEl(el);}
+        else{const t=$('#book-content').querySelector(`#${CSS.escape(o.section)}`);if(t)t.scrollIntoView({behavior:'smooth'});}
+      };
+      card.querySelector('.note-del').onclick=()=>{
+        removeHighlightDom(hash); delete highlights[hash];store.set('highlights',highlights);renderNotes();updateNotesBadge();};
+      list.appendChild(card);
+    });
   });
 }
 $('#notes-panel-toggle').onclick=()=>{renderNotes();notesPanel.classList.toggle('open');};
@@ -242,9 +328,22 @@ function openChapter(id,sec){
   if(target)setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'start'}),40);
   $$('.toc-link').forEach(a=>a.classList.toggle('active',a.dataset.ch===id&&!sec));
 }
+function flashEl(el){ if(!el)return; el.classList.remove('kg-flash'); void el.offsetWidth; el.classList.add('kg-flash');
+  setTimeout(()=>el.classList.remove('kg-flash'),5000); }
+function toast(msg){ const t=$('#toast'); if(!t)return; t.textContent=msg; t.classList.add('show');
+  clearTimeout(toast._h); toast._h=setTimeout(()=>t.classList.remove('show'),1800); }
 function closeSidebar(){sidebar.classList.remove('open');overlay.classList.remove('visible');}
 $('#menu-toggle').onclick=()=>{const o=!sidebar.classList.contains('open');sidebar.classList.toggle('open',o);overlay.classList.toggle('visible',o);};
 $('#toc-close').onclick=closeSidebar; overlay.onclick=closeSidebar;
+/* hover-to-open sidebar (desktop only); pin toggle keeps it open like Obsidian's slide-out panels */
+if(matchMedia('(hover:hover) and (min-width:900px)').matches&&sbPinned){
+  let sbTimer=null;
+  const menuBtn=$('#menu-toggle');
+  const keepOpen=()=>{clearTimeout(sbTimer);sidebar.classList.add('open');overlay.classList.remove('visible');};
+  const scheduleClose=()=>{clearTimeout(sbTimer);sbTimer=setTimeout(()=>{if(!sidebar.contains(document.activeElement))closeSidebar();},420);};
+  [menuBtn,sidebar].forEach(el=>{el.addEventListener('mouseenter',keepOpen);el.addEventListener('mouseleave',scheduleClose);});
+  document.addEventListener('mousemove',e=>{ if(e.clientX<=14)keepOpen(); });
+}
 $('#view-tabs').addEventListener('click',e=>{const b=e.target.closest('.vt-btn');if(!b)return;e.preventDefault();showView(b.dataset.viewbtn);});
 tocList.addEventListener('click',e=>{
   const a=e.target.closest('a'); if(!a)return; e.preventDefault();
@@ -309,6 +408,43 @@ document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))searc
 
 /* ============================ KNOWLEDGE GRAPH ============================ */
 const Graph={built:false,nodes:[],links:[],svg:null,zoom:1,pan:{x:0,y:0},hidden:new Set(store.get('graphHidden',[])),selected:null,focusMode:false};
+/* ---- book ↔ graph bidirectional linking ---- */
+// concept nodes that anchor onto a specific book element (id like "ch3-hpi" -> section h3 id)
+const CONCEPTS_BY_ANCHOR={},CONCEPTS_BY_CHAPTER={};
+KG.nodes.forEach(n=>{
+  if(n.type==='chapter')return;
+  const m=/^(ch\d+[ab]?)-/.exec(n.id);
+  if(m){(CONCEPTS_BY_ANCHOR[n.id]=CONCEPTS_BY_ANCHOR[n.id]||[]).push(n);}      // node id == section element id
+  (CONCEPTS_BY_CHAPTER[n.ch]=CONCEPTS_BY_CHAPTER[n.ch]||[]).push(n);
+});
+// for every book element with an id, find related concept nodes (exact anchor first, chapter fallback)
+function kgNodesForId(id,chId){
+  if(CONCEPTS_BY_ANCHOR[id])return CONCEPTS_BY_ANCHOR[id];
+  const list=(chId&&CONCEPTS_BY_CHAPTER[chId])||[];
+  return list.filter(n=>n.type!=='section'&&n.type!=='figure').slice(0,4);
+}
+function hlKgIds(hlEl){
+  if(!hlEl)return [];
+  if(hlEl.dataset.kg!==undefined)return hlEl.dataset.kg.split(',').filter(Boolean);
+  const ch=hlEl.closest('.chapter'); const chId=ch?ch.id:lastChapter;
+  let secId=null;
+  try{secId=sectionOf(hlEl);}catch(e){}
+  const found=kgNodesForId(secId,chId);
+  const ids=found.map(n=>n.id); hlEl.dataset.kg=ids.join(',');
+  return ids;
+}
+function linkHlToKg(){ $$('#book-content .hl').forEach(el=>hlKgIds(el)); }
+/* attach hover markers to section headings & figures so the map is reachable from the text */
+function decorateBookWithKg(){
+  $$('#book-content h3[id]').forEach(h3=>{
+    const rel=kgNodesForId(h3.id,(h3.id.match(/^ch\d+[ab]?/)||[''])[0]);
+    if(!rel.length)return;
+    const mk=document.createElement('span');
+    mk.className='kg-mark'; mk.dataset.kg=rel[0].id;
+    mk.title='On the knowledge map: '+rel.map(n=>n.label).join(', ');
+    h3.appendChild(mk);
+  });
+}
 function shapeSVG(shape,x,y,r,fill,stroke,texId){
   let el='';
   if(shape==='circle')el=`<circle r="${r}" cx="0" cy="0"/>`;
@@ -407,6 +543,27 @@ Graph.focus=function(id){
   $$('#graph-nodes .node').forEach(g=>g.classList.toggle('dimmed',!nb.has(g.dataset.id)));
   $$('#graph-links .link').forEach(l=>l.classList.toggle('dimmed',!(l.dataset.s===id||l.dataset.t===id)));
 };
+/* where a node lives in the book */
+function nodeTarget(n){
+  if(!n)return null;
+  if(n.type==='chapter')return {ch:n.id,sec:null};
+  if(n.type==='section')return {ch:n.ch,sec:n.id};
+  if(n.type==='figure'){ // figure nodes are named <ch>-figN — jump to the chapter
+    return {ch:n.ch,sec:null};
+  }
+  // concept nodes: anchor id (chX-...) is a real section when it exists
+  const el=document.getElementById(n.id);
+  if(el&&el.closest('.chapter'))return {ch:(el.closest('.chapter')||{}).id||n.ch,sec:n.id};
+  return {ch:n.ch,sec:null};
+}
+function gotoNode(n){
+  const t=nodeTarget(n); if(!t)return;
+  closePeek(); $('#node-info').classList.remove('open');
+  showView('book'); lastChapter=t.ch; store.set('lastChapter',t.ch);
+  const target=(t.sec&&document.getElementById(t.sec))||document.getElementById(t.ch);
+  if(target)setTimeout(()=>{target.scrollIntoView({behavior:'smooth',block:'start'});flashEl(target.querySelector?.('h2,h3')||target);},40);
+  toast('📖 '+(n.label||''));
+}
 function nodeInfo(n){
   $('#node-info').classList.add('open');
   $('#ni-label').textContent=n.label;
@@ -419,29 +576,95 @@ function nodeInfo(n){
   Graph.selected=n;
   $('#ni-open-book').dataset.goto=n.id;
 }
+/* ---- hover peek card (Obsidian-style site preview of the map) ---- */
+const peek=$('#graph-peek'); let peekTimer=null,peekPinned=false;
+function positionPeek(el,rect){
+  const w=el.offsetWidth||320,h=el.offsetHeight||180;
+  let x=rect.left+rect.width/2-w/2,y=rect.bottom+10;
+  x=Math.max(10,Math.min(x,innerWidth-w-10));
+  if(y+h>innerHeight-10)y=Math.max(60,rect.top-h-10);
+  el.style.left=x+'px'; el.style.top=y+'px';
+}
+function openPeek(nodeId,anchorRect,pin){
+  const n=(Graph.byId&&Graph.byId[nodeId])||KG.nodes.find(x=>x.id===nodeId); if(!n)return;
+  clearTimeout(peekTimer);
+  $('#gp-title').textContent=n.label;
+  const cfg=TYPES[n.type]||TYPES.concept;
+  const b=$('#gp-type');b.textContent=cfg.label;b.style.borderColor=`oklch(60% 0.13 ${cfg.hue})`;b.style.color=`oklch(60% 0.13 ${cfg.hue})`;
+  $('#gp-desc').textContent=n.desc||'';
+  const rel=KG.links.filter(([a,b2])=>a===n.id||b2===n.id).slice(0,7)
+    .map(([a,b2,r])=>{const other=a===n.id?b2:a;const o=(Graph.byId&&Graph.byId[other])||KG.nodes.find(x=>x.id===other)||{label:other,id:other};
+      return `<span class="gp-chip" data-node="${o.id}" title="${esc(r)}">${esc(o.label||other)}</span>`;});
+  $('#gp-rel').innerHTML=rel.join('')||'<span style="color:var(--app-muted);font-size:11.5px">no links</span>';
+  peek.classList.add('open'); positionPeek(peek,anchorRect);
+  if(pin!==undefined)peekPinned=pin;
+}
+function closePeek(){ if(peekPinned){peekPinned=false;} peek.classList.remove('open'); }
+peek.addEventListener('mouseleave',()=>{clearTimeout(peekTimer);peekTimer=setTimeout(()=>{peekPinned=false;peek.classList.remove('open');},300);});
+peek.addEventListener('mouseenter',()=>clearTimeout(peekTimer));
+$('#gp-close').onclick=()=>{peekPinned=false;peek.classList.remove('open');};
+$('#gp-full').onclick=e=>{e.preventDefault();const lbl=$('#gp-title').textContent;
+  const n=KG.nodes.find(x=>x.label===lbl)||Graph.selected; peek.classList.remove('open');
+  showView('graph'); if(n)setTimeout(()=>{nodeInfo(n);Graph.focus(n.id);},80);};
+peek.addEventListener('click',e=>{const chip=e.target.closest('.gp-chip');if(chip){const nn=KG.nodes.find(x=>x.id===chip.dataset.node);if(nn)openPeek(nn.id,chip.getBoundingClientRect(),true);}});
+/* book-side: hovering a concept marker opens the peek; clicking jumps straight into the map */
+bookContent.addEventListener('mouseover',e=>{
+  const mk=e.target.closest('.kg-mark'); if(!mk)return;
+  clearTimeout(peekTimer);
+  peekTimer=setTimeout(()=>openPeek(mk.dataset.kg,mk.getBoundingClientRect()),350);
+});
+bookContent.addEventListener('mouseout',e=>{
+  if(e.target.closest&&e.target.closest('.kg-mark')){clearTimeout(peekTimer);peekTimer=setTimeout(closePeek,350);}
+});
+bookContent.addEventListener('click',e=>{
+  const mk=e.target.closest('.kg-mark'); if(!mk)return;
+  e.preventDefault(); e.stopPropagation(); suppressPopup=true;
+  const nid=mk.dataset.kg;
+  const n=(Graph.byId&&Graph.byId[nid])||KG.nodes.find(x=>x.id===nid);
+  if(n){gotoNode(n);}
+},true);
 function bindGraphCanvas(){
   const svg=$('#graph-svg'),grp=$('#graph-transform-group');
   let drag=null;
   function setT(){grp.setAttribute('transform',`translate(${Graph.pan.x},${Graph.pan.y}) scale(${Graph.zoom})`);}
   Graph.setT=setT;
+  /* smooth animated zoom toward a focal point (fixes clunky stepped zoom) */
+  Graph.zoomTo=function(target,fxc,fyc){
+    target=Math.max(0.3,Math.min(4,target));
+    const z0=Graph.zoom,p0={...Graph.pan};
+    const fx=fxc==null?svg.clientWidth/2:fxc, fy=fyc==null?svg.clientHeight/2:fyc;
+    const wx=(fx-p0.x)/z0, wy=(fy-p0.y)/z0;              // world point under focus stays fixed
+    const dur=160,t0=performance.now();
+    (function step(now){
+      const k=Math.min(1,(now-t0)/dur),ease=1-Math.pow(1-k,3);
+      Graph.zoom=z0+(target-z0)*ease;
+      Graph.pan={x:fx-wx*Graph.zoom,y:fy-wy*Graph.zoom};
+      setT(); if(k<1)requestAnimationFrame(step);
+    })(t0);
+  };
   svg.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,px:Graph.pan.x,py:Graph.pan.y,moved:false};svg.classList.add('grabbing');});
   svg.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
     if(Math.abs(dx)+Math.abs(dy)>3)drag.moved=true;Graph.pan.x=drag.px+dx;Graph.pan.y=drag.py+dy;setT();});
-  addEventListener('pointerup',()=>{drag=null;svg.classList.remove('grabbing');});
-  svg.addEventListener('wheel',e=>{e.preventDefault();const k=e.deltaY<0?1.12:0.89;
-    Graph.zoom=Math.max(0.3,Math.min(4,Graph.zoom*k));setT();},{passive:false});
-  svg.addEventListener('click',e=>{const g=e.target.closest('.node');if(!g||drag&&false)return;
-    const n=Graph.byId[g.dataset.id];nodeInfo(n);Graph.focus(n.id);});
+  addEventListener('pointerup',()=>{setTimeout(()=>{drag=null;},0);svg.classList.remove('grabbing');});
+  svg.addEventListener('wheel',e=>{e.preventDefault();
+    const r=svg.getBoundingClientRect();
+    const factor=Math.exp(-e.deltaY*(e.deltaMode===1?0.02:0.0015));   // trackpad-smooth exponential zoom
+    Graph.zoomTo(Graph.zoom*factor,e.clientX-r.left,e.clientY-r.top);},{passive:false});
+  /* click a node → go there directly, no confirmation step */
+  svg.addEventListener('click',e=>{
+    const g=e.target.closest('.node'); if(!g)return;
+    const n=Graph.byId[g.dataset.id]; if(!n)return;
+    Graph.selected=n; nodeInfo(n); Graph.focus(n.id);
+    if(drag&&drag.moved)return;
+    gotoNode(n);                       // one click = navigate
+  });
   $('#ni-close').onclick=()=>{$('#node-info').classList.remove('open');applyFilters();};
-  $('#ni-open-book').onclick=e=>{const n=Graph.byId[e.currentTarget.dataset.goto];if(!n)return;
-    if(n.type==='chapter')openChapter(n.id);
-    else if(n.type==='figure'){openChapter(n.ch);}
-    else openChapter(n.ch,n.id);};
+  $('#ni-open-book').onclick=e=>{gotoNode(Graph.byId[e.currentTarget.dataset.goto]);};
   $('#ni-focus').onclick=()=>Graph.focus(Graph.selected.id);
-  $('#zoom-in').onclick=()=>{Graph.zoom=Math.min(4,Graph.zoom*1.2);setT();};
-  $('#zoom-out').onclick=()=>{Graph.zoom=Math.max(0.3,Graph.zoom/1.2);setT();};
+  $('#zoom-in').onclick=()=>Graph.zoomTo(Graph.zoom*1.35);
+  $('#zoom-out').onclick=()=>Graph.zoomTo(Graph.zoom/1.35);
   $('#zoom-fit').onclick=()=>Graph.fit();
-  $('#graph-reset').onclick=()=>{Graph.zoom=1;Graph.pan={x:0,y:0};setT();$('#graph-search').value='';applyFilters();$('#graph-search-clear').style.display='none';applyFilters();};
+  $('#graph-reset').onclick=()=>{Graph.zoom=1;Graph.pan={x:0,y:0};setT();$('#graph-search').value='';$('#graph-search-clear').style.display='none';applyFilters();};
   Graph.fit=function(){const wrap=$('#graph-canvas-wrap');
     const xs=Graph.nodes.map(n=>n.x),ys=Graph.nodes.map(n=>n.y);
     const minX=Math.min(...xs)-60,maxX=Math.max(...xs)+60,minY=Math.min(...ys)-60,maxY=Math.max(...ys)+70;
@@ -611,20 +834,89 @@ $('#clear-all-data').onclick=()=>{if(confirm('Delete all highlights, notes and q
 (function storageStatus(){let ok=true;try{store.set('_t',1);store.get('_t');localStorage.removeItem('scribe04__t');}catch(e){ok=false;}
   $('#storage-status').textContent=ok?'Saved locally in this browser ('+Object.keys(highlights).length+' highlights).':'Storage unavailable — bookmarks won\'t persist.';})();
 
-/* ============================ SCRATCHPAD (brain dump) ============================ */
+/* ============================ SCRATCHPAD (always-available hover box) ============================ */
 (function scratchpad(){
   const area=$('#scratchpad-area'),status=$('#scratchpad-status');
-  if(!area)return;
-  let saved=''; try{saved=localStorage.getItem('scribe04_scratchpad')||'';}catch(e){}
-  area.value=saved;
+  const dock=$('#sp-dock'),panel=$('#sp-hover');
+  if(!area||!dock||!panel)return;
+  try{area.value=localStorage.getItem('scribe04_scratchpad')||'';}catch(e){}
+  function syncBadge(){
+    const has=area.value.trim().length>0;
+    document.body.classList.toggle('has-scratch',has);
+    const c=$('#sp-dock-count');
+    c.textContent=has?(area.value.length>999?'999+':area.value.length):'';
+    c.classList.toggle('show',has);
+  }
+  syncBadge();
   let timer=null;
-  function flash(msg){status.textContent=msg;}
   area.addEventListener('input',()=>{
-    flash('Saving…');clearTimeout(timer);
-    timer=setTimeout(()=>{try{localStorage.setItem('scribe04_scratchpad',area.value);flash('Saved ✓ '+new Date().toLocaleTimeString());}
-      catch(e){flash('Could not save (storage full or blocked)');}},400);
+    status.textContent='Saving…'; clearTimeout(timer);
+    timer=setTimeout(()=>{try{localStorage.setItem('scribe04_scratchpad',area.value);
+        status.textContent='Saved ✓ '+new Date().toLocaleTimeString();}
+      catch(e){status.textContent='Could not save';}syncBadge();},350);
   });
-  $('#scratchpad-clear').onclick=()=>{if(confirm('Clear the scratchpad?')){area.value='';try{localStorage.removeItem('scribe04_scratchpad');}catch(e){}flash('Cleared ✓');}};
+  // hover the dock → panel appears; leave both → it fades away. Click pins it open.
+  let hideT=null;
+  const show=()=>{clearTimeout(hideT);panel.classList.add('hoverself');};
+  const hideSoon=()=>{clearTimeout(hideT);hideT=setTimeout(()=>{
+    if(!panel.classList.contains('pinned')&&!panel.contains(document.activeElement))panel.classList.remove('hoverself');},350);};
+  [dock,panel].forEach(el=>{el.addEventListener('mouseenter',show);el.addEventListener('mouseleave',hideSoon);});
+  dock.addEventListener('click',()=>{const p=panel.classList.toggle('pinned');if(p){show();area.focus();}});
+  panel.addEventListener('focusin',()=>panel.classList.add('hoverself'));
+  // expand → focus window (larger modal-ish pad); collapse returns to hover mode
+  $('#sp-expand').onclick=()=>{const f=panel.classList.toggle('focused');$('#sp-expand').textContent=f?'⤡':'⤢';if(f)area.focus();};
+  $('#scratchpad-clear').onclick=()=>{if(area.value&&!confirm('Clear the scratchpad?'))return;
+    area.value='';try{localStorage.removeItem('scribe04_scratchpad');}catch(e){}status.textContent='Cleared ✓';syncBadge();area.focus();};
+  addEventListener('keydown',e=>{ if(e.key==='Escape'&&panel.classList.contains('focused')){panel.classList.remove('focused');$('#sp-expand').textContent='⤢';} });
+})();
+
+/* ============================ FOCUS READING MODE + STUDY TIMER ============================ */
+(function focusAndTimer(){
+  /* focus mode: dim everything but the paragraph under the cursor / current scroll center */
+  const focusBtn=$('#focus-toggle');
+  let focusOn=store.get('focusMode',false);
+  function markActive(){
+    if(!focusOn)return;
+    const els=$$('#book-content .paper > *, #book-content .chapter > p, #book-content .chapter > ul, #book-content .chapter > h2, #book-content .chapter > h3');
+    let best=null,bestD=1e9;const mid=innerHeight*0.42;
+    for(const el of els){const r=el.getBoundingClientRect();if(r.bottom<60||r.top>innerHeight-60)continue;
+      const d=Math.abs((r.top+r.bottom)/2-mid);if(d<bestD){bestD=d;best=el;}}
+    $$('.fm-active').forEach(x=>x.classList.remove('fm-active'));
+    if(best)best.classList.add('fm-active');
+  }
+  function applyFocus(){document.body.classList.toggle('focus-mode',focusOn);
+    focusBtn.classList.toggle('active',focusOn);store.set('focusMode',focusOn);markActive();}
+  focusBtn.onclick=()=>{focusOn=!focusOn;applyFocus();};
+  addEventListener('scroll',markActive,{passive:true});
+
+  /* study timer: page time (auto, while book view active) + manual session stopwatch */
+  const playBtn=$('#timer-play'),readEl=$('#timer-read'),sesEl=$('#timer-session'),wrapEl=$('#study-timer');
+  const PLAY='<path d="M8 5v14l11-7z"/>',PAUSE='<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>';
+  const fmt=s=>{s=Math.floor(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;
+    return (h?h+':'+String(m).padStart(2,'0'):String(m).padStart(2,'0'))+':'+String(ss).padStart(2,'0');};
+  let readSecs=store.get('readSecs',0),lastReadTick=Date.now();
+  let sesSecs=store.get('sesSecs',0),sesRunning=store.get('sesRunning',false),sesT0=Date.now();
+  readEl.textContent=fmt(readSecs); sesEl.textContent=fmt(sesSecs);
+  wrapEl.classList.toggle('running',sesRunning);
+  playBtn.querySelector('svg').innerHTML=sesRunning?PAUSE:PLAY;
+  playBtn.onclick=()=>{sesRunning=!sesRunning;
+    if(sesRunning)sesT0=Date.now(); else sesSecs=Math.round(performance.now()/1000)*0+sesSecs+(Date.now()-sesT0)/1000;
+    wrapEl.classList.toggle('running',sesRunning);playBtn.querySelector('svg').innerHTML=sesRunning?PAUSE:PLAY;
+    store.set('sesRunning',sesRunning);store.set('sesSecs',Math.floor(sesSecs));
+    toast(sesRunning?'Study session started ⏱':'Study session paused');};
+  wrapEl.addEventListener('dblclick',()=>{readSecs=0;sesSecs=0;sesRunning=false;sesT0=Date.now();
+    store.set('readSecs',0);store.set('sesSecs',0);store.set('sesRunning',false);
+    wrapEl.classList.remove('running');playBtn.querySelector('svg').innerHTML=PLAY;
+    readEl.textContent='00:00';sesEl.textContent='00:00';toast('Timer reset');});
+  setInterval(()=>{
+    const now=Date.now();
+    if($('#book-view').classList.contains('active')){readSecs+=Math.min(5,(now-lastReadTick)/1000);}
+    lastReadTick=now;
+    readEl.textContent=fmt(readSecs);
+    if(sesRunning)sesEl.textContent=fmt(sesSecs+(now-sesT0)/1000);
+    store.set('readSecs',Math.floor(readSecs));
+  },1000);
+  document.addEventListener('visibilitychange',()=>{ if(!sesRunning){sesT0=Date.now();} lastReadTick=Date.now(); });
 })();
 
 /* ============================ KEYBOARD ============================ */
