@@ -4468,7 +4468,14 @@ kbd{border:1px solid var(--app-border);border-bottom-width:2px;border-radius:5px
 <script>// Scribe Academy v0.4 — application logic (from scratch)
 (function(){
 'use strict';
-const DATA = window.__APP_DATA__;            // {kg, glossary, flashcards, mcqs}
+// Safety net: if the data script failed to parse/execute, show a clear message instead of a dead UI
+if(!window.__APP_DATA__){
+  document.addEventListener('DOMContentLoaded',function(){
+    var m=document.querySelector('#book-content')||document.body;
+    m.insertAdjacentHTML('afterbegin','<div style="padding:20px;margin:20px;border:2px solid #c00;border-radius:10px;background:#fee;color:#900;font-weight:600">App data failed to load. Please hard-refresh the page (Ctrl+Shift+R / Cmd+Shift+R). If this persists, the deployed file may be an old build.</div>');
+  });
+}
+const DATA = window.__APP_DATA__ || {kg:{kg:{nodes:[],links:[]}},glossary:[],flashcards:[],mcqs:{}};   // {kg, glossary, flashcards, mcqs}
 const KG = DATA.kg.kg || DATA.kg; // data.py wraps as {"kg": {nodes, links}}
 const MCQS = DATA.mcqs;                      // chId -> [{q, opts:[...], a:[idx], why, links:[secIds]}]
 const $ = s => document.querySelector(s);
