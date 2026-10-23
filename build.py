@@ -174,20 +174,33 @@ def count_hex(doc):
 hexes = count_hex(html)
 print('raw hex tokens remaining (excl. svg-data-uris):', len(hexes), set(hexes) if hexes else '')
 
-# ---- GitHub Pages deploy folder: site/index.html + images/ ----
+# ---- GitHub Pages deploy root: repo-root index.html + book-images/images/ ----
+# NOTE: Pages for this project serves from the REPO ROOT (branch main, path /),
+# so the app must live at ./index.html. The source markup uses images/<file>;
+# rewrite those to book-images/images/<file>, which is where they are committed.
+favicon_tag = ('<link rel="icon" type="image/png" href="book-images/images/favicon.png">\n'
+               '<meta name="theme-color" content="#1c3557">')
+root_html = html.replace('src="images/', 'src="book-images/images/')
+root_html = root_html.replace('<head>', '<head>\n' + favicon_tag, 1)
+assert 'book-images/images/favicon.png' in root_html
+assert not re.search(r'src="images/', root_html), 'unrewritten image src remains'
+open(os.path.join(HERE, 'index.html'), 'w', encoding='utf-8').write(root_html)
+
+# keep legacy site/ folder in sync (harmless duplicate; site/images/ has copies)
+SITE_HTML = root_html.replace('book-images/images/', 'images/')
 import shutil
-site_html = html.replace('<head>', '<head>\n<link rel="icon" type="image/png" href="images/favicon.png">\n<meta name="theme-color" content="#1c3557">', 1)
-assert 'images/favicon.png' in site_html
 os.makedirs(os.path.join(SITE_DIR, 'images'), exist_ok=True)
-open(os.path.join(SITE_DIR, 'index.html'), 'w', encoding='utf-8').write(site_html)
+open(os.path.join(SITE_DIR, 'index.html'), 'w', encoding='utf-8').write(SITE_HTML)
 img_src = os.path.join(HERE, 'book-images', 'images')
 img_dst = os.path.join(SITE_DIR, 'images')
 if os.path.isdir(img_src):
     for f in os.listdir(img_src):
         shutil.copy2(os.path.join(img_src, f), os.path.join(img_dst, f))
-refs = set(re.findall(r'src="(images/[^"]+)"', site_html))
-missing = [r for r in refs if not os.path.exists(os.path.join(SITE_DIR, r))]
-assert not missing, 'site image refs missing on disk: %s' % missing[:5]
-print('site/: index.html (%d bytes) + %d images, all %d referenced images present'
-      % (len(site_html), len(os.listdir(img_dst)), len(refs)))
+
+# verify every image referenced by the deployed root page exists in the repo
+refs = set(re.findall(r'(?:src|href)="((?:book-images/)?images/[^"]+)"', root_html))
+missing = [r for r in refs if not os.path.exists(os.path.join(HERE, r))]
+assert not missing, 'deployed image refs missing on disk: %s' % missing[:5]
+print('root index.html (%d bytes); %d image refs, all present under book-images/images/'
+      % (len(root_html), len(refs)))
 print('ALL CHECKS PASSED')
